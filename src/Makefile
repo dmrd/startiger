@@ -50,13 +50,30 @@ endif
 #
 # Notice that many of the dependencies are implicit (e.g. a .o depends
 # on its corresponding .cpp), as are many of the compilation rules.
-#
+
+
+LIBS=R3/libR3.a
 
 all: startiger
 
 startiger: $(LIBS) $(GAME_OBJS)
 	rm -f $@
-	$(CXX) $(CXXFLAGS) $^ -lm -o $@ $(LIBS)
+	$(CXX) $(CXXFLAGS) $^ -lm -o $@ $(LIBS) $(GLLIBS)
 
-clean: 
-	rm -f *.o startiger
+R3/libR3.a: 
+	    $(MAKE) -C R3
+
+R2/libR2.a: 
+	    $(MAKE) -C R2
+
+jpeg/libjpeg.a: 
+	    $(MAKE) -C jpeg
+
+clean:
+	    rm -f *.o startiger
+		$(MAKE) -C R3 clean
+		$(MAKE) -C R2 clean
+		$(MAKE) -C jpeg clean
+
+distclean:  clean
+	    ${RM} -f *~ 
