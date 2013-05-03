@@ -20,32 +20,32 @@ dirs
 todo
 ----
 
-    - App
-        - add [special] key release callbacks
+   - App
+       - add [special] key release callbacks
 
-    - Rendering
-        - integrate R3Scene
-        - get scenegraph rendering working
-        - do a little test render with motion etc.
+   - Rendering
+       - integrate R3Scene
+       - get scenegraph rendering working
+       - do a little test render with motion etc.
 
-    - Logic
-        - work on GameObject/GameObjectManager stuff
-        - possibly work on GameState/Level stuff
+   - Logic
+       - work on GameObject/GameObjectManager stuff
+       - possibly work on GameState/Level stuff
 
-    - Physics
-        - get some kind of node-based physics/collision system working?
+   - Physics
+       - get some kind of node-based physics/collision system working?
 
 
 
 ideas
 -----
   
-    - Rendering
+   - Rendering
 
-    - Logic
-        - work on GameObject/GameObjectManager stuff
+   - Logic
+       - work on GameObject/GameObjectManager stuff
 
-    - Physics
+   - Physics
 
 
 
@@ -57,7 +57,8 @@ features
         db = David Bieber
         ns = Nikhilesh Sigatapu
 
-done?    who?    maybe?
+    done?    who?    maybe?
+
                           required
                             - 3d perspective viewing and objects
                             - lighting and smooth shading
