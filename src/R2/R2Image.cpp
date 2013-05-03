@@ -983,7 +983,7 @@ WritePPM(const char *filename, int ascii) const
 extern "C" { 
 #   define XMD_H // Otherwise, a conflict with INT32
 #   undef FAR // Otherwise, a conflict with windows.h
-#   include "../jpeg/jpeglib.h"
+#   include "jpeg/jpeglib.h"
 };
 
 
