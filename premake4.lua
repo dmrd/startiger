@@ -16,8 +16,6 @@ files { "./src/**.h", "./src/**.cpp" }
 
 -- Include/library directories and libraries ------------------------------------------------
 
-ofpath = "../../../Libraries/of"
-
 includedirs { 
     -- project
     "./src",
