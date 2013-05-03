@@ -7,45 +7,45 @@ COS426 Final Project
 dirs
 ----
 
-   - lib/       external libraries
-   - src/       project source code
-      - R2/     2D basics
-      - R3/     3D basics
+    - lib/       external libraries
+    - src/       project source code
+       - R2/     2D basics
+       - R3/     3D basics
 
-   - bin/       executable output files
-   - obj/       intermediate output files
+    - bin/       executable output files
+    - obj/       intermediate output files
 
 
 
 todo
 ----
 
-   - App
-       - add [special] key release callbacks
+    - App
+        - add [special] key release callbacks
 
-   - Rendering
-       - integrate R3Scene
-       - get scenegraph rendering working
-       - do a little test render with motion etc.
+    - Rendering
+        - integrate R3Scene
+        - get scenegraph rendering working
+        - do a little test render with motion etc.
 
-   - Logic
-       - work on GameObject/GameObjectManager stuff
-       - possibly work on GameState/Level stuff
+    - Logic
+        - work on GameObject/GameObjectManager stuff
+        - possibly work on GameState/Level stuff
 
-   - Physics
-       - get some kind of node-based physics/collision system working?
+    - Physics
+        - get some kind of node-based physics/collision system working?
 
 
 
 ideas
 -----
   
-   - Rendering
-
-   - Logic
-       - work on GameObject/GameObjectManager stuff
-
-   - Physics
+    - Rendering
+  
+    - Logic
+        - work on GameObject/GameObjectManager stuff
+  
+    - Physics
 
 
 
