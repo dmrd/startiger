@@ -234,7 +234,7 @@ void DrawNode(R3Scene *scene, R3Node *node)
     if (node->material) LoadMaterial(node->material);
 
     // Draw shape
-    if (node->shape) DrawShape(node->shape);
+    if (node->shape) node->shape->Draw();
 
     // Draw children nodes
     for (int i = 0; i < (int) node->children.size(); i++) 
@@ -254,21 +254,9 @@ void DrawNode(R3Scene *scene, R3Node *node)
      */
 }
 
-void DrawShape(R3Shape *shape)
-{
-    // Check shape type
-    if (shape->type == R3_BOX_SHAPE) shape->box->Draw();
-    else if (shape->type == R3_SPHERE_SHAPE) shape->sphere->Draw();
-    else if (shape->type == R3_CYLINDER_SHAPE) shape->cylinder->Draw();
-    else if (shape->type == R3_CONE_SHAPE) shape->cone->Draw();
-    else if (shape->type == R3_MESH_SHAPE) shape->mesh->Draw();
-    else if (shape->type == R3_SEGMENT_SHAPE) shape->segment->Draw();
-    else if (shape->type == R3_CIRCLE_SHAPE) shape->circle->Draw();
-    else fprintf(stderr, "Unrecognized shape type: %d\n", shape->type);
-}
-
 void DrawScene(R3Scene *scene) 
 {
     // Draw nodes recursively
     DrawNode(scene, scene->root);
 }
+

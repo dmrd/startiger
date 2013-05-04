@@ -59,6 +59,7 @@ class R3Matrix;
 
 // Class include files
 
+#include "R3Shape.h"
 #include "R3Point.h"
 #include "R3Vector.h"
 #include "R3Line.h"

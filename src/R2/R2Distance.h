@@ -25,32 +25,32 @@ double R2SignedDistance(const R2Line& line, const R2Point& point);
 
 inline double R2Distance(const R2Line& line, const R2Point& point)
 {
-  // Distance is commutative
-  return R2Distance(point, line);
+    // Distance is commutative
+    return R2Distance(point, line);
 }
 
 
 
 inline double R2Distance(const R2Segment& segment, const R2Point& point)
 {
-  // Distance is commutative
-  return R2Distance(point, segment);
+    // Distance is commutative
+    return R2Distance(point, segment);
 }
 
 
 
 inline double R2Distance(const R2Segment& segment, const R2Line& line)
 {
-  // Distance is commutative
-  return R2Distance(line, segment);
+    // Distance is commutative
+    return R2Distance(line, segment);
 }
 
 
 
 inline double R2SignedDistance(const R2Point& point, const R2Line& line)
 {
-  // Distance is commutative
-  return R2SignedDistance(line, point);
+    // Distance is commutative
+    return R2SignedDistance(line, point);
 }
 
 

@@ -9,17 +9,6 @@
 // Constant definitions
 
 typedef enum {
-    R3_BOX_SHAPE,
-    R3_SPHERE_SHAPE,
-    R3_CYLINDER_SHAPE,
-    R3_CONE_SHAPE,
-    R3_MESH_SHAPE,
-    R3_SEGMENT_SHAPE,
-    R3_CIRCLE_SHAPE,
-    R3_NUM_SHAPE_TYPES
-} R3ShapeType;
-
-typedef enum {
     R3_DIRECTIONAL_LIGHT,
     R3_POINT_LIGHT,
     R3_SPOT_LIGHT,
@@ -30,17 +19,6 @@ typedef enum {
 
 
 // Scene element definitions
-
-struct R3Shape {
-    R3ShapeType type;
-    R3Box *box;
-    R3Sphere *sphere;
-    R3Cylinder *cylinder;
-    R3Cone *cone;
-    R3Mesh *mesh;
-    R3Segment *segment;
-    R3Circle *circle;
-};  
 
 struct R3Material {
     R2Pixel ka;
@@ -182,8 +160,7 @@ struct R3Scene {
 
 // Inline functions 
 
-inline R3Node *R3Scene::
-Root(void) const
+inline R3Node *R3Scene::Root(void) const
 {
     // Return root node
     return root;
@@ -191,8 +168,7 @@ Root(void) const
 
 
 
-inline int R3Scene::
-NLights(void) const
+inline int R3Scene::NLights(void) const
 {
     // Return number of lights
     return lights.size();
@@ -200,8 +176,7 @@ NLights(void) const
 
 
 
-inline R3Light *R3Scene::
-Light(int k) const
+inline R3Light *R3Scene::Light(int k) const
 {
     // Return kth light
     return lights[k];
@@ -209,8 +184,7 @@ Light(int k) const
 
 
 
-inline R3Camera& R3Scene::
-Camera(void) 
+inline R3Camera& R3Scene::Camera(void) 
 {
     // Return camera
     return camera;
@@ -218,8 +192,7 @@ Camera(void)
 
 
 
-inline R3Box& R3Scene::
-BBox(void) 
+inline R3Box& R3Scene::BBox(void) 
 {
     // Return bounding box 
     return bbox;
@@ -227,8 +200,7 @@ BBox(void)
 
 
 
-inline int R3Scene::
-NParticleSources(void) const
+inline int R3Scene::NParticleSources(void) const
 {
     // Return number of particle sources
     return particle_sources.size();
@@ -236,8 +208,7 @@ NParticleSources(void) const
 
 
 
-inline R3ParticleSource *R3Scene::
-ParticleSource(int k) const
+inline R3ParticleSource *R3Scene::ParticleSource(int k) const
 {
     // Return kth particle source
     return particle_sources[k];
@@ -245,8 +216,7 @@ ParticleSource(int k) const
 
 
 
-inline int R3Scene::
-NParticleSinks(void) const
+inline int R3Scene::NParticleSinks(void) const
 {
     // Return number of particle sinks
     return particle_sinks.size();
@@ -254,8 +224,7 @@ NParticleSinks(void) const
 
 
 
-inline R3ParticleSink *R3Scene::
-ParticleSink(int k) const
+inline R3ParticleSink *R3Scene::ParticleSink(int k) const
 {
     // Return kth particle sink
     return particle_sinks[k];
@@ -263,8 +232,7 @@ ParticleSink(int k) const
 
 
 
-inline int R3Scene::
-NParticles(void) const
+inline int R3Scene::NParticles(void) const
 {
     // Return number of particles
     return particles.size();
@@ -272,8 +240,7 @@ NParticles(void) const
 
 
 
-inline R3Particle *R3Scene::
-Particle(int k) const
+inline R3Particle *R3Scene::Particle(int k) const
 {
     // Return kth particle 
     return particles[k];

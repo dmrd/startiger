@@ -59,15 +59,7 @@ ReadShape(FILE *fp, int command_number, const char *filename)
         }
 
         // Create shape
-        shape = new R3Shape();
-        shape->type = R3_BOX_SHAPE;
-        shape->box = new R3Box(x1, y1, z1, x2, y2, z2);
-        shape->sphere = NULL;
-        shape->cylinder = NULL;
-        shape->cone = NULL;
-        shape->mesh = NULL;
-        shape->segment = NULL;
-        shape->circle = NULL;
+        shape = new R3Box(x1, y1, z1, x2, y2, z2);
     }
     else if (!strcmp(shape_type, "sphere")) {
         // Read sphere args
@@ -78,15 +70,7 @@ ReadShape(FILE *fp, int command_number, const char *filename)
         }
 
         // Create shape
-        shape = new R3Shape();
-        shape->type = R3_SPHERE_SHAPE;
-        shape->box = NULL;
-        shape->sphere = new R3Sphere(R3Point(center_x, center_y, center_z), radius);
-        shape->cylinder = NULL;
-        shape->cone = NULL;
-        shape->mesh = NULL;
-        shape->segment = NULL;
-        shape->circle = NULL;
+        shape = new R3Sphere(R3Point(center_x, center_y, center_z), radius);
     }
     else if (!strcmp(shape_type, "cylinder")) {
         // Read cylinder args
@@ -97,15 +81,7 @@ ReadShape(FILE *fp, int command_number, const char *filename)
         }
 
         // Create shape
-        shape = new R3Shape();
-        shape->type = R3_CYLINDER_SHAPE;
-        shape->box = NULL;
-        shape->sphere = NULL;
-        shape->cylinder = new R3Cylinder(R3Point(center_x, center_y, center_z), radius, height);
-        shape->cone = NULL;
-        shape->mesh = NULL;
-        shape->segment = NULL;
-        shape->circle = NULL;
+        shape = new R3Cylinder(R3Point(center_x, center_y, center_z), radius, height);
     }
     else if (!strcmp(shape_type, "cone")) {
         // Read cylinder args
@@ -116,15 +92,7 @@ ReadShape(FILE *fp, int command_number, const char *filename)
         }
 
         // Create shape
-        shape = new R3Shape();
-        shape->type = R3_CONE_SHAPE;
-        shape->box = NULL;
-        shape->sphere = NULL;
-        shape->cylinder = NULL;
-        shape->cone = new R3Cone(R3Point(center_x, center_y, center_z), radius, height);
-        shape->mesh = NULL;
-        shape->segment = NULL;
-        shape->circle = NULL;
+        shape = new R3Cone(R3Point(center_x, center_y, center_z), radius, height);
     }
     else if (!strcmp(shape_type, "mesh")) {
         // Read mesh args
@@ -156,15 +124,7 @@ ReadShape(FILE *fp, int command_number, const char *filename)
         }
 
         // Create shape
-        shape = new R3Shape();
-        shape->type = R3_MESH_SHAPE;
-        shape->box = NULL;
-        shape->sphere = NULL;
-        shape->cylinder = NULL;
-        shape->cone = NULL;
-        shape->mesh = mesh;
-        shape->segment = NULL;
-        shape->circle = NULL;
+        shape = mesh;
     }
     else if (!strcmp(shape_type, "line")) {
         // Read sphere args
@@ -175,15 +135,7 @@ ReadShape(FILE *fp, int command_number, const char *filename)
         }
 
         // Create shape
-        shape = new R3Shape();
-        shape->type = R3_SEGMENT_SHAPE;
-        shape->box = NULL;
-        shape->sphere = NULL;
-        shape->cylinder = NULL;
-        shape->cone = NULL;
-        shape->mesh = NULL;
-        shape->segment = new R3Segment(R3Point(x1, y1, z1), R3Point(x2, y2, z2));
-        shape->circle = NULL;
+        shape = new R3Segment(R3Point(x1, y1, z1), R3Point(x2, y2, z2));
     }
     else if (!strcmp(shape_type, "circle")) {
         // Read circle args
@@ -194,15 +146,7 @@ ReadShape(FILE *fp, int command_number, const char *filename)
         }
 
         // Create shape
-        shape = new R3Shape();
-        shape->type = R3_CIRCLE_SHAPE;
-        shape->box = NULL;
-        shape->sphere = NULL;
-        shape->cylinder = NULL;
-        shape->cone = NULL;
-        shape->mesh = NULL;
-        shape->segment = NULL;
-        shape->circle = new R3Circle(R3Point(center_x, center_y, center_z), radius, R3Vector(normal_x, normal_y, normal_z));
+        shape = new R3Circle(R3Point(center_x, center_y, center_z), radius, R3Vector(normal_x, normal_y, normal_z));
     }
     else {
         // Unrecognized shape type
@@ -353,13 +297,7 @@ Read(const char *filename, R3Node *node)
             particle_sources.push_back(source);
 
             // Update scene bounding box
-            if (shape->type == R3_SEGMENT_SHAPE) bbox.Union(shape->segment->BBox());
-            else if (shape->type == R3_BOX_SHAPE) bbox.Union(*(shape->box));
-            else if (shape->type == R3_CIRCLE_SHAPE) bbox.Union(shape->circle->BBox());
-            else if (shape->type == R3_SPHERE_SHAPE) bbox.Union(shape->sphere->BBox());
-            else if (shape->type == R3_CYLINDER_SHAPE) bbox.Union(shape->cylinder->BBox());
-            else if (shape->type == R3_CONE_SHAPE) bbox.Union(shape->cone->BBox());
-            else if (shape->type == R3_MESH_SHAPE) bbox.Union(shape->mesh->bbox);
+            bbox.Union(shape->BBox());
         }
         else if (!strcmp(cmd, "particle_sink")) {
             // Read sink parameters 
@@ -388,13 +326,7 @@ Read(const char *filename, R3Node *node)
             particle_sinks.push_back(sink);
 
             // Update scene bounding box
-            if (shape->type == R3_SEGMENT_SHAPE) bbox.Union(shape->segment->BBox());
-            else if (shape->type == R3_BOX_SHAPE) bbox.Union(*(shape->box));
-            else if (shape->type == R3_CIRCLE_SHAPE) bbox.Union(shape->circle->BBox());
-            else if (shape->type == R3_SPHERE_SHAPE) bbox.Union(shape->sphere->BBox());
-            else if (shape->type == R3_CYLINDER_SHAPE) bbox.Union(shape->cylinder->BBox());
-            else if (shape->type == R3_CONE_SHAPE) bbox.Union(shape->cone->BBox());
-            else if (shape->type == R3_MESH_SHAPE) bbox.Union(shape->mesh->bbox);
+            bbox.Union(shape->BBox());
         }
         else if (!strcmp(cmd, "particle_spring")) {
             // Read gravity parameters 
@@ -462,14 +394,7 @@ Read(const char *filename, R3Node *node)
             mesh->CreateFace(vertices);
 
             // Create shape
-            R3Shape *shape = new R3Shape();
-            shape->type = R3_MESH_SHAPE;
-            shape->box = NULL;
-            shape->sphere = NULL;
-            shape->cylinder = NULL;
-            shape->cone = NULL;
-            shape->mesh = mesh;
-            shape->segment = NULL;
+            R3Shape *shape = mesh;
 
             // Create shape node
             R3Node *node = new R3Node();
@@ -511,14 +436,7 @@ Read(const char *filename, R3Node *node)
             R3Box *box = new R3Box(p1, p2);
 
             // Create shape
-            R3Shape *shape = new R3Shape();
-            shape->type = R3_BOX_SHAPE;
-            shape->box = box;
-            shape->sphere = NULL;
-            shape->cylinder = NULL;
-            shape->cone = NULL;
-            shape->mesh = NULL;
-            shape->segment = NULL;
+            R3Shape *shape = box;
 
             // Create shape node
             R3Node *node = new R3Node();
@@ -558,14 +476,7 @@ Read(const char *filename, R3Node *node)
             R3Sphere *sphere = new R3Sphere(c, r);
 
             // Create shape
-            R3Shape *shape = new R3Shape();
-            shape->type = R3_SPHERE_SHAPE;
-            shape->box = NULL;
-            shape->sphere = sphere;
-            shape->cylinder = NULL;
-            shape->cone = NULL;
-            shape->mesh = NULL;
-            shape->segment = NULL;
+            R3Shape *shape = sphere;
 
             // Create shape node
             R3Node *node = new R3Node();
@@ -605,14 +516,7 @@ Read(const char *filename, R3Node *node)
             R3Cylinder *cylinder = new R3Cylinder(c, r, h);
 
             // Create shape
-            R3Shape *shape = new R3Shape();
-            shape->type = R3_CYLINDER_SHAPE;
-            shape->box = NULL;
-            shape->sphere = NULL;
-            shape->cylinder = cylinder;
-            shape->cone = NULL;
-            shape->mesh = NULL;
-            shape->segment = NULL;
+            R3Shape *shape = cylinder;
 
             // Create shape node
             R3Node *node = new R3Node();
@@ -669,14 +573,7 @@ Read(const char *filename, R3Node *node)
             }
 
             // Create shape
-            R3Shape *shape = new R3Shape();
-            shape->type = R3_MESH_SHAPE;
-            shape->box = NULL;
-            shape->sphere = NULL;
-            shape->cylinder = NULL;
-            shape->cone = NULL;
-            shape->mesh = mesh;
-            shape->segment = NULL;
+            R3Shape *shape = mesh;
 
             // Create shape node
             R3Node *node = new R3Node();
@@ -716,14 +613,7 @@ Read(const char *filename, R3Node *node)
             R3Cone *cone = new R3Cone(c, r, h);
 
             // Create shape
-            R3Shape *shape = new R3Shape();
-            shape->type = R3_CONE_SHAPE;
-            shape->box = NULL;
-            shape->sphere = NULL;
-            shape->cylinder = NULL;
-            shape->cone = cone;
-            shape->mesh = NULL;
-            shape->segment = NULL;
+            R3Shape *shape = cone;
 
             // Create shape node
             R3Node *node = new R3Node();
@@ -762,14 +652,7 @@ Read(const char *filename, R3Node *node)
             R3Segment *segment = new R3Segment(p1, p2);
 
             // Create shape
-            R3Shape *shape = new R3Shape();
-            shape->type = R3_SEGMENT_SHAPE;
-            shape->box = NULL;
-            shape->sphere = NULL;
-            shape->cylinder = NULL;
-            shape->cone = NULL;
-            shape->mesh = NULL;
-            shape->segment = segment;
+            R3Shape *shape = segment;
 
             // Create shape node
             R3Node *node = new R3Node();

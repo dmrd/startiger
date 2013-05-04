@@ -21,15 +21,13 @@ R2Point R2negy_point(0.0, -1.0);
 
 // Public functions 
 
-R2Point::
-R2Point(void)
+R2Point::R2Point(void)
 {
 }
 
 
 
-R2Point::
-R2Point(double x, double y)
+R2Point::R2Point(double x, double y)
 {
     v[0] = x; 
     v[1] = y; 
@@ -37,8 +35,7 @@ R2Point(double x, double y)
 
 
 
-R2Point::
-R2Point(const R2Point& point)
+R2Point::R2Point(const R2Point& point)
 {
     v[0] = point.v[0]; 
     v[1] = point.v[1]; 
@@ -46,8 +43,7 @@ R2Point(const R2Point& point)
 
 
 
-R2Point::
-R2Point(double array[2])
+R2Point::R2Point(double array[2])
 {
     v[0] = array[0]; 
     v[1] = array[1]; 
@@ -55,17 +51,15 @@ R2Point(double array[2])
 
 
 
-R2Vector R2Point::
-Vector(void) const
+R2Vector R2Point::Vector(void) const
 {
-  // Return vector to point from origin
-  return R2Vector(v[0], v[1]);
+    // Return vector to point from origin
+    return R2Vector(v[0], v[1]);
 }
 
 
 
-void R2Point::
-Project(const R2Line& line)
+void R2Point::Project(const R2Line& line)
 {
     // Mirror point across line
     double d = R2SignedDistance(*this, line);
@@ -74,8 +68,7 @@ Project(const R2Line& line)
 
 
 
-void R2Point::
-Mirror(const R2Line& line)
+void R2Point::Mirror(const R2Line& line)
 {
     // Mirror point across line
     double d = R2SignedDistance(*this, line);
@@ -84,8 +77,7 @@ Mirror(const R2Line& line)
 
 
 
-void R2Point::
-Rotate(const R2Point& origin, double angle)
+void R2Point::Rotate(const R2Point& origin, double angle)
 {
     // Rotate point counterclockwise around origin by angle (in radians)
     double x = v[0] - origin[0]; 
@@ -98,8 +90,7 @@ Rotate(const R2Point& origin, double angle)
 
 
 
-R2Point& R2Point::
-operator=(const R2Point& point)
+R2Point& R2Point::operator=(const R2Point& point)
 {
     v[0] = point[0];
     v[1] = point[1];
@@ -108,8 +99,7 @@ operator=(const R2Point& point)
 
 
 
-R2Point& R2Point::
-operator+=(const R2Point& point)
+R2Point& R2Point::operator+=(const R2Point& point)
 {
     v[0] += point[0];
     v[1] += point[1];
@@ -118,8 +108,7 @@ operator+=(const R2Point& point)
 
 
 
-R2Point& R2Point::
-operator+=(const R2Vector& vector)
+R2Point& R2Point::operator+=(const R2Vector& vector)
 {
     v[0] += vector[0];
     v[1] += vector[1];
@@ -128,8 +117,7 @@ operator+=(const R2Vector& vector)
 
 
 
-R2Point& R2Point::
-operator-=(const R2Vector& vector)
+R2Point& R2Point::operator-=(const R2Vector& vector)
 {
     v[0] -= vector[0];
     v[1] -= vector[1];
@@ -138,8 +126,7 @@ operator-=(const R2Vector& vector)
 
 
 
-R2Point& R2Point::
-operator*=(double a)
+R2Point& R2Point::operator*=(double a)
 {
     v[0] *= a;
     v[1] *= a;
@@ -148,8 +135,7 @@ operator*=(double a)
 
 
 
-R2Point& R2Point::
-operator/=(double a)
+R2Point& R2Point::operator/=(double a)
 {
     //  assert(!zero(a)); 
     v[0] /= a;
@@ -159,101 +145,90 @@ operator/=(double a)
 
 
 
-void R2Point::
-Print(FILE *fp) const
+void R2Point::Print(FILE *fp) const
 {
-  // Print point coordinates
-  fprintf(fp, "%g %g", v[0], v[1]);
+    // Print point coordinates
+    fprintf(fp, "%g %g", v[0], v[1]);
 }
 
 
 
-R2Point 
-operator+(const R2Point& point) 
+R2Point operator+(const R2Point& point) 
 {
     return point;
 }
 
 
 
-R2Point 
-operator-(const R2Point& point)
+R2Point operator-(const R2Point& point)
 {
     return R2Point(-point.X(), 
-		   -point.Y());
+            -point.Y());
 }
 
 
 
-R2Point 
-operator+(const R2Point& point1, const R2Point& point2)
+R2Point operator+(const R2Point& point1, const R2Point& point2)
 {
     return R2Point(point1.v[0] + point2.v[0], 
-		   point1.v[1] + point2.v[1]);
+            point1.v[1] + point2.v[1]);
 }
 
 
 
-R2Point 
-operator+(const R2Point& point, const R2Vector& vector)
+R2Point operator+(const R2Point& point, const R2Vector& vector)
 {
     return R2Point(point.X() + vector.X(), 
-		   point.Y() + vector.Y());
+            point.Y() + vector.Y());
 }
 
 
 
-R2Point 
-operator+(const R2Vector& vector, const R2Point& point)
+R2Point operator+(const R2Vector& vector, const R2Point& point)
 {
-  // Commute addition
-  return (point + vector);
+    // Commute addition
+    return (point + vector);
 }
 
 
 
-R2Vector 
-operator-(const R2Point& point1, const R2Point& point2)
+R2Vector operator-(const R2Point& point1, const R2Point& point2)
 {
     return R2Vector(point1.v[0] - point2.v[0], 
-		    point1.v[1] - point2.v[1]);
+            point1.v[1] - point2.v[1]);
 }
 
 
 
-R2Point 
-operator-(const R2Point& point, const R2Vector& vector)
+R2Point operator-(const R2Point& point, const R2Vector& vector)
 {
     return R2Point(point.X() - vector.X(), 
-		   point.Y() - vector.Y());
+            point.Y() - vector.Y());
 }
 
 
 
-R2Point 
-operator*(const R2Point& point, double a)
+R2Point operator*(const R2Point& point, double a)
 {
     return R2Point(point.X() * a, 
-		   point.Y() * a);
+            point.Y() * a);
 }
 
 
 
-R2Point 
-operator/(const R2Point& point, double a)
+R2Point operator/(const R2Point& point, double a)
 {
     assert(a != 0);
     return R2Point(point.X() / a, 
-		   point.Y() / a);
+            point.Y() / a);
 }
 
 
 
-R2Point 
-operator*(double a, const R2Point& point)
+R2Point operator*(double a, const R2Point& point)
 {
-  // Commute scale
-  return (point * a);
+    // Commute scale
+    return (point * a);
 }
 
 

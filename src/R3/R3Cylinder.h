@@ -4,39 +4,42 @@
 
 // Class definition 
 
-class R3Cylinder {
- public:
-  // Constructor functions
-  R3Cylinder(void);
-  R3Cylinder(const R3Cylinder& cylinder);
-  R3Cylinder(const R3Point& center, double radius, double height);
+class R3Cylinder : public R3Shape
+{
+    public:
+        R3Shape::Type GetType(void) { return R3Shape::CYLINDER; }
 
-  // Cylinder propetry functions/operators
-  const R3Point& Center(void) const;
-  double Radius(void) const;
-  double Height(void) const;
-  R3Segment Axis(void) const;
+        // Constructor functions
+        R3Cylinder(void);
+        R3Cylinder(const R3Cylinder& cylinder);
+        R3Cylinder(const R3Point& center, double radius, double height);
 
-  // Shape propetry functions/operators
-  double Area(void) const;
-  double Volume(void) const;
-  R3Box BBox(void) const;
+        // Cylinder propetry functions/operators
+        const R3Point& Center(void) const;
+        double Radius(void) const;
+        double Height(void) const;
+        R3Segment Axis(void) const;
 
-  // Manipulation functions/operators
-  void Empty(void);
-  void Translate(const R3Vector& vector);
-  void Reposition(const R3Point& center);
-  void Resize(double radius, double height);
+        // Shape propetry functions/operators
+        double Area(void) const;
+        double Volume(void) const;
+        const R3Box BBox(void) const;
 
-  // Output functions
-  void Draw(void) const;
-  void Outline(void) const;
-  void Print(FILE *fp = stdout) const;
+        // Manipulation functions/operators
+        void Empty(void);
+        void Translate(const R3Vector& vector);
+        void Reposition(const R3Point& center);
+        void Resize(double radius, double height);
 
- private:
-  R3Point center;
-  double radius;
-  double height;
+        // Output functions
+        void Draw(void) const;
+        void Outline(void) const;
+        void Print(FILE *fp = stdout) const;
+
+    private:
+        R3Point center;
+        double radius;
+        double height;
 };
 
 
@@ -51,38 +54,34 @@ extern const R3Cylinder R3unit_cylinder;
 
 // Inline functions 
 
-inline const R3Point& R3Cylinder::
-Center(void) const
+inline const R3Point& R3Cylinder::Center(void) const
 {
-  // Return center point
-  return center;
+    // Return center point
+    return center;
 }
 
 
 
-inline double R3Cylinder::
-Radius(void) const
+inline double R3Cylinder::Radius(void) const
 {
-  // Return cylinder radius
-  return radius;
+    // Return cylinder radius
+    return radius;
 }
 
 
 
-inline double R3Cylinder::
-Height(void) const
+inline double R3Cylinder::Height(void) const
 {
-  // Return cylinder height
-  return height;
+    // Return cylinder height
+    return height;
 }
 
 
 
-inline R3Segment R3Cylinder::
-Axis(void) const
+inline R3Segment R3Cylinder::Axis(void) const
 {
-  // Return cylinder axis
-  return R3Segment(center + 0.5 * height * R3negy_vector, center + 0.5 * height * R3posy_vector);
+    // Return cylinder axis
+    return R3Segment(center + 0.5 * height * R3negy_vector, center + 0.5 * height * R3posy_vector);
 }
 
 

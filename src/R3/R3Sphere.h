@@ -4,37 +4,40 @@
 
 // Class definition 
 
-class R3Sphere {
- public:
-  // Constructor functions
-  R3Sphere(void);
-  R3Sphere(const R3Sphere& sphere);
-  R3Sphere(const R3Point& center, double radius);
+class R3Sphere : public R3Shape
+{
+    public:
+        R3Shape::Type GetType(void) { return R3Shape::SPHERE; }
 
-  // Sphere property functions/operators
-  const R3Point& Center(void) const;
-  const double Radius(void) const;
-  const bool IsEmpty(void) const;
+        // Constructor functions
+        R3Sphere(void);
+        R3Sphere(const R3Sphere& sphere);
+        R3Sphere(const R3Point& center, double radius);
 
-  // Shape property functions/operators
-  double Area(void) const;
-  double Volume(void) const;
-  R3Box BBox(void) const;
+        // Sphere property functions/operators
+        const R3Point& Center(void) const;
+        const double Radius(void) const;
+        const bool IsEmpty(void) const;
 
-  // Manipulation functions/operators
-  void Empty(void);
-  void Translate(const R3Vector& vector);
-  void Reposition(const R3Point& center);
-  void Resize(double radius);
+        // Shape property functions/operators
+        double Area(void) const;
+        double Volume(void) const;
+        const R3Box BBox(void) const;
 
-  // Output functions
-  void Draw(void) const;
-  void Outline(void) const;
-  void Print(FILE *fp = stdout) const;
+        // Manipulation functions/operators
+        void Empty(void);
+        void Translate(const R3Vector& vector);
+        void Reposition(const R3Point& center);
+        void Resize(double radius);
 
- private:
-  R3Point center;
-  double radius;
+        // Output functions
+        void Draw(void) const;
+        void Outline(void) const;
+        void Print(FILE *fp = stdout) const;
+
+    private:
+        R3Point center;
+        double radius;
 };
 
 
@@ -49,29 +52,26 @@ extern const R3Sphere R3unit_sphere;
 
 // Inline functions 
 
-inline const R3Point& R3Sphere::
-Center(void) const
+inline const R3Point& R3Sphere::Center(void) const
 {
-  // Return sphere center
-  return center;
+    // Return sphere center
+    return center;
 }
 
 
 
-inline const double R3Sphere::
-Radius(void) const
+inline const double R3Sphere::Radius(void) const
 {
-  // Return sphere radius
-  return radius;
+    // Return sphere radius
+    return radius;
 }
 
 
 
-inline const bool R3Sphere::
-IsEmpty(void) const
+inline const bool R3Sphere::IsEmpty(void) const
 {
-  // Return whether the sphere is null
-  return (radius < 0.0);
+    // Return whether the sphere is null
+    return (radius < 0.0);
 }
 
 

@@ -19,11 +19,12 @@ struct Globals
 
     bool quit;            // if set to true, exit soon
 
-    char *input_scene_name = NULL;
+    char *input_scene_name;
     R3Scene *scene;       // The currently displayed scene file
 
     Globals() :
-        quit(false)
+        quit(false),
+        input_scene_name(NULL)
     {
     }
 };
