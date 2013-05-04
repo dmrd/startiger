@@ -1,5 +1,6 @@
 #ifndef __GLOBALS_H__
 #define __GLOBALS_H__
+#include "R3Scene.h"
 
 /*
  * data accessible from everywhere
@@ -18,7 +19,8 @@ struct Globals
 
     bool quit;            // if set to true, exit soon
 
-
+    char *input_scene_name = NULL;
+    R3Scene *scene;       // The currently displayed scene file
 
     Globals() :
         quit(false)

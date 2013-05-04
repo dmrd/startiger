@@ -1,8 +1,10 @@
+#ifndef __SCENE_H__
+#define __SCENE_H__
+
 // Include file for the R3 scene stuff
+#include "R3/R3.h"
 
 #define R3Rgb R2Pixel
-
-
 
 // Constant definitions
 
@@ -41,11 +43,11 @@ struct R3Shape {
 };  
 
 struct R3Material {
-    R3Rgb ka;
-    R3Rgb kd;
-    R3Rgb ks;
-    R3Rgb kt;
-    R3Rgb emission;
+    R2Pixel ka;
+    R2Pixel kd;
+    R2Pixel ks;
+    R2Pixel kt;
+    R2Pixel emission;
     double shininess;
     double indexofrefraction;
     R2Image *texture;
@@ -58,7 +60,7 @@ struct R3Light {
     R3Point position;
     R3Vector direction;
     double radius;
-    R3Rgb color;
+    R2Pixel color;
     double constant_attenuation;
     double linear_attenuation;
     double quadratic_attenuation;
@@ -171,8 +173,8 @@ struct R3Scene {
         R3Vector gravity;
         R3Camera camera;
         R3Box bbox;
-        R3Rgb background;
-        R3Rgb ambient;
+        R2Pixel background;
+        R2Pixel ambient;
         double time;
 };
 
@@ -279,4 +281,4 @@ Particle(int k) const
 
 
 
-
+#endif

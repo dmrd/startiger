@@ -2,6 +2,9 @@
 
 #include "Globals.h"
 #include "glutfix.h"
+#include "R3/R3.h"
+#include "R3Scene.h"
+#include "Draw.h"
 
 #define START_WIN_WIDTH    800
 #define START_WIN_HEIGHT   600
@@ -10,6 +13,16 @@
 
 void App::Init(int *argc, char **argv)
 {
+    // Read in scene from command line - Works until we have a main menu
+    if (!App::ParseArgs(*argc, argv)) { exit(1); }
+
+    // Read in scene
+    printf("Input scene: %s\n", globals.input_scene_name);
+    globals.scene = new R3Scene();
+    globals.scene->Read(globals.input_scene_name);
+
+
+    /*********************** Glut stuff *****************************/
     glutInit(argc, argv);
 
     // window
@@ -28,6 +41,40 @@ void App::Init(int *argc, char **argv)
     glutMotionFunc(App::MouseMoved);
     glutKeyboardFunc(App::KeyPressed);
     glutSpecialFunc(App::KeyPressedSpecial);
+
+    // Graphics moeds
+    glEnable(GL_NORMALIZE);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_DEPTH_TEST);
+    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+}
+
+int App::ParseArgs(int argc, char **argv)
+{
+    int print_usage = 0;
+    // Parse arguments
+    argc--; argv++;
+    while (argc > 0) {
+        if ((*argv)[0] == '-') {
+            if (!strcmp(*argv, "-help")) { print_usage = 1; }
+            else { fprintf(stderr, "Invalid program argument: %s", *argv); exit(1); }
+            argv++; argc--;
+        }
+        else {
+            if (!globals.input_scene_name) globals.input_scene_name = *argv;
+            else { fprintf(stderr, "Invalid program argument: %s", *argv); exit(1); }
+            argv++; argc--;
+        }
+    }
+
+    // Check input_scene_name
+    if (!globals.input_scene_name || print_usage) {
+        printf("Usage: startiger <input.scn> [glut options]\n");
+        return 0;
+    }
+
+    // Return OK status 
+    return 1;
 }
 
 void App::Loop(void)
@@ -47,8 +94,9 @@ void App::Quit(void)
 
 void App::Idle(void)
 {
-    if (glutGetWindow() != globals.window.glutid) 
+    if (glutGetWindow() != globals.window.glutid) {
         glutSetWindow(globals.window.glutid);  
+    }
     glutPostRedisplay();
 }
 
@@ -61,13 +109,36 @@ void App::WindowResized(int w, int h)
 }
 
 
-
 // --- draw -----------------------------------------------------------------
 
 void App::Draw(void)
 {
     if (globals.quit)
         App::Quit();
+
+    // Initialize OpenGL drawing modes
+    glEnable(GL_LIGHTING);
+    glDisable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ZERO);
+    glDepthMask(true);
+
+    // Clear window 
+    R3Rgb background = globals.scene->background;
+    glClearColor(background[0], background[1], background[2], background[3]);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Load camera
+    LoadCamera(&(globals.scene->camera));
+
+    // Load scene lights
+    LoadLights(globals.scene);
+
+    // Draw scene surfaces
+    glEnable(GL_LIGHTING);
+    DrawScene(globals.scene);
+
+    // Swap buffers 
+    glutSwapBuffers();
 }
 
 
@@ -80,7 +151,6 @@ void App::MouseMoved(int x, int y)
 void App::MouseClicked(int button, int state, int x, int y)
 {
 }
-
 
 
 // --- keyboard -------------------------------------------------------------
@@ -100,6 +170,5 @@ void App::KeyPressed(unsigned char key, int x, int y)
 void App::KeyPressedSpecial(int key, int x, int y)
 {
 }
-
 
 

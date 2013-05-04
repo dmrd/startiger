@@ -14,7 +14,7 @@ class App
         static void Init(int *argc, char **argv);
         static void Loop(void);
         static void Quit(void);
-
+        static int ParseArgs(int argc, char **argv);
 
         // GLUT callbacks
 
