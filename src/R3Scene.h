@@ -1,14 +1,14 @@
-#ifndef __SCENE_H__
-#define __SCENE_H__
+#ifndef __R3SCENE_H__
+#define __R3SCENE_H__
 
-// Include file for the R3 scene stuff
 #include "R3/R3.h"
 
 #define R3Rgb R2Pixel
 
 // Constant definitions
 
-typedef enum {
+typedef enum
+{
     R3_DIRECTIONAL_LIGHT,
     R3_POINT_LIGHT,
     R3_SPOT_LIGHT,
@@ -20,7 +20,8 @@ typedef enum {
 
 // Scene element definitions
 
-struct R3Material {
+struct R3Material
+{
     R2Pixel ka;
     R2Pixel kd;
     R2Pixel ks;
@@ -33,7 +34,8 @@ struct R3Material {
     int id;
 };
 
-struct R3Light {
+struct R3Light
+{
     R3LightType type;
     R3Point position;
     R3Vector direction;
@@ -46,7 +48,8 @@ struct R3Light {
     double angle_cutoff;
 };
 
-struct R3Camera {
+struct R3Camera
+{
     R3Point eye;
     R3Vector towards;
     R3Vector right;
@@ -55,7 +58,8 @@ struct R3Camera {
     double neardist, fardist;
 };
 
-struct R3Node {
+struct R3Node
+{
     struct R3Node *parent;
     vector<struct R3Node *> children;
     R3Shape *shape;
@@ -68,7 +72,8 @@ struct R3Node {
 
 // Particle system definitions
 
-struct R3Particle {
+struct R3Particle
+{
     R3Point position;
     R3Point oPos;
     R3Vector velocity;
@@ -85,7 +90,8 @@ struct R3Particle {
     R3Vector forces;
 };
 
-struct R3ParticleSource {
+struct R3ParticleSource
+{
     R3Shape *shape;
     double rate;
     double velocity;
@@ -99,7 +105,8 @@ struct R3ParticleSource {
     double residual;
 };
 
-struct R3ParticleSink {
+struct R3ParticleSink
+{
     R3Shape *shape;
     double intensity;
     double constant_attenuation;
@@ -107,7 +114,8 @@ struct R3ParticleSink {
     double quadratic_attenuation;
 };
 
-struct R3ParticleSpring {
+struct R3ParticleSpring
+{
     R3Particle *particles[2];
     double rest_length;
     double ks;
@@ -118,7 +126,8 @@ struct R3ParticleSpring {
 
 // Scene graph definition
 
-struct R3Scene {
+struct R3Scene
+{
     public:
         // Constructor functions
         R3Scene(void);
@@ -139,7 +148,7 @@ struct R3Scene {
         R3Particle *Particle(int k) const;
 
         // I/O functions
-        int Read(const char *filename, R3Node *root = NULL);
+        int Read(const string &name, R3Node *root = NULL);
 
     public:
         R3Node *root;

@@ -6,6 +6,7 @@
 
 #include "R3.h"
 
+#include "Dirs.h"
 
 
 ////////////////////////////////////////////////////////////
@@ -823,33 +824,34 @@ void R3Mesh::Outline(void) const
 // I/O FUNCTIONS
 ////////////////////////////////////////////////////////////////////////
 
-int R3Mesh::Read(const char *filename)
+int R3Mesh::Read(const string &name)
 {
+    string path = DIR_MESHES + name;
+
     // Parse input filename extension
     const char *extension;
-    if (!(extension = strrchr(filename, '.')))
+    if (!(extension = strrchr(name.c_str(), '.')))
     {
-        printf("Filename %s has no extension (e.g., .ply)\n", filename);
+        printf("Filename %s has no extension (e.g., .ply)\n", name.c_str());
         return 0;
     }
 
     // Read file of appropriate type
-    int status = 0;
     if (!strncmp(extension, ".ray", 4)) 
-        status = ReadRay(filename);
+        ReadRay(path.c_str());
     else if (!strncmp(extension, ".off", 4)) 
-        status = ReadOff(filename);
+        ReadOff(path.c_str());
     else if (!strncmp(extension, ".jpg", 4)) 
-        status = ReadImage(filename);
+        ReadImage(path.c_str());
     else if (!strncmp(extension, ".jpeg", 4)) 
-        status = ReadImage(filename);
+        ReadImage(path.c_str());
     else if (!strncmp(extension, ".bmp", 4)) 
-        status = ReadImage(filename);
+        ReadImage(path.c_str());
     else if (!strncmp(extension, ".ppm", 4)) 
-        status = ReadImage(filename);
+        ReadImage(path.c_str());
     else
     {
-        fprintf(stderr, "Unable to read file %s (unrecognized extension: %s)\n", filename, extension);
+        fprintf(stderr, "Unable to read file %s (unrecognized extension: %s)\n", path.c_str(), extension);
         return 0;
     }
 

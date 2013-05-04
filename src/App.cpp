@@ -14,15 +14,16 @@
 void App::Init(int *argc, char **argv)
 {
     // Read in scene from command line - Works until we have a main menu
-    if (!App::ParseArgs(*argc, argv)) { exit(1); }
+    if (!App::ParseArgs(*argc, argv))
+        exit(1);
 
     // Read in scene
-    printf("Input scene: %s\n", globals.input_scene_name);
+    printf("Input scene: %s\n", globals.input_scene_name.c_str());
     globals.scene = new R3Scene();
     globals.scene->Read(globals.input_scene_name);
 
 
-    /*********************** Glut stuff *****************************/
+    // initialize GLUT
     glutInit(argc, argv);
 
     // window
@@ -42,7 +43,7 @@ void App::Init(int *argc, char **argv)
     glutKeyboardFunc(App::KeyPressed);
     glutSpecialFunc(App::KeyPressedSpecial);
 
-    // Graphics moeds
+    // OpenGL modes
     glEnable(GL_NORMALIZE);
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
@@ -52,23 +53,38 @@ void App::Init(int *argc, char **argv)
 int App::ParseArgs(int argc, char **argv)
 {
     int print_usage = 0;
+
     // Parse arguments
     argc--; argv++;
-    while (argc > 0) {
-        if ((*argv)[0] == '-') {
-            if (!strcmp(*argv, "-help")) { print_usage = 1; }
-            else { fprintf(stderr, "Invalid program argument: %s", *argv); exit(1); }
+    while (argc > 0)
+    {
+        if ((*argv)[0] == '-')
+        {
+            if (!strcmp(*argv, "-help"))
+                print_usage = 1;
+            else
+            {
+                fprintf(stderr, "Invalid program argument: %s", *argv);
+                exit(1);
+            }
             argv++; argc--;
         }
-        else {
-            if (!globals.input_scene_name) globals.input_scene_name = *argv;
-            else { fprintf(stderr, "Invalid program argument: %s", *argv); exit(1); }
+        else
+        {
+            if (globals.input_scene_name == "")
+                globals.input_scene_name = *argv;
+            else
+            {
+                fprintf(stderr, "Invalid program argument: %s", *argv);
+                exit(1);
+            }
             argv++; argc--;
         }
     }
 
     // Check input_scene_name
-    if (!globals.input_scene_name || print_usage) {
+    if (globals.input_scene_name == "" || print_usage)
+    {
         printf("Usage: startiger <input.scn> [glut options]\n");
         return 0;
     }
@@ -94,7 +110,8 @@ void App::Quit(void)
 
 void App::Idle(void)
 {
-    if (glutGetWindow() != globals.window.glutid) {
+    if (glutGetWindow() != globals.window.glutid)
+    {
         glutSetWindow(globals.window.glutid);  
     }
     glutPostRedisplay();

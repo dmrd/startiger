@@ -8,8 +8,11 @@
 ////////////////////////////////////////////////////////////
 
 #include <vector>
+#include <string>
+
 #include "R2/R2.h"
 #include "R3/R3.h"
+
 using namespace std;
 
 
@@ -142,7 +145,7 @@ struct R3Mesh : public R3Shape
     void Crop(const R3Plane& plane);
 
     // File input/output 
-    int Read(const char *filename);
+    int Read(const string &name);
     int ReadRay(const char *filename);
     int ReadOff(const char *filename);
     int ReadImage(const char *filename);

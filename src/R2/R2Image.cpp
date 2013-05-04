@@ -6,7 +6,7 @@
 
 #include "R2.h"
 
-
+#include "Dirs.h"
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -422,25 +422,27 @@ void R2Image::Morph(const R2Image& target,
 // I/O Functions
 ////////////////////////////////////////////////////////////////////////
 
-int R2Image::Read(const char *filename)
+int R2Image::Read(const std::string &name)
 {
+    std::string path = DIR_IMAGES + name;
+
     // Initialize everything
     if (pixels) { delete [] pixels; pixels = NULL; }
     npixels = width = height = 0;
 
     // Parse input filename extension
     char *input_extension;
-    if (!(input_extension = (char*)strrchr(filename, '.')))
+    if (!(input_extension = (char*)strrchr(name.c_str(), '.')))
     {
         fprintf(stderr, "Input file has no extension (e.g., .jpg).\n");
         return 0;
     }
 
     // Read file of appropriate type
-    if (!strncmp(input_extension, ".bmp", 4)) return ReadBMP(filename);
-    else if (!strncmp(input_extension, ".ppm", 4)) return ReadPPM(filename);
-    else if (!strncmp(input_extension, ".jpg", 4)) return ReadJPEG(filename);
-    else if (!strncmp(input_extension, ".jpeg", 5)) return ReadJPEG(filename);
+    if (!strncmp(input_extension, ".bmp", 4)) return ReadBMP(path.c_str());
+    else if (!strncmp(input_extension, ".ppm", 4)) return ReadPPM(path.c_str());
+    else if (!strncmp(input_extension, ".jpg", 4)) return ReadJPEG(path.c_str());
+    else if (!strncmp(input_extension, ".jpeg", 5)) return ReadJPEG(path.c_str());
 
     // Should never get here
     fprintf(stderr, "Unrecognized image file extension");

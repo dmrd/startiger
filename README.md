@@ -7,13 +7,18 @@ COS426 Final Project
 dirs
 ----
 
-    - lib/       external libraries
-    - src/       project source code
-       - R2/     2D basics
-       - R3/     3D basics
+    - lib/          external libraries
+    - src/          project source code
+       - R2/        2D basics
+       - R3/        3D basics
 
-    - bin/       executable output files
-    - obj/       intermediate output files
+    - bin/          executable output files
+    - obj/          intermediate output files
+
+    - data/         runtime game data
+       - scenes/    scene data
+       - meshes/    mesh data
+       - images/    image data
 
 
 

@@ -2,7 +2,7 @@
 #ifndef R2_IMAGE_INCLUDED
 #define R2_IMAGE_INCLUDED
 
-
+#include <string>
 
 // Constant definitions
 
@@ -106,7 +106,7 @@ class R2Image
                 double t, int sampling_method);
 
         // File reading/writing
-        int Read(const char *filename);
+        int Read(const std::string &name);
         int ReadBMP(const char *filename);
         int ReadPPM(const char *filename);
         int ReadJPEG(const char *filename);

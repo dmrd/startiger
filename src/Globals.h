@@ -1,6 +1,15 @@
 #ifndef __GLOBALS_H__
 #define __GLOBALS_H__
-#include "R3Scene.h"
+
+#include <string>
+
+
+/*
+ * forward declarations
+ */
+class R3Scene;
+
+
 
 /*
  * data accessible from everywhere
@@ -19,16 +28,18 @@ struct Globals
 
     bool quit;            // if set to true, exit soon
 
-    char *input_scene_name;
+    std::string input_scene_name;
     R3Scene *scene;       // The currently displayed scene file
 
     Globals() :
         quit(false),
-        input_scene_name(NULL)
+        input_scene_name("")
     {
     }
 };
 
 extern Globals globals;
+
+
 
 #endif
