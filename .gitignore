@@ -29,3 +29,5 @@ tags
 /*.make
 /Makefile
 
+
+.DS_Store

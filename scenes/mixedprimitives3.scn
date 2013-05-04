@@ -46,7 +46,7 @@ begin  2
   0 0 1 0
   0 0 0 1
 
-  mesh     -1   ico.off 
+  mesh     -1   arwing.off 
 end
 
 
