@@ -137,11 +137,18 @@ void App::WindowResized(int w, int h)
 void App::Draw(void)
 {
     // test keys
+
     printf("w: %d | a: %d | s: %d | d: %d\n",
             globals.keys['w'],
             globals.keys['a'],
             globals.keys['s'],
             globals.keys['d']);
+
+    globals.scene->root->transformation.Translate(R3Vector(
+                0.5 * (globals.keys['d'] - globals.keys['a']),
+                0.5 * (globals.keys['w'] - globals.keys['s']),
+                0
+            ));
 
     // quit?
     if (globals.quit)
