@@ -32,6 +32,11 @@
 
 
 
+// Typedefs
+
+typedef R2Pixel R3Rgb;
+
+
 // Constant declarations
 
 #define R3_X 0

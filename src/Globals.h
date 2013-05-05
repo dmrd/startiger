@@ -26,15 +26,24 @@ struct Globals
         int height;
     } window;
 
+    struct Settings
+    {
+        bool show_bboxes; // whether to draw node bounding boxes
+    } settings;
+
     bool quit;            // if set to true, exit soon
 
     std::string input_scene_name;
-    R3Scene *scene;       // The currently displayed scene file
+    R3Scene *scene;       // current scene
 
-    Globals() :
-        quit(false),
-        input_scene_name("")
+    Globals()
     {
+        // defaults
+
+        settings.show_bboxes = false;
+
+        quit = false;
+        input_scene_name = "";
     }
 };
 

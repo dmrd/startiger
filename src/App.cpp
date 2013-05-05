@@ -4,7 +4,6 @@
 #include "glutfix.h"
 #include "R3/R3.h"
 #include "R3Scene.h"
-#include "Draw.h"
 
 #define START_WIN_WIDTH    800
 #define START_WIN_HEIGHT   600
@@ -13,15 +12,14 @@
 
 void App::Init(int *argc, char **argv)
 {
-    // Read in scene from command line - Works until we have a main menu
+    // read command-line arguments
     if (!App::ParseArgs(*argc, argv))
         exit(1);
 
-    // Read in scene
+    // load scene
     printf("Input scene: %s\n", globals.input_scene_name.c_str());
     globals.scene = new R3Scene();
     globals.scene->Read(globals.input_scene_name);
-
 
     // initialize GLUT
     glutInit(argc, argv);
@@ -54,7 +52,6 @@ int App::ParseArgs(int argc, char **argv)
 {
     int print_usage = 0;
 
-    // Parse arguments
     argc--; argv++;
     while (argc > 0)
     {
@@ -89,7 +86,6 @@ int App::ParseArgs(int argc, char **argv)
         return 0;
     }
 
-    // Return OK status 
     return 1;
 }
 
@@ -130,31 +126,25 @@ void App::WindowResized(int w, int h)
 
 void App::Draw(void)
 {
+    // quit?
     if (globals.quit)
         App::Quit();
 
-    // Initialize OpenGL drawing modes
+    // initialize OpenGL drawing modes
     glEnable(GL_LIGHTING);
     glDisable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ZERO);
     glDepthMask(true);
 
-    // Clear window 
+    // clear window 
     R3Rgb background = globals.scene->background;
     glClearColor(background[0], background[1], background[2], background[3]);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Load camera
-    LoadCamera(&(globals.scene->camera));
+    // draw scene
+    globals.scene->Draw();
 
-    // Load scene lights
-    LoadLights(globals.scene);
-
-    // Draw scene surfaces
-    glEnable(GL_LIGHTING);
-    DrawScene(globals.scene);
-
-    // Swap buffers 
+    // swap buffers 
     glutSwapBuffers();
 }
 

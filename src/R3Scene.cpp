@@ -9,6 +9,7 @@
 #include <string>
 
 #include "R3/R3.h"
+#include "R3Camera.h"
 #include "Dirs.h"
 
 
@@ -29,14 +30,34 @@ R3Scene::R3Scene(void) :
 
     // Create root node
     root = new R3Node();
-    root->parent = NULL;
-    root->transformation = R3identity_matrix;
-    root->material = NULL;
-    root->shape = NULL;
-    root->bbox = R3null_box;
 }
 
 
+
+// --- draw ----------------------------------------------------------------------------
+
+void R3Scene::Draw() const
+{
+    // lights!
+    static GLfloat glambient[4];
+    glambient[0] = ambient[0];
+    glambient[1] = ambient[1];
+    glambient[2] = ambient[2];
+    glambient[3] = 1;
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, glambient);
+    for (int i = 0; i < lights.size(); ++i)
+        lights[i]->Load(i);
+
+    // camera!
+    camera.Load();
+    
+    // action!
+    root->Draw();
+}
+
+
+
+// --- I/O -----------------------------------------------------------------------------
 
 static R3Shape *ReadShape(FILE *fp, int command_number, const char *filename)
 {
@@ -177,8 +198,6 @@ static R3Shape *ReadShape(FILE *fp, int command_number, const char *filename)
     return shape;
 }
 
-
-
 int R3Scene::Read(const string &name, R3Node *node)
 {
     string path = DIR_SCENES + name + ".scn";
@@ -225,6 +244,9 @@ int R3Scene::Read(const string &name, R3Node *node)
             // Comment -- read everything until end of line
             do { cmd[0] = fgetc(fp); } while ((cmd[0] >= 0) && (cmd[0] != '\n'));
         }
+
+        // --- particles -----------------------------------------------------------------------
+
         else if (!strcmp(cmd, "particle"))
         {
             // Read position and velocity
@@ -404,394 +426,110 @@ int R3Scene::Read(const string &name, R3Node *node)
                 return 0;
             }
         }
-        else if (!strcmp(cmd, "tri"))
-        {
-            // Read data
-            int m;
-            R3Point p1, p2, p3;
-            if (fscanf(fp, "%d%lf%lf%lf%lf%lf%lf%lf%lf%lf", &m, 
-                        &p1[0], &p1[1], &p1[2], &p2[0], &p2[1], &p2[2], &p3[0], &p3[1], &p3[2]) != 10)
-            {
-                fprintf(stderr, "Unable to read triangle at command %d in file %s\n", command_number, path.c_str());
-                return 0;
-            }
 
-            // Get material
-            R3Material *material = group_materials[depth];
-            if (m >= 0)
-            {
-                if (m < (int) materials.size())
-                {
-                    material = materials[m];
-                }
-                else
-                {
-                    fprintf(stderr, "Invalid material id at tri command %d in file %s\n", command_number, path.c_str());
-                    return 0;
-                }
-            }
+        // --- shapes --------------------------------------------------------------------------
 
-            // Create mesh
-            R3Mesh *mesh = new R3Mesh();
-            vector<R3MeshVertex *> vertices;
-            vertices.push_back(mesh->CreateVertex(p1, R3zero_vector, R2zero_point));
-            vertices.push_back(mesh->CreateVertex(p2, R3zero_vector, R2zero_point));
-            vertices.push_back(mesh->CreateVertex(p3, R3zero_vector, R2zero_point));
-            mesh->CreateFace(vertices);
+#define READ_SHAPE(func, num, type) \
+        do \
+        { \
+            if (func != num) \
+            { \
+                fprintf(stderr, "Bad " type " at command %d in file %s\n", command_number, path.c_str()); \
+                return 0; \
+            } \
+            material = group_materials[depth]; \
+            if (m >= 0) \
+            { \
+                if (m < (int) materials.size()) \
+                    material = materials[m]; \
+                else \
+                { \
+                    fprintf(stderr, "Invalid material id at box command %d in file %s\n", command_number, path.c_str()); \
+                    return 0; \
+                } \
+            } \
+        } \
+        while (0)
 
-            // Create shape
-            R3Shape *shape = mesh;
-
-            // Create shape node
-            R3Node *node = new R3Node();
-            node->transformation = R3identity_matrix;
-            node->material = material;
-            node->shape = shape;
-            node->bbox = R3null_box;
-            node->bbox.Union(p1);
-            node->bbox.Union(p2);
-            node->bbox.Union(p3);
-
-            // Insert node
-            group_nodes[depth]->bbox.Union(node->bbox);
-            group_nodes[depth]->children.push_back(node);
-            node->parent = group_nodes[depth];
-        }
         else if (!strcmp(cmd, "box"))
         {
-            // Read data
-            int m;
             R3Point p1, p2;
-            if (fscanf(fp, "%d%lf%lf%lf%lf%lf%lf", &m, &p1[0], &p1[1], &p1[2], &p2[0], &p2[1], &p2[2]) != 7)
-            {
-                fprintf(stderr, "Unable to read box at command %d in file %s\n", command_number, path.c_str());
-                return 0;
-            }
-
-            // Get material
-            R3Material *material = group_materials[depth];
-            if (m >= 0)
-            {
-                if (m < (int) materials.size())
-                {
-                    material = materials[m];
-                }
-                else
-                {
-                    fprintf(stderr, "Invalid material id at box command %d in file %s\n", command_number, path.c_str());
-                    return 0;
-                }
-            }
-
-            // Create box
-            R3Box *box = new R3Box(p1, p2);
-
-            // Create shape
-            R3Shape *shape = box;
-
-            // Create shape node
-            R3Node *node = new R3Node();
-            node->transformation = R3identity_matrix;
-            node->material = material;
-            node->shape = shape;
-            node->bbox = *box;
-
-            // Insert node
-            group_nodes[depth]->bbox.Union(node->bbox);
-            group_nodes[depth]->children.push_back(node);
-            node->parent = group_nodes[depth];
+            int m; R3Material *material;
+            READ_SHAPE(fscanf(fp, "%d%lf%lf%lf%lf%lf%lf", &m, &p1[0], &p1[1], &p1[2], &p2[0], &p2[1], &p2[2]), 7, "box");
+            group_nodes[depth]->AddChild(new R3Node(new R3Box(p1, p2), material));
         }
         else if (!strcmp(cmd, "sphere"))
         {
-            // Read data
-            int m;
-            R3Point c;
-            double r;
-            if (fscanf(fp, "%d%lf%lf%lf%lf", &m, &c[0], &c[1], &c[2], &r) != 5)
-            {
-                fprintf(stderr, "Unable to read sphere at command %d in file %s\n", command_number, path.c_str());
-                return 0;
-            }
-
-            // Get material
-            R3Material *material = group_materials[depth];
-            if (m >= 0)
-            {
-                if (m < (int) materials.size())
-                {
-                    material = materials[m];
-                }
-                else
-                {
-                    fprintf(stderr, "Invalid material id at sphere command %d in file %s\n", command_number, path.c_str());
-                    return 0;
-                }
-            }
-
-            // Create sphere
-            R3Sphere *sphere = new R3Sphere(c, r);
-
-            // Create shape
-            R3Shape *shape = sphere;
-
-            // Create shape node
-            R3Node *node = new R3Node();
-            node->transformation = R3identity_matrix;
-            node->material = material;
-            node->shape = shape;
-            node->bbox = sphere->BBox();
-
-            // Insert node
-            group_nodes[depth]->bbox.Union(node->bbox);
-            group_nodes[depth]->children.push_back(node);
-            node->parent = group_nodes[depth];
+            R3Point c; double r;
+            int m; R3Material *material;
+            READ_SHAPE(fscanf(fp, "%d%lf%lf%lf%lf", &m, &c[0], &c[1], &c[2], &r), 5, "sphere");
+            group_nodes[depth]->AddChild(new R3Node(new R3Sphere(c, r), material));
         }
         else if (!strcmp(cmd, "cylinder"))
         {
-            // Read data
-            int m;
-            R3Point c;
-            double r, h;
-            if (fscanf(fp, "%d%lf%lf%lf%lf%lf", &m, &c[0], &c[1], &c[2], &r, &h) != 6)
-            {
-                fprintf(stderr, "Unable to read cylinder at command %d in file %s\n", command_number, path.c_str());
-                return 0;
-            }
-
-            // Get material
-            R3Material *material = group_materials[depth];
-            if (m >= 0)
-            {
-                if (m < (int) materials.size())
-                {
-                    material = materials[m];
-                }
-                else
-                {
-                    fprintf(stderr, "Invalid material id at cyl command %d in file %s\n", command_number, path.c_str());
-                    return 0;
-                }
-            }
-
-            // Create cylinder
-            R3Cylinder *cylinder = new R3Cylinder(c, r, h);
-
-            // Create shape
-            R3Shape *shape = cylinder;
-
-            // Create shape node
-            R3Node *node = new R3Node();
-            node->transformation = R3identity_matrix;
-            node->material = material;
-            node->shape = shape;
-            node->bbox = cylinder->BBox();
-
-            // Insert node
-            group_nodes[depth]->bbox.Union(node->bbox);
-            group_nodes[depth]->children.push_back(node);
-            node->parent = group_nodes[depth];
+            R3Point c; double r, h;
+            int m; R3Material *material;
+            READ_SHAPE(fscanf(fp, "%d%lf%lf%lf%lf%lf", &m, &c[0], &c[1], &c[2], &r, &h), 6, "cyldiner");
+            group_nodes[depth]->AddChild(new R3Node(new R3Cylinder(c, r, h), material));
         }
         else if (!strcmp(cmd, "mesh"))
         {
-            // Read data
-            int m;
             char meshname[256];
-            if (fscanf(fp, "%d%s", &m, meshname) != 2)
-            {
-                fprintf(stderr, "Unable to parse mesh command %d in file %s\n", command_number, path.c_str());
-                return 0;
-            }
+            int m; R3Material *material;
+            READ_SHAPE(fscanf(fp, "%d%s", &m, meshname), 2, "mesh");
 
-            // Get material
-            R3Material *material = group_materials[depth];
-            if (m >= 0)
-            {
-                if (m < (int) materials.size())
-                {
-                    material = materials[m];
-                }
-                else
-                {
-                    fprintf(stderr, "Invalid material id at cone command %d in file %s\n", command_number, path.c_str());
-                    return 0;
-                }
-            }
-
-            // Create mesh
             R3Mesh *mesh = new R3Mesh();
-            if (!mesh)
-            {
-                fprintf(stderr, "Unable to allocate mesh\n");
-                return 0;
-            }
-
-            // Read mesh file
             if (!mesh->Read(meshname))
             {
                 fprintf(stderr, "Unable to read mesh: %s\n", meshname);
                 return 0;
             }
 
-            // Create shape
-            R3Shape *shape = mesh;
-
-            // Create shape node
-            R3Node *node = new R3Node();
-            node->transformation = R3identity_matrix;
-            node->material = material;
-            node->shape = shape;
-            node->bbox = mesh->bbox;
-
-            // Insert node
-            group_nodes[depth]->bbox.Union(node->bbox);
-            group_nodes[depth]->children.push_back(node);
-            node->parent = group_nodes[depth];
+            group_nodes[depth]->AddChild(new R3Node(mesh, material));
         }
         else if (!strcmp(cmd, "cone"))
         {
-            // Read data
-            int m;
             R3Point c;
             double r, h;
-            if (fscanf(fp, "%d%lf%lf%lf%lf%lf", &m, &c[0], &c[1], &c[2], &r, &h) != 6)
-            {
-                fprintf(stderr, "Unable to read cone at command %d in file %s\n", command_number, path.c_str());
-                return 0;
-            }
-
-            // Get material
-            R3Material *material = group_materials[depth];
-            if (m >= 0)
-            {
-                if (m < (int) materials.size())
-                {
-                    material = materials[m];
-                }
-                else
-                {
-                    fprintf(stderr, "Invalid material id at cone command %d in file %s\n", command_number, path.c_str());
-                    return 0;
-                }
-            }
-
-            // Create cone
-            R3Cone *cone = new R3Cone(c, r, h);
-
-            // Create shape
-            R3Shape *shape = cone;
-
-            // Create shape node
-            R3Node *node = new R3Node();
-            node->transformation = R3identity_matrix;
-            node->material = material;
-            node->shape = shape;
-            node->bbox = cone->BBox();
-
-            // Insert node
-            group_nodes[depth]->bbox.Union(node->bbox);
-            group_nodes[depth]->children.push_back(node);
-            node->parent = group_nodes[depth];
+            int m; R3Material *material;
+            READ_SHAPE(fscanf(fp, "%d%lf%lf%lf%lf%lf", &m, &c[0], &c[1], &c[2], &r, &h), 6, "cone");
+            group_nodes[depth]->AddChild(new R3Node(new R3Cone(c, r, h), material));
         }
         else if (!strcmp(cmd, "line"))
         {
-            // Read data
-            int m;
             R3Point p1, p2;
-            if (fscanf(fp, "%d%lf%lf%lf%lf%lf%lf", &m, &p1[0], &p1[1], &p1[2], &p2[0], &p2[1], &p2[2]) != 7)
-            {
-                fprintf(stderr, "Unable to read line at command %d in file %s\n", command_number, path.c_str());
-                return 0;
-            }
-
-            // Get material
-            R3Material *material = group_materials[depth];
-            if (m >= 0)
-            {
-                if (m < (int) materials.size())
-                {
-                    material = materials[m];
-                }
-                else
-                {
-                    fprintf(stderr, "Invalid material id at line command %d in file %s\n", command_number, path.c_str());
-                    return 0;
-                }
-            }
-
-            // Create segment
-            R3Segment *segment = new R3Segment(p1, p2);
-
-            // Create shape
-            R3Shape *shape = segment;
-
-            // Create shape node
-            R3Node *node = new R3Node();
-            node->transformation = R3identity_matrix;
-            node->material = material;
-            node->shape = shape;
-            node->bbox = segment->BBox();
-
-            // Insert node
-            group_nodes[depth]->bbox.Union(node->bbox);
-            group_nodes[depth]->children.push_back(node);
-            node->parent = group_nodes[depth];
+            int m; R3Material *material;
+            READ_SHAPE(fscanf(fp, "%d%lf%lf%lf%lf%lf%lf", &m, &p1[0], &p1[1], &p1[2], &p2[0], &p2[1], &p2[2]), 7, "line");
+            group_nodes[depth]->AddChild(new R3Node(new R3Segment(p1, p2), material));
         }
+
+        // --- scenegraph ----------------------------------------------------------------------
+
         else if (!strcmp(cmd, "begin"))
         {
             // Read data
-            int m;
             double matrix[16];
-            if (fscanf(fp, "%d%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf", &m, 
+            int m; R3Material *material;
+            READ_SHAPE(fscanf(fp, "%d%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf", &m, 
                         &matrix[0], &matrix[1], &matrix[2], &matrix[3], 
                         &matrix[4], &matrix[5], &matrix[6], &matrix[7], 
                         &matrix[8], &matrix[9], &matrix[10], &matrix[11], 
-                        &matrix[12], &matrix[13], &matrix[14], &matrix[15]) != 17)
-            {
-                fprintf(stderr, "Unable to read begin at command %d in file %s\n", command_number, path.c_str());
-                return 0;
-            }
-
-            // Get material
-            R3Material *material = group_materials[depth];
-            if (m >= 0)
-            {
-                if (m < (int) materials.size())
-                {
-                    material = materials[m];
-                }
-                else
-                {
-                    fprintf(stderr, "Invalid material id at cone command %d in file %s\n", command_number, path.c_str());
-                    return 0;
-                }
-            }
-
-            // Create new group node
-            R3Node *node = new R3Node();
-            node->transformation = R3Matrix(matrix);
-            node->material = NULL;
-            node->shape = NULL;
-            node->bbox = R3null_box;
-
-            // Push node onto stack
-            depth++;
-            group_nodes[depth] = node;
+                        &matrix[12], &matrix[13], &matrix[14], &matrix[15]), 17, "begin");
+            R3Node *node = new R3Node(R3Matrix(matrix));
+            group_nodes[depth]->AddChild(node);
+            group_nodes[++depth] = node;
             group_materials[depth] = material;
         }
         else if (!strcmp(cmd, "end"))
         {
-            // Pop node from stack
+            // Pop node and transform bounding box
             R3Node *node = group_nodes[depth];
             depth--;
-
-            // Transform bounding box
             node->bbox.Transform(node->transformation);
-
-            // Insert node
-            group_nodes[depth]->bbox.Union(node->bbox);
-            group_nodes[depth]->children.push_back(node);
-            node->parent = group_nodes[depth];
         }
+
+        // --- material ------------------------------------------------------------------------
+
         else if (!strcmp(cmd, "material"))
         {
             // Read data
@@ -832,6 +570,22 @@ int R3Scene::Read(const string &name, R3Node *node)
             // Insert material
             materials.push_back(material);
         }
+        else if (!strcmp(cmd, "background"))
+        {
+            // Read data
+            double r, g, b;
+            if (fscanf(fp, "%lf%lf%lf", &r, &g, &b) != 3)
+            {
+                fprintf(stderr, "Unable to read background at command %d in file %s\n", command_number, path.c_str());
+                return 0;
+            }
+
+            // Assign background color
+            background = R3Rgb(r, g, b, 1);
+        }
+
+        // --- lights --------------------------------------------------------------------------
+
         else if (!strcmp(cmd, "dir_light"))
         {
             // Read data
@@ -957,6 +711,22 @@ int R3Scene::Read(const string &name, R3Node *node)
             // Insert light
             lights.push_back(light);
         }
+        else if (!strcmp(cmd, "ambient"))
+        {
+            // Read data
+            double r, g, b;
+            if (fscanf(fp, "%lf%lf%lf", &r, &g, &b) != 3)
+            {
+                fprintf(stderr, "Unable to read ambient at command %d in file %s\n", command_number, path.c_str());
+                return 0;
+            }
+
+            // Assign ambient color
+            ambient = R3Rgb(r, g, b, 1);
+        }
+
+        // --- camera --------------------------------------------------------------------------
+
         else if (!strcmp(cmd, "camera"))
         {
             // Read data
@@ -982,6 +752,9 @@ int R3Scene::Read(const string &name, R3Node *node)
             camera.neardist = neardist;
             camera.fardist = fardist;
         }
+
+        // --- scene ---------------------------------------------------------------------------
+
         else if (!strcmp(cmd, "include"))
         {
             // Read data
@@ -998,32 +771,6 @@ int R3Scene::Read(const string &name, R3Node *node)
                 fprintf(stderr, "Unable to read included scene: %s\n", scenename);
                 return 0;
             }
-        }
-        else if (!strcmp(cmd, "background"))
-        {
-            // Read data
-            double r, g, b;
-            if (fscanf(fp, "%lf%lf%lf", &r, &g, &b) != 3)
-            {
-                fprintf(stderr, "Unable to read background at command %d in file %s\n", command_number, path.c_str());
-                return 0;
-            }
-
-            // Assign background color
-            background = R3Rgb(r, g, b, 1);
-        }
-        else if (!strcmp(cmd, "ambient"))
-        {
-            // Read data
-            double r, g, b;
-            if (fscanf(fp, "%lf%lf%lf", &r, &g, &b) != 3)
-            {
-                fprintf(stderr, "Unable to read ambient at command %d in file %s\n", command_number, path.c_str());
-                return 0;
-            }
-
-            // Assign ambient color
-            ambient = R3Rgb(r, g, b, 1);
         }
         else
         {

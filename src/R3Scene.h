@@ -2,73 +2,10 @@
 #define __R3SCENE_H__
 
 #include "R3/R3.h"
-
-#define R3Rgb R2Pixel
-
-// Constant definitions
-
-typedef enum
-{
-    R3_DIRECTIONAL_LIGHT,
-    R3_POINT_LIGHT,
-    R3_SPOT_LIGHT,
-    R3_AREA_LIGHT,
-    R3_NUM_LIGHT_TYPES
-} R3LightType;
-
-
-
-// Scene element definitions
-
-struct R3Material
-{
-    R2Pixel ka;
-    R2Pixel kd;
-    R2Pixel ks;
-    R2Pixel kt;
-    R2Pixel emission;
-    double shininess;
-    double indexofrefraction;
-    R2Image *texture;
-    int texture_index;
-    int id;
-};
-
-struct R3Light
-{
-    R3LightType type;
-    R3Point position;
-    R3Vector direction;
-    double radius;
-    R2Pixel color;
-    double constant_attenuation;
-    double linear_attenuation;
-    double quadratic_attenuation;
-    double angle_attenuation;
-    double angle_cutoff;
-};
-
-struct R3Camera
-{
-    R3Point eye;
-    R3Vector towards;
-    R3Vector right;
-    R3Vector up;
-    double xfov, yfov;
-    double neardist, fardist;
-};
-
-struct R3Node
-{
-    struct R3Node *parent;
-    vector<struct R3Node *> children;
-    R3Shape *shape;
-    R3Matrix transformation;
-    R3Material *material;
-    R3Box bbox;
-};
-
-
+#include "R3Node.h"
+#include "R3Material.h"
+#include "R3Light.h"
+#include "R3Camera.h"
 
 // Particle system definitions
 
@@ -147,7 +84,10 @@ struct R3Scene
         int NParticles(void) const;
         R3Particle *Particle(int k) const;
 
-        // I/O functions
+        // Drawing
+        void Draw(void) const;
+
+        // I/O
         int Read(const string &name, R3Node *root = NULL);
 
     public:

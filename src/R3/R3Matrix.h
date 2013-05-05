@@ -146,8 +146,7 @@ inline const bool R3Matrix::operator!=(const R3Matrix& matrix) const
 
 
 
-inline void R3Matrix:: 
-Transform(const R3Matrix& a)
+inline void R3Matrix::Transform(const R3Matrix& a)
 {
     // Post-multiply transform
     *this = *this * a;
@@ -155,8 +154,7 @@ Transform(const R3Matrix& a)
 
 
 
-inline void R3Matrix:: 
-Multiply(const R3Matrix& a)
+inline void R3Matrix::Multiply(const R3Matrix& a)
 {
     // Multiply matrix
     *this = *this * a;
@@ -195,6 +193,27 @@ inline double *R3Matrix::operator[] (int i)
 {
     assert ((i>=0)&&(i<=3));
     return m[i];
+}
+
+
+inline void R3Matrix::Load(void) const
+{
+    R3Matrix m = Transpose();
+    glMultMatrixd((double *) &m);
+}
+
+
+
+inline void R3Matrix::Push(void) const
+{
+    glPushMatrix();
+    Load();
+}
+
+
+inline void R3Matrix::Pop(void) const
+{
+    glPopMatrix();
 }
 
 
