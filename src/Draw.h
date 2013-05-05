@@ -9,5 +9,6 @@ void LoadMatrix(R3Matrix *matrix);
 void DrawNode(R3Scene *scene, R3Node *node);
 void DrawShape(R3Shape *shape);
 void DrawScene(R3Scene *scene);
+void DrawParticles(R3Scene *scene);
 
 #endif

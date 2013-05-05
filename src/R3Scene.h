@@ -4,6 +4,7 @@
 #include "R3/R3.h"
 
 #define R3Rgb R2Pixel
+#define TRAIL_LENGTH 10
 
 // Constant definitions
 
@@ -31,6 +32,7 @@ struct R3Material
     double indexofrefraction;
     R2Image *texture;
     int texture_index;
+    GLuint textureName;
     int id;
 };
 
@@ -72,37 +74,37 @@ struct R3Node
 
 // Particle system definitions
 
-struct R3Particle
-{
-    R3Point position;
-    R3Point oPos;
-    R3Vector velocity;
-    R3Vector oV;
-    double mass;
-    bool fixed;
-    double drag;
-    double elasticity;
-    double lifetime;
-    R3Material *material;
-    double birth;
-    vector<struct R3ParticleSpring *> springs;
-    bool dead;
-    R3Vector forces;
+struct R3Particle {
+  R3Point position;
+  R3Vector velocity;
+  double mass;
+  bool fixed;
+  double drag;
+  double elasticity;
+  double lifetime;
+  double startLifetime;
+  R3Material *material;
+  R3Material **materials;
+  int numMaterials;
+  vector<struct R3ParticleSpring *> springs;
+  R3Point trail[TRAIL_LENGTH];
+  int last_trail;
+    int boid;
 };
 
-struct R3ParticleSource
-{
-    R3Shape *shape;
-    double rate;
-    double velocity;
-    double angle_cutoff;
-    double mass;
-    bool fixed;
-    double drag;
-    double elasticity;
-    double lifetime;
-    R3Material *material;
-    double residual;
+struct R3ParticleSource {
+  R3Shape *shape;
+  double rate;
+  double velocity;
+  double angle_cutoff;
+  double mass;
+  bool fixed;
+  double drag;
+  double elasticity;
+  double lifetime;
+  R3Material *material;
+  R3Material **materials;
+  int numMaterials;
 };
 
 struct R3ParticleSink

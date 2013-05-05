@@ -29,6 +29,8 @@ class App
         static void KeyPressed(unsigned char key, int x, int y);
         static void KeyPressedSpecial(int key, int x, int y);
 
+        static void KeyReleased(unsigned char key, int x, int y);
+        static void KeyReleasedSpecial(int key, int x, int y);
 
     public:
         static void Run(int *argc, char **argv)

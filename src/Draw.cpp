@@ -1,5 +1,60 @@
 #include "Draw.h"
 #include "Globals.h"
+#include "particle.h"
+
+#ifdef _WIN32
+#  include <windows.h>
+#else
+#  include <sys/time.h>
+#endif
+
+static double GetTime(void)
+{
+#ifdef _WIN32
+  // Return number of seconds since start of execution
+  static int first = 1;
+  static LARGE_INTEGER timefreq;
+  static LARGE_INTEGER start_timevalue;
+
+  // Check if this is the first time
+  if (first) {
+    // Initialize first time
+    QueryPerformanceFrequency(&timefreq);
+    QueryPerformanceCounter(&start_timevalue);
+    first = 0;
+    return 0;
+  }
+  else {
+    // Return time since start
+    LARGE_INTEGER current_timevalue;
+    QueryPerformanceCounter(&current_timevalue);
+    return ((double) current_timevalue.QuadPart - 
+            (double) start_timevalue.QuadPart) / 
+            (double) timefreq.QuadPart;
+  }
+#else
+  // Return number of seconds since start of execution
+  static int first = 1;
+  static struct timeval start_timevalue;
+
+  // Check if this is the first time
+  if (first) {
+    // Initialize first time
+    gettimeofday(&start_timevalue, NULL);
+    first = 0;
+    return 0;
+  }
+  else {
+    // Return time since start
+    struct timeval current_timevalue;
+    gettimeofday(&current_timevalue, NULL);
+    int secs = current_timevalue.tv_sec - start_timevalue.tv_sec;
+    int usecs = current_timevalue.tv_usec - start_timevalue.tv_usec;
+    return (double) (secs + 1.0E-6F * usecs);
+  }
+#endif
+}
+
 
 void LoadCamera(R3Camera *camera)
 {
@@ -259,4 +314,33 @@ void DrawScene(R3Scene *scene)
     // Draw nodes recursively
     DrawNode(scene, scene->root);
 }
+
+void DrawParticles(R3Scene *scene)
+{
+  // Get current time (in seconds) since start of execution
+  double current_time = GetTime();
+  static double previous_time = 0;
+
+
+  // program just started up?
+  if (previous_time == 0) previous_time = current_time;
+
+  // time passed since starting
+  double delta_time = current_time - previous_time;
+
+  //scene->camera = camera;
+
+  // Update particles
+  UpdateParticles(scene, current_time, delta_time, 0);
+
+  // Generate new particles
+  GenerateParticles(scene, current_time, delta_time);
+
+  // Render particles
+  RenderParticles(scene, current_time, delta_time);
+
+  // Remember previous time
+  previous_time = current_time;
+}
+
 
