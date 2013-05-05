@@ -27,6 +27,7 @@ struct Globals
     } window;
 
     bool quit;            // if set to true, exit soon
+    bool keys[256];
 
     std::string input_scene_name;
     R3Scene *scene;       // The currently displayed scene file

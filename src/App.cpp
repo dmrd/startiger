@@ -9,7 +9,6 @@
 #define START_WIN_WIDTH    800
 #define START_WIN_HEIGHT   600
 
-bool keys[256];
 
 ////////////////////////////////////////////////////////////
 // TIMER CODE
@@ -166,7 +165,7 @@ void App::Draw(void)
     // Draw particles
     DrawParticles(globals.scene);
 
-  glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHTING);
     // Draw scene surfaces
     DrawScene(globals.scene);
 
@@ -193,7 +192,7 @@ void App::MouseClicked(int button, int state, int x, int y)
 
 void App::KeyPressed(unsigned char key, int x, int y)
 {
-    keys[key] = true;
+    globals.keys[key] = true;
     switch (key)
     {
         case 'Q':
@@ -210,7 +209,7 @@ void App::KeyPressedSpecial(int key, int x, int y)
 
 void App::KeyReleased(unsigned char key, int x, int y)
 {
-    keys[key] = false;
+    globals.keys[key] = false;
 }
 
 void App::KeyReleasedSpecial(int key, int x, int y)
