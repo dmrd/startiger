@@ -144,9 +144,9 @@ void App::Draw(void)
             globals.keys['s'],
             globals.keys['d']);
 
-    globals.scene->root->transformation.Translate(R3Vector(
-                0.5 * (globals.keys['d'] - globals.keys['a']),
-                0.5 * (globals.keys['w'] - globals.keys['s']),
+    globals.scene->root->children[1]->transformation.Translate(R3Vector(
+                0.5 * (globals.keys['a'] - globals.keys['d']),
+                0.5 * (globals.keys['s'] - globals.keys['w']),
                 0
             ));
 
