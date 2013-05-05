@@ -147,8 +147,27 @@ void App::Draw(void)
     globals.scene->root->children[1]->transformation.Translate(R3Vector(
                 0.5 * (globals.keys['a'] - globals.keys['d']),
                 0.5 * (globals.keys['s'] - globals.keys['w']),
-                0
+                0.4
             ));
+
+#define RND (((double) rand()) / RAND_MAX)
+    static int doit = 50;
+    if (--doit < 0)
+    {
+        R3Node *node = new R3Node(
+                new R3Sphere(R3null_point, 4*(RND + 1)),
+                globals.scene->root->children[1]->children[0]->material
+                );
+        node->transformation.Transform(globals.scene->root->children[1]->transformation.Inverse());
+        node->transformation.Translate(R3Vector(
+                    42 * (RND - 0.5),
+                    42 * (RND - 0.5),
+                    -70
+                    ));
+
+        globals.scene->root->children[1]->AddChild(node);
+        doit = 14;
+    }
 
     // quit?
     if (globals.quit)
