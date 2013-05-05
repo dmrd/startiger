@@ -53,6 +53,8 @@ void R3Scene::Draw() const
     
     // action!
     root->Draw();
+
+    // TODO: draw particles...
 }
 
 
@@ -288,8 +290,6 @@ int R3Scene::Read(const string &name, R3Node *node)
             particle->elasticity = elasticity;
             particle->lifetime = lifetime;
             particle->material = material;   
-            particle->dead = false;
-            particle->forces = R3Vector(0.0,0.0,0.0);
 
             // Add particle to scene
             particles.push_back(particle);
@@ -347,7 +347,6 @@ int R3Scene::Read(const string &name, R3Node *node)
             source->velocity = velocity;
             source->angle_cutoff = angle_cutoff;
             source->shape = shape;   
-            source->residual = 0.0;   
 
             // Add particle source to scene
             particle_sources.push_back(source);

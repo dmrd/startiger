@@ -8,6 +8,14 @@
 #define START_WIN_WIDTH    800
 #define START_WIN_HEIGHT   600
 
+
+////////////////////////////////////////////////////////////
+// TIMER CODE
+////////////////////////////////////////////////////////////
+
+
+
+
 // --- main -----------------------------------------------------------------
 
 void App::Init(int *argc, char **argv)
@@ -40,6 +48,8 @@ void App::Init(int *argc, char **argv)
     glutMotionFunc(App::MouseMoved);
     glutKeyboardFunc(App::KeyPressed);
     glutSpecialFunc(App::KeyPressedSpecial);
+    glutKeyboardUpFunc(App::KeyReleased);
+    glutSpecialUpFunc(App::KeyReleasedSpecial);
 
     // OpenGL modes
     glEnable(GL_NORMALIZE);
@@ -149,6 +159,8 @@ void App::Draw(void)
 }
 
 
+
+
 // --- mouse ----------------------------------------------------------------
 
 void App::MouseMoved(int x, int y)
@@ -164,6 +176,7 @@ void App::MouseClicked(int button, int state, int x, int y)
 
 void App::KeyPressed(unsigned char key, int x, int y)
 {
+    globals.keys[key] = true;
     switch (key)
     {
         case 'Q':
@@ -175,6 +188,15 @@ void App::KeyPressed(unsigned char key, int x, int y)
 }
 
 void App::KeyPressedSpecial(int key, int x, int y)
+{
+}
+
+void App::KeyReleased(unsigned char key, int x, int y)
+{
+    globals.keys[key] = false;
+}
+
+void App::KeyReleasedSpecial(int key, int x, int y)
 {
 }
 
