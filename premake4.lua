@@ -26,7 +26,8 @@ includedirs {
 
 libdirs  {
     -- libs
-    "./lib/jpeg"
+    "./lib/jpeg",
+    "./lib/glut"
 }
 
 
