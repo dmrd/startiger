@@ -48,8 +48,8 @@ class Player : public GameObject
         {
             // move
             node->transformation.Translate(R3Vector(
-                        5 * (globals.keys['d'] - globals.keys['a']),
-                        5 * (globals.keys['w'] - globals.keys['s']),
+                        3 * (globals.keys['d'] - globals.keys['a']),
+                        3 * (globals.keys['w'] - globals.keys['s']),
                         0
                         ) * dt);
         }

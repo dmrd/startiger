@@ -1,3 +1,9 @@
+#ifdef _WIN32
+#  include <windows.h>
+#else
+#  include <sys/time.h>
+#endif
+
 #include "App.h"
 
 #include "Globals.h"
@@ -10,10 +16,59 @@
 #define START_WIN_HEIGHT   600
 
 
-////////////////////////////////////////////////////////////
-// TIMER CODE
-////////////////////////////////////////////////////////////
 
+// --- GetTime() ------------------------------------------------------------
+
+static double GetTime(void)
+{
+#ifdef _WIN32
+    // Return number of seconds since start of execution
+    static int first = 1;
+    static LARGE_INTEGER timefreq;
+    static LARGE_INTEGER start_timevalue;
+
+    // Check if this is the first time
+    if (first)
+    {
+        // Initialize first time
+        QueryPerformanceFrequency(&timefreq);
+        QueryPerformanceCounter(&start_timevalue);
+        first = 0;
+        return 0;
+    }
+    else
+    {
+        // Return time since start
+        LARGE_INTEGER current_timevalue;
+        QueryPerformanceCounter(&current_timevalue);
+        return ((double) current_timevalue.QuadPart - 
+                (double) start_timevalue.QuadPart) / 
+            (double) timefreq.QuadPart;
+    }
+#else
+    // Return number of seconds since start of execution
+    static int first = 1;
+    static struct timeval start_timevalue;
+
+    // Check if this is the first time
+    if (first)
+    {
+        // Initialize first time
+        gettimeofday(&start_timevalue, NULL);
+        first = 0;
+        return 0;
+    }
+    else
+    {
+        // Return time since start
+        struct timeval current_timevalue;
+        gettimeofday(&current_timevalue, NULL);
+        int secs = current_timevalue.tv_sec - start_timevalue.tv_sec;
+        int usecs = current_timevalue.tv_usec - start_timevalue.tv_usec;
+        return (double) (secs + 1.0E-6F * usecs);
+    }
+#endif
+}
 
 
 
@@ -122,9 +177,8 @@ void App::Quit(void)
 void App::Idle(void)
 {
     if (glutGetWindow() != globals.window.glutid)
-    {
         glutSetWindow(globals.window.glutid);  
-    }
+    Update();
     glutPostRedisplay();
 }
 
@@ -141,47 +195,6 @@ void App::WindowResized(int w, int h)
 
 void App::Draw(void)
 {
-    // test keys
-    /*
-    printf("w: %d | a: %d | s: %d | d: %d\n",
-            globals.keys['w'],
-            globals.keys['a'],
-            globals.keys['s'],
-            globals.keys['d']);
-
-    globals.scene->root->children[1]->transformation.Translate(R3Vector(
-                0.5 * (globals.keys['a'] - globals.keys['d']),
-                0.5 * (globals.keys['s'] - globals.keys['w']),
-                0.4
-            ));
-
-#define RND (((double) rand()) / RAND_MAX)
-    static int doit = 50;
-    if (--doit < 0)
-    {
-        R3Node *node = new R3Node(
-                new R3Sphere(R3null_point, 4*(RND + 1)),
-                globals.scene->root->children[1]->children[0]->material
-                );
-        node->transformation.Transform(globals.scene->root->children[1]->transformation.Inverse());
-        node->transformation.Translate(R3Vector(
-                    42 * (RND - 0.5),
-                    42 * (RND - 0.5),
-                    -70
-                    ));
-
-        globals.scene->root->children[1]->AddChild(node);
-        doit = 14;
-    }
-    */
-
-    // update objects
-    globals.gomgr->Update(0.1);
-
-    // quit?
-    if (globals.quit)
-        App::Quit();
-
     // initialize OpenGL drawing modes
     glEnable(GL_LIGHTING);
     glDisable(GL_BLEND);
@@ -200,7 +213,6 @@ void App::Draw(void)
     glutSwapBuffers();
 }
 
-static double GetTime(void);
 void App::Update()
 {    
     double current_time = GetTime();
@@ -211,8 +223,14 @@ void App::Update()
 
     // time passed since starting
     double delta_time = current_time - previous_time;
+    previous_time = current_time;
 
+    // update objects
     globals.gomgr->Update(delta_time);
+
+    // quit?
+    if (globals.quit)
+        App::Quit();
 }
 
 
@@ -256,59 +274,4 @@ void App::KeyReleasedSpecial(int key, int x, int y)
 }
 
 
-////////////////////////////////////////////////////////////
-// TIMER CODE (from assignment4 particleview.cpp)
-////////////////////////////////////////////////////////////
 
-#ifdef _WIN32
-#  include <windows.h>
-#else
-#  include <sys/time.h>
-#endif
-
-static double GetTime(void)
-{
-#ifdef _WIN32
-  // Return number of seconds since start of execution
-  static int first = 1;
-  static LARGE_INTEGER timefreq;
-  static LARGE_INTEGER start_timevalue;
-
-  // Check if this is the first time
-  if (first) {
-    // Initialize first time
-    QueryPerformanceFrequency(&timefreq);
-    QueryPerformanceCounter(&start_timevalue);
-    first = 0;
-    return 0;
-  }
-  else {
-    // Return time since start
-    LARGE_INTEGER current_timevalue;
-    QueryPerformanceCounter(&current_timevalue);
-    return ((double) current_timevalue.QuadPart - 
-            (double) start_timevalue.QuadPart) / 
-            (double) timefreq.QuadPart;
-  }
-#else
-  // Return number of seconds since start of execution
-  static int first = 1;
-  static struct timeval start_timevalue;
-
-  // Check if this is the first time
-  if (first) {
-    // Initialize first time
-    gettimeofday(&start_timevalue, NULL);
-    first = 0;
-    return 0;
-  }
-  else {
-    // Return time since start
-    struct timeval current_timevalue;
-    gettimeofday(&current_timevalue, NULL);
-    int secs = current_timevalue.tv_sec - start_timevalue.tv_sec;
-    int usecs = current_timevalue.tv_usec - start_timevalue.tv_usec;
-    return (double) (secs + 1.0E-6F * usecs);
-  }
-#endif
-}
