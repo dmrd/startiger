@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "GameObject.h"
+
 
 /*
  * forward declarations
@@ -36,6 +38,8 @@ struct Globals
 
     std::string input_scene_name;
     R3Scene *scene;       // current scene
+
+    GameObjectManager *gomgr;
 
     Globals()
     {
