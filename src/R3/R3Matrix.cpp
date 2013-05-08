@@ -1,8 +1,6 @@
 // Source file for the RING matrix class 
 
 
-
-
 // Matrix concatenation order is designed to be compatible with OpenGL.
 // The idea is that matrixs can be applied (matrices multiplied)
 // in the same order as OpenGL calls would be made.  Make more global
@@ -99,6 +97,13 @@ R3Matrix::R3Matrix(const double *a)
     m[3][0] = a[12]; m[3][1] = a[13]; m[3][2] = a[14]; m[3][3] = a[15];
 }
 
+R3Matrix::R3Matrix(const R3Point &point)
+{
+    m[0][0] = 1; m[0][1] = 0; m[0][2] = 0; m[0][3] = point.X();
+    m[1][0] = 0; m[1][1] = 1; m[1][2] = 0; m[1][3] = point.Y();
+    m[2][0] = 0; m[2][1] = 0; m[2][2] = 1; m[2][3] = point.Z();
+    m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
+}
 
 
 const bool R3Matrix::IsZero(void) const

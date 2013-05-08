@@ -1,7 +1,6 @@
 // Include file for the R3 point class 
 
 
-
 // Class definition 
 
 class R3Point
@@ -190,6 +189,3 @@ inline bool R3Point::operator!=(const R3Point& point) const
     // Return whether point is not equal
     return ((v[0] != point.v[0]) || (v[1] != point.v[1]) || (v[2] != point.v[2]));
 }
-
-
-

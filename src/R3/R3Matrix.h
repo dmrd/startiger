@@ -1,7 +1,5 @@
 // Include file for the RING matrix class 
 
-
-
 // Class definition 
 
 class R3Matrix
@@ -14,7 +12,8 @@ class R3Matrix
                 double a10, double a11, double a12, double a13,
                 double a20, double a21, double a22, double a23,
                 double a30, double a31, double a32, double a33);
-        R3Matrix(const double* array);
+        R3Matrix(const double *array);
+        R3Matrix(const R3Point &point);
 
         // Entry acccess
         double *operator[](int i);
