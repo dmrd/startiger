@@ -25,6 +25,7 @@ struct R3Node
 
     R3Node(R3Shape *shape_, R3Material *material_,
             const R3Matrix &transformation_ = R3identity_matrix) :
+        parent(NULL),
         shape(shape_),
         bbox(shape_ ? shape_->BBox() : R3null_box),
         material(material_),
