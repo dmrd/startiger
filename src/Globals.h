@@ -11,6 +11,7 @@
  */
 class R3Scene;
 class Player;
+class CameraHandler;
 
 
 
@@ -42,6 +43,7 @@ struct Globals
 
     GameObjectManager *gomgr;
     Player *player;
+    CameraHandler *camerahandler;
 
     Globals()
     {

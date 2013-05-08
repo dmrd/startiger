@@ -83,6 +83,7 @@ struct R3Mesh : public R3Shape
     // Constructors
     R3Mesh(void);
     R3Mesh(const R3Mesh& mesh);
+    R3Mesh(const string &name);
     ~R3Mesh(void);
 
     // Properties

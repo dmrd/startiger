@@ -215,7 +215,12 @@ const R3Matrix R3Matrix::Inverse(void) const
     return inverse;
 }
 
-
+R3Point R3Matrix::getOrigin(void) const
+{
+    R3Point pos(R3null_point);
+    pos.Transform(*this);
+    return pos;
+}
 
 void R3Matrix::Flip(void)
 {

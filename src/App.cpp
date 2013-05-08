@@ -113,8 +113,12 @@ void App::Init(int *argc, char **argv)
     glEnable(GL_DEPTH_TEST);
     glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
 
-    // test Player
+    // GameObjectManager
     globals.gomgr = new GameObjectManager();
+
+    // test Player, CameraHandler
+
+    globals.gomgr->Add(new CameraHandler(&globals.scene->camera));
     globals.gomgr->Add(new Player(R3identity_matrix));
 }
 
@@ -227,10 +231,6 @@ void App::Update()
 
     // update objects
     globals.gomgr->Update(delta_time);
-
-    // test R3Camera::LookAt
-    R3Point playerpos = globals.player->GetPosition();
-    globals.scene->camera.LookAt(playerpos);
 
     // quit?
     if (globals.quit)

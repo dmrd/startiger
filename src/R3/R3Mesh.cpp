@@ -45,7 +45,11 @@ R3Mesh::R3Mesh(const R3Mesh& mesh) :
     }
 }
 
-
+R3Mesh::R3Mesh(const string &name) :
+    bbox(R3null_box)
+{
+    Read(name);
+}
 
 R3Mesh::~R3Mesh(void)
 {
