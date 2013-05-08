@@ -25,6 +25,8 @@ class Player : public GameObject
 
         void Create(void)
         {
+            // create material, node
+
             mat = new R3Material();
             mat->ka = R3Rgb(0.2, 0.2, 0.2, 1);
             mat->kd = R3Rgb(0.5, 0.5, 0.5, 1);
@@ -36,12 +38,20 @@ class Player : public GameObject
             mat->texture = NULL;
             mat->id = 0;
 
-            globals.scene->root->AddChild(new R3Node(new R3Sphere(R3null_point, 2),
-                        mat, starttransform));
+            node = new R3Node(new R3Sphere(R3null_point, 0.5),
+                        mat, starttransform);
+
+            globals.scene->root->AddChild(node);
         }
 
         void Update(double dt)
         {
+            // move
+            node->transformation.Translate(R3Vector(
+                        5 * (globals.keys['d'] - globals.keys['a']),
+                        5 * (globals.keys['w'] - globals.keys['s']),
+                        0
+                        ) * dt);
         }
 
         void Destroy()

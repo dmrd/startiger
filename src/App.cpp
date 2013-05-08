@@ -22,13 +22,13 @@
 void App::Init(int *argc, char **argv)
 {
     // read command-line arguments
-    //if (!App::ParseArgs(*argc, argv))
-        //exit(1);
+    if (!App::ParseArgs(*argc, argv))
+        exit(1);
 
     // load scene
-    //printf("Input scene: %s\n", globals.input_scene_name.c_str());
+    printf("Input scene: %s\n", globals.input_scene_name.c_str());
     globals.scene = new R3Scene();
-    //globals.scene->Read(globals.input_scene_name);
+    globals.scene->Read(globals.input_scene_name);
 
     // initialize GLUT
     glutInit(argc, argv);
@@ -59,12 +59,8 @@ void App::Init(int *argc, char **argv)
     glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
 
     // test Player
-
-    globals.scene->ambient.Reset(0.2, 0.2, 0.2, 1);
-
     globals.gomgr = new GameObjectManager();
     globals.gomgr->Add(new Player(R3identity_matrix));
-    globals.scene->camera.eye = R3Point(0, 0, 5);
 }
 
 int App::ParseArgs(int argc, char **argv)
