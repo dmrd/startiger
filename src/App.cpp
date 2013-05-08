@@ -228,6 +228,10 @@ void App::Update()
     // update objects
     globals.gomgr->Update(delta_time);
 
+    // test R3Camera::LookAt
+    R3Point playerpos = globals.player->GetPosition();
+    globals.scene->camera.LookAt(playerpos);
+
     // quit?
     if (globals.quit)
         App::Quit();

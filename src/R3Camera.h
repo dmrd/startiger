@@ -35,6 +35,20 @@ struct R3Camera
         glMultMatrixd(camera_matrix);
         glTranslated(-(eye[0]), -(eye[1]), -(eye[2]));
     }
+
+    void LookAt(const R3Point &target, const R3Vector &globalup = R3posy_vector)
+    {
+        towards = target - eye;
+        towards.Normalize();
+
+        right = towards;
+        right.Cross(globalup);
+        right.Normalize();
+
+        up = right;
+        up.Cross(towards);
+        up.Normalize();
+    }
 };
 
 #endif

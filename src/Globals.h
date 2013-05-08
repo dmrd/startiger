@@ -10,6 +10,7 @@
  * forward declarations
  */
 class R3Scene;
+class Player;
 
 
 
@@ -40,6 +41,7 @@ struct Globals
     R3Scene *scene;       // current scene
 
     GameObjectManager *gomgr;
+    Player *player;
 
     Globals()
     {

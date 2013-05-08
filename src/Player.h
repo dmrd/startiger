@@ -25,6 +25,9 @@ class Player : public GameObject
 
         void Create(void)
         {
+            // let everyone know
+            globals.player = this;
+
             // create material, node
 
             mat = new R3Material();
@@ -56,6 +59,14 @@ class Player : public GameObject
 
         void Destroy()
         {
+            globals.player = NULL;
+        }
+
+        R3Point GetPosition()
+        {
+            R3Point pos(R3null_point);
+            pos.Transform(node->transformation);
+            return pos;
         }
 };
 

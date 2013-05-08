@@ -26,19 +26,26 @@ todo
 ----
 
     - App
-        - add [special] key release callbacks
 
     - Rendering
-        - integrate R3Scene
-        - get scenegraph rendering working
-        - do a little test render with motion etc.
 
     - Logic
-        - work on GameObject/GameObjectManager stuff
+        - work on enemies
         - possibly work on GameState/Level stuff
 
     - Physics
         - get some kind of node-based physics/collision system working?
+
+    - HUD
+        - health, score etc.
+
+
+done
+----
+
+        - basic App (input/mainloop)
+        - R3Node+R3Scene scenegraph rendering
+        - basic GameObject framework
 
 
 
