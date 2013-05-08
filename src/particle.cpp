@@ -410,7 +410,9 @@ void RenderParticles(R3Scene *scene, double current_time, double delta_time)
           glDepthMask(GL_FALSE);
           glEnable(GL_TEXTURE_2D);
 
-          glBindTexture(GL_TEXTURE_2D, particle->material->textureName);
+          //TODO: fix this to use R3Material::Load() with GL_LIGHTING
+          //      disabled
+          //glBindTexture(GL_TEXTURE_2D, particle->material->textureName);
 
 
           glBegin(GL_QUADS);
@@ -500,7 +502,7 @@ int FindSink(R3Scene *scene, R3Camera *camera, int x, int y, int width, int heig
     double angleY = camera->yfov*(y-height/2)/(double)height;
     R3Vector vector =  2*tan(angleX)*camera->right + 2*tan(angleY)*camera->up + camera->towards;
     vector.Normalize();
-    R3Ray ray = R3Ray::R3Ray(camera->eye, vector);
+    R3Ray ray = R3Ray(camera->eye, vector);
     double t = -1;
     int best = -1;
 
@@ -523,7 +525,7 @@ int FindSource(R3Scene *scene, R3Camera *camera, int x, int y, int width, int he
     double angleY = camera->yfov*(y-height/2)/(double)height;
     R3Vector vector =  2*tan(angleX)*camera->right + 2*tan(angleY)*camera->up + camera->towards;
     vector.Normalize();
-    R3Ray ray = R3Ray::R3Ray(camera->eye, vector);
+    R3Ray ray = R3Ray(camera->eye, vector);
     double t = -1;
     int best = -1;
 
