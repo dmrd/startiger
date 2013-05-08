@@ -32,6 +32,7 @@ class R3Matrix
         const R3Matrix Inverse(void) const;
         const bool operator==(const R3Matrix& matrix) const;
         const bool operator!=(const R3Matrix& matrix) const;
+        R3Point getOrigin(void) const;
 
         // Manipulation functions/operators
         void Flip(void);

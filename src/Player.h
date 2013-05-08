@@ -4,11 +4,13 @@
 #include "Globals.h"
 #include "R3Node.h"
 #include "GameObject.h"
+#include "CameraHandler.h"
 
 class Player : public GameObject
 {
     protected:
         R3Node *node;
+        R3Node *cameramovetarget;
         R3Matrix starttransform;
         R3Material *mat;
 
@@ -41,10 +43,16 @@ class Player : public GameObject
             mat->texture = NULL;
             mat->id = 0;
 
-            node = new R3Node(new R3Sphere(R3null_point, 0.5),
+            node = new R3Node(new R3Mesh("arwing.off"),
                         mat, starttransform);
 
             globals.scene->root->AddChild(node);
+
+            // camera targets
+            globals.camerahandler->SetLookTarget(node);
+            cameramovetarget = new R3Node(NULL, NULL, R3Matrix(R3Point(0, 1.5, 12)));
+            node->AddChild(cameramovetarget);
+            globals.camerahandler->SetMoveTarget(cameramovetarget);
         }
 
         void Update(double dt)

@@ -98,8 +98,8 @@ class GameObjectManager
         void Update(double dt)
         {
             // notify
-            for (GameObjectMap::iterator iter = gameObjects.begin();
-                    iter != gameObjects.end(); ++iter)
+            for (GameObjectMap::reverse_iterator iter = gameObjects.rbegin();
+                    iter != gameObjects.rend(); ++iter)
                 iter->second->Update(dt);
 
             // destroy marked
