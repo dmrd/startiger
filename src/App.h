@@ -22,6 +22,7 @@ class App
         static void WindowResized(int w, int h);
 
         static void Draw(void);
+        static void Update();
 
         static void MouseMoved(int x, int y);
         static void MouseClicked(int button, int state, int x, int y);

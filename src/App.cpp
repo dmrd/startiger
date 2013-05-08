@@ -200,7 +200,20 @@ void App::Draw(void)
     glutSwapBuffers();
 }
 
+static double GetTime(void);
+void App::Update()
+{    
+    double current_time = GetTime();
+    static double previous_time = 0;
 
+    // program just started up?
+    if (previous_time == 0) previous_time = current_time;
+
+    // time passed since starting
+    double delta_time = current_time - previous_time;
+
+    globals.gomgr->Update(delta_time);
+}
 
 
 // --- mouse ----------------------------------------------------------------
@@ -243,3 +256,59 @@ void App::KeyReleasedSpecial(int key, int x, int y)
 }
 
 
+////////////////////////////////////////////////////////////
+// TIMER CODE (from assignment4 particleview.cpp)
+////////////////////////////////////////////////////////////
+
+#ifdef _WIN32
+#  include <windows.h>
+#else
+#  include <sys/time.h>
+#endif
+
+static double GetTime(void)
+{
+#ifdef _WIN32
+  // Return number of seconds since start of execution
+  static int first = 1;
+  static LARGE_INTEGER timefreq;
+  static LARGE_INTEGER start_timevalue;
+
+  // Check if this is the first time
+  if (first) {
+    // Initialize first time
+    QueryPerformanceFrequency(&timefreq);
+    QueryPerformanceCounter(&start_timevalue);
+    first = 0;
+    return 0;
+  }
+  else {
+    // Return time since start
+    LARGE_INTEGER current_timevalue;
+    QueryPerformanceCounter(&current_timevalue);
+    return ((double) current_timevalue.QuadPart - 
+            (double) start_timevalue.QuadPart) / 
+            (double) timefreq.QuadPart;
+  }
+#else
+  // Return number of seconds since start of execution
+  static int first = 1;
+  static struct timeval start_timevalue;
+
+  // Check if this is the first time
+  if (first) {
+    // Initialize first time
+    gettimeofday(&start_timevalue, NULL);
+    first = 0;
+    return 0;
+  }
+  else {
+    // Return time since start
+    struct timeval current_timevalue;
+    gettimeofday(&current_timevalue, NULL);
+    int secs = current_timevalue.tv_sec - start_timevalue.tv_sec;
+    int usecs = current_timevalue.tv_usec - start_timevalue.tv_usec;
+    return (double) (secs + 1.0E-6F * usecs);
+  }
+#endif
+}
