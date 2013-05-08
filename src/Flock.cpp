@@ -19,16 +19,9 @@ Flock::~Flock()
 
 void Flock::Create(void)
 {
-    for (int boid = 0; boid < swarmSize; boid++) {
-        double x, y, z;
-        do {
-            x = 2 * (UnitRandom() - 0.5);
-            y = 2 * (UnitRandom() - 0.5);
-            z = 2 * (UnitRandom() - 0.5);
-        } while(x*x + y*y + z*z > 1.0);
-        R3Point location = R3Point(0,0,0) + radius * (x * R3posx_vector
-                                            + y * R3posy_vector
-                                            + z * R3posz_vector);
+    for (int boid = 0; boid < swarmSize; boid++)
+    {
+        R3Point location = spawn + Util::BallRandom(radius);
         globals.gomgr->Add(new Boid(location, R3Vector(1,0,0), 1.0));
     }
 }

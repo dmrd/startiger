@@ -162,7 +162,7 @@ void App::Draw(void)
 
 void App::Update()
 {    
-    double current_time = GetTime();
+    double current_time = Util::GetTime();
     static double previous_time = 0;
 
     // program just started up?
