@@ -1,75 +1,16 @@
-#ifdef _WIN32
-#  include <windows.h>
-#else
-#  include <sys/time.h>
-#endif
-
 #include "App.h"
 
 #include "Globals.h"
+#include "Util.h"
 #include "glutfix.h"
 #include "R3/R3.h"
 #include "R3Scene.h"
 #include "Player.h"
+#include "Flock.h"
+#include "Boid.h"
 
 #define START_WIN_WIDTH    800
 #define START_WIN_HEIGHT   600
-
-
-
-// --- GetTime() ------------------------------------------------------------
-
-static double GetTime(void)
-{
-#ifdef _WIN32
-    // Return number of seconds since start of execution
-    static int first = 1;
-    static LARGE_INTEGER timefreq;
-    static LARGE_INTEGER start_timevalue;
-
-    // Check if this is the first time
-    if (first)
-    {
-        // Initialize first time
-        QueryPerformanceFrequency(&timefreq);
-        QueryPerformanceCounter(&start_timevalue);
-        first = 0;
-        return 0;
-    }
-    else
-    {
-        // Return time since start
-        LARGE_INTEGER current_timevalue;
-        QueryPerformanceCounter(&current_timevalue);
-        return ((double) current_timevalue.QuadPart - 
-                (double) start_timevalue.QuadPart) / 
-            (double) timefreq.QuadPart;
-    }
-#else
-    // Return number of seconds since start of execution
-    static int first = 1;
-    static struct timeval start_timevalue;
-
-    // Check if this is the first time
-    if (first)
-    {
-        // Initialize first time
-        gettimeofday(&start_timevalue, NULL);
-        first = 0;
-        return 0;
-    }
-    else
-    {
-        // Return time since start
-        struct timeval current_timevalue;
-        gettimeofday(&current_timevalue, NULL);
-        int secs = current_timevalue.tv_sec - start_timevalue.tv_sec;
-        int usecs = current_timevalue.tv_usec - start_timevalue.tv_usec;
-        return (double) (secs + 1.0E-6F * usecs);
-    }
-#endif
-}
-
 
 
 // --- main -----------------------------------------------------------------
@@ -116,6 +57,8 @@ void App::Init(int *argc, char **argv)
     // test Player
     globals.gomgr = new GameObjectManager();
     globals.gomgr->Add(new Player(R3identity_matrix));
+    globals.gomgr->Add(new Flock(R3null_point, 300, 1.5));
+    //globals.gomgr->Add(new Boid(R3Point(0,0,0), R3Vector(1.0,0,0), 1.0));
 }
 
 int App::ParseArgs(int argc, char **argv)
