@@ -62,7 +62,7 @@ void App::Init(int *argc, char **argv)
     globals.gomgr->Add(new CameraHandler(&globals.scene->camera));
     globals.gomgr->Add(new Player(R3identity_matrix));
     //globals.gomgr->Add(new Flock(R3Point(0,30,0), 300, 1.5));
-    globals.gomgr->Add(new Flock(R3Point(0,-5,0), 15, 1));
+    globals.gomgr->Add(new Flock(R3Point(0,0,0), 100, 1));
 }
 
 int App::ParseArgs(int argc, char **argv)

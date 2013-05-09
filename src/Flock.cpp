@@ -8,15 +8,17 @@
 using namespace std;
 
 /* Simple test "impulse" in a certain direction */
-R3Vector leader = R3Vector(1,0,0);
+R3Vector wind = R3Vector(0.5,0,0);
+//R3Point target = R3Point(15,15,0);
+//double targetStrength = 1.5;
 
 Flock::Flock(R3Point spawn_, int swarmSize_, double radius_) :
     spawn(spawn_),
     swarmSize(swarmSize_),
     radius(radius_),
-    neighborhood(1.5),
-    repulsionArea(0.4),
-    vlim(1)
+    neighborhood(2),
+    repulsionArea(1),
+    vlim(2)
 {
 }
 
@@ -59,14 +61,18 @@ void Flock::UpdateBoidVelocity(int current) {
             repulsion += (boids[current]->position - boids[id]->position);
         }
     }
+
     if (numNeighbors > 0) {
-        center /= swarmSize - 1;
-        velocity /= swarmSize - 1;
+        center /= numNeighbors;
+        velocity /= numNeighbors;
         R3Vector centerV = (center - boids[current]->position) / 8;
         velocity /= 100;
         boids[current]->velocity += velocity + centerV + repulsion;
     }
-    boids[current]->velocity += leader;
+    //R3Vector pull = (target - boids[current]->position);
+    //pull.Normalize();
+    //boids[current]->velocity += pull * targetStrength;
+    boids[current]->velocity += wind;
     if (boids[current]->velocity.Length() >  vlim) {
         boids[current]->velocity.Normalize();
         boids[current]->velocity *= vlim;
@@ -83,7 +89,7 @@ void Flock::Update(double dt)
     for (int i = 0; i < boids.size(); i++) {
         if (boids[i]->alive) {
             // Cache R3Point location to avoid recalculating later
-            boids[i]->position = boids[i]->node->transformation.getOrigin();
+            boids[i]->position = boids[i]->node->getWorldTransform().getOrigin();
             boids[swarmSize] = boids[i];
             swarmSize++;
         } else {
@@ -101,6 +107,7 @@ void Flock::Update(double dt)
     /* Update positions */
     for (int i = 0; i < boids.size(); i++) {
         boids[i]->node->transformation.Translate((boids[i]->velocity) * dt);
+        //boids[i]-
     }
 
 }
