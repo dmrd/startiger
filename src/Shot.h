@@ -1,5 +1,5 @@
-#ifndef __PLAYER_H__
-#define __PLAYER_H__
+#ifndef __SHOT_H__
+#define __SHOT_H__
 
 #include "Globals.h"
 #include "R3Node.h"
@@ -7,12 +7,12 @@
 #include "CameraHandler.h"
 #include "R3Scene.h"
 
-class Player : public GameObject
+class Shot : public GameObject
 {
     public:
         struct Params { R3Matrix transform; };
-        Player(const Params &params_);
-        ~Player();
+        Shot(const Params &params_);
+        ~Shot();
 
         void Create(void);
         void Update(double dt);
@@ -24,11 +24,7 @@ class Player : public GameObject
         Params params;
 
         R3Node *node;
-        R3Node *cameramovetarget;
         R3Material *mat;
-
-        double rotation;
-        double lastFire;
 };
 
 #endif
