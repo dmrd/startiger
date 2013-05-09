@@ -23,6 +23,7 @@ class App
 
         static void Draw(void);
         static void Update();
+        static void HUD();
 
         static void MouseMoved(int x, int y);
         static void MouseClicked(int button, int state, int x, int y);
