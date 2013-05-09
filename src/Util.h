@@ -12,11 +12,11 @@
 
 namespace Util {
 
-double GetTime(void);            // time in seconds
-double UnitRandom(void);         // random in [0, 1]
-double SymmetricRandom(void);    // random in [-1, 1]
-R3Vector BallRandom(double r);   // random in ball of radius r
-
+    double GetTime(void);            // time in seconds
+    double UnitRandom(void);         // random in [0, 1]
+    double SymmetricRandom(void);    // random in [-1, 1]
+    R3Vector BallRandom(double r);   // random in ball of radius r
+    R3Point PointFromMatrix(const R3Matrix &mat);
 }
 
 #endif
