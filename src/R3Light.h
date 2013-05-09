@@ -2,6 +2,7 @@
 #define __R3LIGHT_H__
 
 #include "R3/R3.h"
+#include "stdio.h"
 
 /*
  * light types
@@ -117,6 +118,10 @@ struct R3Light
                 buffer[2] = direction.Z();
                 buffer[3] = 1.0;
                 glLightfv(index, GL_SPOT_DIRECTION, buffer);
+                break;
+
+            default:
+                fprintf(stderr, "Unkown light type!\n");
                 break;
         }
 
