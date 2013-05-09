@@ -60,9 +60,16 @@ void App::Init(int *argc, char **argv)
     // test Player, CameraHandler
 
     globals.gomgr->Add(new CameraHandler(&globals.scene->camera));
-    globals.gomgr->Add(new Player(R3identity_matrix));
-    //globals.gomgr->Add(new Flock(R3Point(0,30,0), 300, 1.5));
-    globals.gomgr->Add(new Flock(R3Point(0,0,0), 100, 1));
+
+    Player::Params playerparams;
+    playerparams.transform = R3identity_matrix;
+    globals.gomgr->Add(new Player(playerparams));
+
+    Flock::Params flockparams;
+    flockparams.spawn = R3null_point;
+    flockparams.swarmSize = 100;
+    flockparams.radius = 1;
+    globals.gomgr->Add(new Flock(flockparams));
 }
 
 int App::ParseArgs(int argc, char **argv)

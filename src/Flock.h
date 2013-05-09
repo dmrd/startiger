@@ -10,22 +10,24 @@
 
 class Flock : public GameObject
 {
+    public:
+        struct Params { R3Point spawn; int swarmSize; double radius; };
+        Flock(const Params &params_);
+
+        ~Flock();
+
+        void Create(void);
+        void Update(double dt);
+        void Destroy();
+
     protected:
-        R3Point spawn;
-        int swarmSize;
+        Params params;
+
         vector<Boid *> boids;
-        double radius; // Area to spawn in
         double neighborhood;
         double repulsionArea;
         double vlim;
         void UpdateBoidVelocity(int current);
-
-    public:
-        Flock(R3Point spawn_, int swarmSize_, double radius_);
-        ~Flock();
-        void Create(void);
-        void Update(double dt);
-        void Destroy();
 };
 
 #endif

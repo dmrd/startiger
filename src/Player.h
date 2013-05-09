@@ -9,15 +9,10 @@
 
 class Player : public GameObject
 {
-    protected:
-        R3Node *node;
-        R3Node *cameramovetarget;
-        R3Matrix starttransform;
-        R3Material *mat;
-
     public:
-        Player(R3Matrix transform) :
-            starttransform(transform)
+        struct Params { R3Matrix transform; };
+        Player(const Params &params_) :
+            params(params_)
         {
         }
 
@@ -45,7 +40,7 @@ class Player : public GameObject
             mat->id = 0;
 
             node = new R3Node(new R3Mesh("arwing.off"),
-                        mat, starttransform);
+                        mat, params.transform);
 
             globals.scene->root->AddChild(node);
 
@@ -77,6 +72,13 @@ class Player : public GameObject
             pos.Transform(node->transformation);
             return pos;
         }
+
+    protected:
+        Params params;
+
+        R3Node *node;
+        R3Node *cameramovetarget;
+        R3Material *mat;
 };
 
 #endif

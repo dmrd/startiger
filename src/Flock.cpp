@@ -12,10 +12,8 @@ R3Vector wind = R3Vector(0.5,0,0);
 //R3Point target = R3Point(15,15,0);
 //double targetStrength = 1.5;
 
-Flock::Flock(R3Point spawn_, int swarmSize_, double radius_) :
-    spawn(spawn_),
-    swarmSize(swarmSize_),
-    radius(radius_),
+Flock::Flock(const Params &params_) :
+    params(params_),
     neighborhood(2),
     repulsionArea(1),
     vlim(2)
@@ -28,20 +26,22 @@ Flock::~Flock()
 
 void Flock::Create(void)
 {
-    for (int boid = 0; boid < swarmSize; boid++)
+    for (int boid = 0; boid < params.swarmSize; boid++)
     {
-        R3Point location = spawn + Util::BallRandom(radius);
+        R3Point location = params.spawn + Util::BallRandom(params.radius);
         Boid *newBoid = new Boid(location, R3Vector(1,0,0), this);
         globals.gomgr->Add(newBoid);
         boids.push_back(newBoid);
         newBoid->velocity = R3Vector(1.0,0,0);
     }
 }
+
 /*
  * Update velocity of a single boid based on its neighborhood
  * Basic rules based on http://www.kfish.org/boids/pseudocode.html
  */
-void Flock::UpdateBoidVelocity(int current) {
+void Flock::UpdateBoidVelocity(int current)
+{
     /* Calculate center of mass & average velocity*/
     R3Point center = R3null_point;
     R3Vector velocity = R3null_vector;
@@ -84,20 +84,20 @@ void Flock::Update(double dt)
 {
 
     /* Clear dead boids */
-    int oSize = swarmSize;
-    swarmSize = 0;
+    int oSize = params.swarmSize;
+    params.swarmSize = 0;
     for (int i = 0; i < boids.size(); i++) {
         if (boids[i]->alive) {
             // Cache R3Point location to avoid recalculating later
             boids[i]->position = boids[i]->node->getWorldTransform().getOrigin();
-            boids[swarmSize] = boids[i];
-            swarmSize++;
+            boids[params.swarmSize] = boids[i];
+            params.swarmSize++;
         } else {
             boids[i]->Destroy();
         }
     }
-    if (oSize != swarmSize) {
-        boids.resize(swarmSize);
+    if (oSize != params.swarmSize) {
+        boids.resize(params.swarmSize);
     }
     /* Update velocities */
     for (int i = 0; i < boids.size(); i++) {
@@ -115,3 +115,6 @@ void Flock::Update(double dt)
 void Flock::Destroy()
 {
 }
+
+
+
