@@ -61,8 +61,6 @@ void Shot::Destroy()
 
 R3Point Shot::GetPosition()
 {
-    R3Point pos(R3null_point);
-    pos.Transform(node->transformation);
-    return pos;
+    return node->getWorldTransform().getOrigin();
 }
 
