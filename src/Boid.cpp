@@ -5,10 +5,11 @@
 #include "Flock.h"
 #include "R3Scene.h"
 
-Boid::Boid(R3Point spawn_, R3Vector direction_, double speed_) :
+Boid::Boid(R3Point spawn_, R3Vector velocity_, Flock *flock_) :
     spawn(spawn_),
-    direction(direction_),
-    speed(speed_)
+    velocity(velocity_),
+    flock(flock_),
+    alive(true)
 {
 }
 
@@ -40,8 +41,6 @@ void Boid::Create(void)
 
 void Boid::Update(double dt)
 {
-    // move
-    node->transformation.Translate(direction * speed * dt);
 }
 
 /* TODO: write delete function */

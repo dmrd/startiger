@@ -14,7 +14,11 @@ class Flock : public GameObject
         R3Point spawn;
         int swarmSize;
         vector<Boid *> boids;
-        double radius;
+        double radius; // Area to spawn in
+        double neighborhood;
+        double repulsionArea;
+        double vlim;
+        void UpdateBoidVelocity(int current);
 
     public:
         Flock(R3Point spawn_, int swarmSize_, double radius_);
