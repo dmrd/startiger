@@ -139,8 +139,13 @@ void App::Idle(void)
 void App::WindowResized(int w, int h)
 {
     glViewport(0, 0, w, h);
+
+    double wbh = ((double) w) / h;
+    globals.scene->camera.xfov = wbh * globals.scene->camera.yfov;
+
     globals.window.width = w;
     globals.window.height = h;
+
     glutPostRedisplay();
 }
 
@@ -178,9 +183,9 @@ void App::Update()
     // time passed since starting
     double delta_time = current_time - previous_time;
     previous_time = current_time;
-
-    // update bboxes
-    globals.scene->UpdateBboxes();
+    
+    // fps
+    printf("fps: %f\n", 1/delta_time);
 
     // update objects
     globals.gomgr->Update(delta_time);

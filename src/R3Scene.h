@@ -65,6 +65,8 @@ struct R3ParticleSpring
 
 // Scene graph definition
 
+class R3Node;
+
 struct R3Scene
 {
     public:
@@ -76,7 +78,6 @@ struct R3Scene
         int NLights(void) const;
         R3Light *Light(int k) const;
         R3Camera& Camera(void);
-        R3Box& BBox(void);
 
         // Particle stuff
         int NParticleSources(void) const;
@@ -87,10 +88,10 @@ struct R3Scene
         R3Particle *Particle(int k) const;
 
         // Bbox
-        inline void UpdateBboxes(void) { root->UpdateBbox(R3identity_matrix); }
+        void UpdateBboxes(void);
 
         // Drawing
-        void Draw(void) const;
+        void Draw(void);
 
         // I/O
         int Read(const string &name, R3Node *root = NULL);
@@ -104,7 +105,6 @@ struct R3Scene
         vector<R3Light *> lights;
         R3Vector gravity;
         R3Camera camera;
-        R3Box bbox;
         R2Pixel background;
         R2Pixel ambient;
         double time;
@@ -142,14 +142,6 @@ inline R3Camera& R3Scene::Camera(void)
 {
     // Return camera
     return camera;
-}
-
-
-
-inline R3Box& R3Scene::BBox(void) 
-{
-    // Return bounding box 
-    return bbox;
 }
 
 

@@ -14,7 +14,6 @@
 
 
 R3Scene::R3Scene(void) :
-    bbox(R3null_box),
     background(0,0,0,1),
     ambient(0,0,0,1)
 {
@@ -36,7 +35,12 @@ R3Scene::R3Scene(void) :
 
 // --- draw ----------------------------------------------------------------------------
 
-void R3Scene::Draw() const
+void R3Scene::UpdateBboxes(void)
+{
+    root->UpdateBbox(R3identity_matrix);
+}
+
+void R3Scene::Draw()
 {
     // lights!
     static GLfloat glambient[4];
@@ -50,8 +54,10 @@ void R3Scene::Draw() const
 
     // camera!
     camera.Load();
+    camera.UpdateFrustumPlanes();
     
     // action!
+    UpdateBboxes();
     root->Draw();
 
     // TODO: draw particles...
@@ -294,9 +300,6 @@ int R3Scene::Read(const string &name, R3Node *node)
             // Add particle to scene
             particles.push_back(particle);
 
-            // Update scene bounding box
-            bbox.Union(position);
-
             // Add to list of particles available for springs
             particles_for_springs.push_back(particle);
         }
@@ -350,9 +353,6 @@ int R3Scene::Read(const string &name, R3Node *node)
 
             // Add particle source to scene
             particle_sources.push_back(source);
-
-            // Update scene bounding box
-            bbox.Union(shape->BBox());
         }
         else if (!strcmp(cmd, "particle_sink"))
         {
@@ -382,9 +382,6 @@ int R3Scene::Read(const string &name, R3Node *node)
 
             // Add particle sink to scene
             particle_sinks.push_back(sink);
-
-            // Update scene bounding box
-            bbox.Union(shape->BBox());
         }
         else if (!strcmp(cmd, "particle_spring"))
         {
@@ -524,7 +521,6 @@ int R3Scene::Read(const string &name, R3Node *node)
             // Pop node and transform bounding box
             R3Node *node = group_nodes[depth];
             depth--;
-            node->bbox.Transform(node->transformation);
         }
 
         // --- material ------------------------------------------------------------------------
@@ -781,14 +777,12 @@ int R3Scene::Read(const string &name, R3Node *node)
         command_number++;
     }
 
-    // Update bounding box
-    bbox.Union(root->bbox);
-
     // Provide default camera
     if (camera.xfov == 0)
     {
-        double scene_radius = bbox.DiagonalRadius();
-        R3Point scene_center = bbox.Centroid();
+        UpdateBboxes();
+        double scene_radius = root->bbox.DiagonalRadius();
+        R3Point scene_center = root->bbox.Centroid();
         camera.towards = R3Vector(0, 0, -1);
         camera.up = R3Vector(0, 1, 0);
         camera.right = R3Vector(1, 0, 0);
