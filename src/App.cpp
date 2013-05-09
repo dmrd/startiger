@@ -179,6 +179,9 @@ void App::Update()
     double delta_time = current_time - previous_time;
     previous_time = current_time;
 
+    // update bboxes
+    globals.scene->UpdateBboxes();
+
     // update objects
     globals.gomgr->Update(delta_time);
 

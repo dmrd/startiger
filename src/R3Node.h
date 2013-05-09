@@ -12,7 +12,7 @@ struct R3Node
     R3Shape *shape;
     R3Matrix transformation;
     R3Material *material;
-    R3Box bbox;
+    R3Box bbox; // stored in world space!
 
     R3Node(const R3Matrix &transformation_ = R3identity_matrix) :
         parent(NULL),
@@ -27,17 +27,38 @@ struct R3Node
             const R3Matrix &transformation_ = R3identity_matrix) :
         parent(NULL),
         shape(shape_),
-        bbox(shape_ ? shape_->BBox() : R3null_box),
         material(material_),
         transformation(transformation_)
     {
     }
 
+    void UpdateBbox(const R3Matrix &parentworldtransform)
+    {
+        R3Matrix worldtransform = parentworldtransform * transformation;
+
+        if (shape)
+        {
+            bbox = shape->BBox();
+            bbox.Transform(worldtransform);
+        }
+        else
+            bbox = R3null_box;
+
+        for (vector<R3Node *>::iterator iter = children.begin();
+                iter != children.end(); ++iter) 
+        {
+            (*iter)->UpdateBbox(worldtransform);
+            bbox.Union((*iter)->bbox);
+        }
+    }
+
     void AddChild(R3Node *node)
     {
-        bbox.Union(node->bbox);
         children.push_back(node);
         node->parent = this;
+
+        node->UpdateBbox(getWorldTransform());
+        bbox.Union(node->bbox);
     }
 
     void Draw(void) const
@@ -54,18 +75,23 @@ struct R3Node
                 iter != children.end(); ++iter) 
             (*iter)->Draw();
 
-        // pop transform
-        transformation.Pop();
-
         // bbox?
         if (globals.settings.show_bboxes)
         {
             GLboolean lighting = glIsEnabled(GL_LIGHTING);
             glDisable(GL_LIGHTING);
+
+            R3Matrix invworldtransform = getWorldTransform().Inverse();
+            invworldtransform.Push();
             bbox.Outline();
+            invworldtransform.Pop();
+
             if (lighting)
                 glEnable(GL_LIGHTING);
         }
+
+        // pop transform
+        transformation.Pop();
     }
 
     R3Matrix getWorldTransform(void) const

@@ -86,6 +86,9 @@ struct R3Scene
         int NParticles(void) const;
         R3Particle *Particle(int k) const;
 
+        // Bbox
+        inline void UpdateBboxes(void) { root->UpdateBbox(R3identity_matrix); }
+
         // Drawing
         void Draw(void) const;
 
