@@ -2,6 +2,7 @@
 #define __R3CAMERA_H__
 
 #include "R3/R3.h"
+#include "Globals.h"
 
 /*
  * a viewpoint for scene rendering
