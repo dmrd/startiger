@@ -6,11 +6,12 @@
 #include "R3Scene.h"
 #include <cmath>
 
-#define MAX_ROTATION .5
-#define ROTATION_RATE .5
+#define ROLL_MAX 0.5
+#define ROLL_SPEED 2.5
 
-#define FIRE_RATE .25
+#define MOVE_SPEED 20
 
+#define FIRE_PERIOD .25
 
 Player::Player(const Params &params_) :
     params(params_)
@@ -39,51 +40,79 @@ void Player::Create(void)
     mat->texture = NULL;
     mat->id = 0;
 
-    // create anode
-    node = new R3Node(new R3Mesh("arwing.off"),
-            mat, params.transform);
-    globals.scene->root->AddChild(node);
+    // create nodes
+
+    //R3Cylinder *debugshape = new R3Cylinder(R3null_point, 0.2, 3);
+
+    nodes.yawpos = new R3Node(NULL, NULL, params.transform);
+    nodes.pitch = new R3Node(NULL, NULL, R3identity_matrix);
+    nodes.roll = new R3Node(new R3Mesh("arwing.off"), mat, R3identity_matrix);
+
+    globals.scene->root->AddChild(nodes.yawpos);
+    nodes.yawpos->AddChild(nodes.pitch);
+    nodes.pitch->AddChild(nodes.roll);
+
+    rotation.yaw = 0;
+    rotation.pitch = 0;
+    rotation.roll = 0;
+
+    position = params.transform.getOrigin();
 
     // camera targets
-    globals.camerahandler->SetLookTarget(node);
-    cameramovetarget = new R3Node(NULL, NULL, R3Matrix(R3Point(0, 1.5, 12)));
-    node->AddChild(cameramovetarget);
-    globals.camerahandler->SetMoveTarget(cameramovetarget);
+
+    globals.camerahandler->SetLookTarget(nodes.yawpos);
+
+    nodes.camMove = new R3Node(NULL, NULL, R3Matrix(R3Point(0, 6, 21)));
+    nodes.pitch->AddChild(nodes.camMove);
+    globals.camerahandler->SetMoveTarget(nodes.camMove);
+
+    nodes.camLook = new R3Node(NULL, NULL, R3Matrix(R3Point(0, 3.5, 0)));
+    nodes.yawpos->AddChild(nodes.camLook);
+    globals.camerahandler->SetLookTarget(nodes.camLook);
 
     // initialize some values
-    rotation = 0;
-    lastFire = 0;
+    fireTimer = 0;
 }
 
 void Player::Update(double dt)
 {
+    // yaw/pitch/roll
+
+    rotation.yaw += (globals.keys['z'] - globals.keys['c']) * ROLL_SPEED * dt;
+    RotAnim(rotation.pitch, ROLL_MAX * (globals.keys['r'] - globals.keys['f']), ROLL_SPEED, dt);
+    RotAnim(rotation.roll,  ROLL_MAX * (globals.keys['a'] - globals.keys['d']), ROLL_SPEED, dt);
+
     // move
-    node->transformation.ZRotate(-rotation);
-    node->transformation.Translate(R3Vector(
-                3 * (globals.keys['d'] - globals.keys['a']),
-                3 * (globals.keys['w'] - globals.keys['s']),
-                0
-                ) * dt);
 
-    // banking left and right
-    double frameRotation = -(globals.keys['d'] - globals.keys['a']) * ROTATION_RATE * dt;
-    if (frameRotation*rotation <= 0 && abs(rotation) > 0.01) {
-        frameRotation = -rotation  / abs(rotation) * 2 * ROTATION_RATE * dt;
-    }
+    R3Vector dx(
+            globals.keys['d'] - globals.keys['a'],
+            globals.keys['w'] - globals.keys['s'],
+            globals.keys['k'] - globals.keys['i']
+            );
 
-    if (abs(rotation+frameRotation) > MAX_ROTATION)
-        frameRotation = 0;
-    rotation += frameRotation;
-    node->transformation.ZRotate(rotation);
+    dx.Transform(R3Matrix::XRotation(rotation.pitch));     // direction given by yaw, pitch
+    dx.Transform(R3Matrix::YRotation(rotation.yaw));
 
-    lastFire -= dt;
-    // shooting
-    if (lastFire <= 0 && globals.keys['j']) {
+    position += MOVE_SPEED * dx * dt;
+
+    // actually set the transform
+
+    nodes.yawpos->transformation = R3Matrix(position);     // have to translate first then rotate
+    nodes.yawpos->transformation.YRotate(rotation.yaw);    // else it gets weird
+    nodes.pitch->transformation = R3Matrix::XRotation(rotation.pitch);
+    nodes.roll->transformation = R3Matrix::ZRotation(rotation.roll);
+
+    // shoot
+
+    if (fireTimer > 0)
+        fireTimer -= dt;
+    else if (globals.keys['j'])
+    {
         Shot::Params shotparams;
         shotparams.transform = GetPosition();
-        shotparams.direction = R3Vector(0,0,-1);
+        shotparams.direction = R3negz_vector;
         globals.gomgr->Add(new Shot(shotparams));
-        lastFire = FIRE_RATE;
+        fireTimer = FIRE_PERIOD;
     }
 }
 
@@ -94,8 +123,6 @@ void Player::Destroy()
 
 R3Point Player::GetPosition()
 {
-    R3Point pos(R3null_point);
-    pos.Transform(node->transformation);
-    return pos;
+    return position;
 }
 

@@ -23,12 +23,45 @@ class Player : public GameObject
     protected:
         Params params;
 
-        R3Node *node;
-        R3Node *cameramovetarget;
+        struct
+        {
+            R3Node *yawpos;
+            R3Node *pitch;
+            R3Node *roll;
+
+            R3Node *camMove;   // camera position target
+            R3Node *camLook;   // camera look target
+        } nodes;
+
+        struct
+        {
+            double yaw;
+            double pitch;
+            double roll;
+        } rotation;
+
+        R3Point position;
+
+        // move rotvar toward target
+        inline void RotAnim(double &rotvar, double target, double speed, double dt)
+        {
+            if (rotvar < target)
+            {
+                rotvar += speed * dt;
+                if (rotvar > target)
+                    rotvar = target;
+            }
+            else if (rotvar > target)
+            {
+                rotvar -= speed * dt;
+                if (rotvar < target)
+                    rotvar = target;
+            }
+        }
+
         R3Material *mat;
 
-        double rotation;
-        double lastFire;
+        double fireTimer;
 };
 
 #endif

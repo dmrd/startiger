@@ -21,7 +21,7 @@ Flock::Flock(const Params &params_) :
     params(params_),
     neighborhood(4),
     repulsionArea(3),
-    vlim(3)
+    vlim(10)
 {
 }
 

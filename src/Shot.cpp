@@ -6,7 +6,7 @@
 #include <cmath>
 
 
-#define BULLET_SPEED 10
+#define BULLET_SPEED 40
 
 Shot::Shot(const Params &params_) :
     params(params_)
@@ -26,9 +26,9 @@ void Shot::Create(void)
     // create material, node
 
     mat = new R3Material();
-    mat->ka = R3Rgb(0.0, 0.5, 0.0, 1);
-    mat->kd = R3Rgb(0.0, 0.5, 0.0, 1);
-    mat->ks = R3Rgb(0.0, 0.5, 0.0, 1);
+    mat->ka = R3Rgb(0.2, 0.2, 0.2, 1);
+    mat->kd = R3Rgb(0.8, 0.2, 0.1, 1);
+    mat->ks = R3Rgb(0.8, 0.2, 0.1, 1);
     mat->kt = R3Rgb(0.0, 0.0, 0.0, 1);
     mat->emission = R3Rgb(0, 0, 0, 1);
     mat->shininess = 10;

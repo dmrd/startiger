@@ -14,6 +14,10 @@ class R3Matrix
                 double a30, double a31, double a32, double a33);
         R3Matrix(const double *array);
         R3Matrix(const R3Point &point);
+        
+        static R3Matrix XRotation(double radians);
+        static R3Matrix YRotation(double radians);
+        static R3Matrix ZRotation(double radians);
 
         // Entry acccess
         double *operator[](int i);
@@ -216,5 +220,43 @@ inline void R3Matrix::Pop(void) const
     glPopMatrix();
 }
 
+inline R3Matrix R3Matrix::XRotation(double radians)
+{
+    // rotate matrix around X axis counterclockwise
+    double c = cos(radians);
+    double s = sin(radians);
+    return R3Matrix(
+            1.0, 0.0, 0.0, 0.0,
+            0.0, c,   -s,  0.0,
+            0.0, s,   c,   0.0,
+            0.0, 0.0, 0.0, 1.0
+            );
+}
+
+inline R3Matrix R3Matrix::YRotation(double radians)
+{
+    // rotate matrix around Y axis counterclockwise
+    double c = cos(radians);
+    double s = sin(radians);
+    return R3Matrix(
+            c,   0.0, s,   0.0,
+            0.0, 1.0, 0.0, 0.0,
+            -s,  0.0, c,   0.0,
+            0.0, 0.0, 0.0, 1.0
+            );
+}
+
+inline R3Matrix R3Matrix::ZRotation(double radians)
+{
+    // rotate matrix around Z axis counterclockwise 
+    double c = cos(radians);
+    double s = sin(radians);
+    return R3Matrix(
+            c,   -s,  0.0, 0.0,
+            s,   c,   0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0
+            );
+}
 
 
