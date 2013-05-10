@@ -66,7 +66,7 @@ void App::Init(int *argc, char **argv)
     globals.gomgr->Add(new Player(playerparams));
 
     Flock::Params flockparams;
-    flockparams.spawn = R3Point(-10,0,-10);
+    flockparams.spawn = R3Point(-5,0,-10);
     flockparams.swarmSize = 10;
     flockparams.radius = 1;
     globals.gomgr->Add(new Flock(flockparams));

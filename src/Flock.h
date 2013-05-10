@@ -22,7 +22,6 @@ class Flock : public GameObject
 
     protected:
         Params params;
-
         vector<Boid *> boids;
         double neighborhood;
         double repulsionArea;
