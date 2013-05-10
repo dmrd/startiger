@@ -110,7 +110,7 @@ void Player::Update(double dt)
     {
         Shot::Params shotparams;
         shotparams.transform = GetPosition();
-        shotparams.direction = R3negz_vector;
+        shotparams.direction = nodes.pitch->getWorldTransform() * R3negz_vector;
         globals.gomgr->Add(new Shot(shotparams));
         fireTimer = FIRE_PERIOD;
     }
