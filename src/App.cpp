@@ -179,7 +179,9 @@ void App::Draw(void)
     glutSwapBuffers();
 }
 
-void App::HUD() {
+void App::HUD()
+{
+    return;
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
