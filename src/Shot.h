@@ -10,7 +10,7 @@
 class Shot : public GameObject
 {
     public:
-        struct Params { R3Matrix transform; };
+        struct Params { R3Matrix transform; R3Vector direction;};
         Shot(const Params &params_);
         ~Shot();
 

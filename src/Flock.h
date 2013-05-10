@@ -27,6 +27,7 @@ class Flock : public GameObject
         double neighborhood;
         double repulsionArea;
         double vlim;
+        vector<R3Point> targets;
         void UpdateBoidVelocity(int current);
 };
 

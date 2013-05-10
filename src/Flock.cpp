@@ -34,6 +34,11 @@ void Flock::Create(void)
         boids.push_back(newBoid);
         newBoid->velocity = R3Vector(1.0,0,0);
     }
+    targets.push_back(R3Point(0,0,0));
+    targets.push_back(R3Point(-5,-5,-15));
+    targets.push_back(R3Point(-5,5,-15));
+    targets.push_back(R3Point(5,5,-15));
+    targets.push_back(R3Point(5,-5,-15));
 }
 
 /*
@@ -107,7 +112,7 @@ void Flock::Update(double dt)
     /* Update positions */
     for (int i = 0; i < boids.size(); i++) {
         boids[i]->node->transformation.Translate((boids[i]->velocity) * dt);
-        //boids[i]-
+        boids[i]->ManageBullets(dt);
     }
 
 }

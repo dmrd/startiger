@@ -1,15 +1,20 @@
 #include "Globals.h"
 #include "R3Node.h"
 #include "GameObject.h"
+#include "Util.h"
 #include "Boid.h"
 #include "Flock.h"
+#include "Player.h"
+#include "Shot.h"
 #include "R3Scene.h"
+#include <iostream>
 
 Boid::Boid(R3Point spawn_, R3Vector velocity_, Flock *flock_) :
     spawn(spawn_),
     velocity(velocity_),
     flock(flock_),
-    alive(true)
+    alive(true),
+    firingRate(1)
 {
 }
 
@@ -43,8 +48,27 @@ void Boid::Update(double dt)
 {
 }
 
+/* Manage accumulating bullet firing probabilities and act of firing*/
+void Boid::ManageBullets(double dt) {
+    std::cout << bullets << "\n";
+    bullets += Util::UnitRandom() * dt * firingRate;
+    if (bullets > 1) {
+        bullets -= 1;
+        Shot::Params shotparams;
+        shotparams.transform = GetPosition();
+        shotparams.direction = globals.player->Player::GetPosition() - GetPosition();
+        globals.gomgr->Add(new Shot(shotparams));
+    }
+}
+
 /* TODO: write delete function */
 void Boid::Destroy()
 {
     //delete node;
+}
+
+
+R3Point Boid::GetPosition()
+{
+    return node->getWorldTransform().getOrigin();
 }

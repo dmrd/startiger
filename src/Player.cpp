@@ -79,6 +79,7 @@ void Player::Update(double dt)
     if (lastFire <= 0 && globals.keys['j']) {
         Shot::Params shotparams;
         shotparams.transform = GetPosition();
+        shotparams.direction = R3Vector(0,0,-1);
         globals.gomgr->Add(new Shot(shotparams));
         lastFire = FIRE_RATE;
     }

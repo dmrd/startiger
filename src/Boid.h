@@ -20,10 +20,15 @@ class Boid : public GameObject
         void Create(void);
         void Update(double dt);
         void Destroy();
+        void ManageBullets(double dt);
+        R3Point GetPosition();
 
         R3Node *node;
         R3Vector velocity;
         R3Point position; // Used by Flock to calculate relative locations
+        int targetID; // Current target index in flock targets
+        double firingRate; // Max amount added to bullets per second
+        double bullets; // Accumulate sum of random numbers.  Fire when greater than 1
         bool alive;
 };
 

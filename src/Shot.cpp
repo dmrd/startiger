@@ -6,7 +6,7 @@
 #include <cmath>
 
 
-#define BULLET_SPEED -40
+#define BULLET_SPEED 10
 
 Shot::Shot(const Params &params_) :
     params(params_)
@@ -20,6 +20,9 @@ Shot::~Shot()
 
 void Shot::Create(void)
 {
+    // Direction vector must be normalized
+    params.direction.Normalize();
+
     // create material, node
 
     mat = new R3Material();
@@ -37,8 +40,13 @@ void Shot::Create(void)
             mat);
 
     node->transformation.Transform(params.transform);
-    node->transformation.ZTranslate(-1);
-    node->transformation.XRotate(1.57);
+    //node->transformation.ZTranslate(-1);
+    //node->transformation.XRotate(1.57);
+    node->transformation.Rotate(R3negy_vector, params.direction);
+    //Adjust the direction vector to account for rotated bullet
+    R3Vector axis = R3Vector(R3negy_vector);
+    axis.Cross(params.direction);
+    params.direction.Rotate(axis, -1.57);
     globals.scene->root->AddChild(node);
 
 }
@@ -46,13 +54,7 @@ void Shot::Create(void)
 void Shot::Update(double dt)
 {
     // move
-    node->transformation.Translate(R3Vector(
-                0,
-                BULLET_SPEED,
-                0
-                ) * dt);
-
-
+    node->transformation.Translate(params.direction * BULLET_SPEED * dt);
 }
 
 void Shot::Destroy()
