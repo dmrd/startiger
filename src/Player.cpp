@@ -36,7 +36,7 @@ void Player::Create(void)
     mat->emission = R3Rgb(0, 0, 0, 1);
     mat->shininess = 10;
     mat->indexofrefraction = 1;
-    mat->texture = NULL;
+    mat->texture = new R2Image("tile.jpg");
     mat->id = 0;
 
     // create nodes
@@ -45,7 +45,8 @@ void Player::Create(void)
 
     nodes.yawpos = new R3Node(NULL, NULL, params.transform);
     nodes.pitch = new R3Node(NULL, NULL, R3identity_matrix);
-    nodes.roll = new R3Node(new R3Mesh("arwing.off"), mat, R3identity_matrix);
+    //nodes.roll = new R3Node(new R3Mesh("arwing.off"), mat, R3identity_matrix);
+    nodes.roll = new R3Node(new R3Sphere(R3null_point, 1), mat, R3identity_matrix);
 
     globals.scene->root->AddChild(nodes.yawpos);
     nodes.yawpos->AddChild(nodes.pitch);
