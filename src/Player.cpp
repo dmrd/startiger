@@ -27,8 +27,7 @@ void Player::Create(void)
     // let everyone know
     globals.player = this;
 
-    // create material, node
-
+    // create material
     mat = new R3Material();
     mat->ka = R3Rgb(0.2, 0.2, 0.2, 1);
     mat->kd = R3Rgb(0.5, 0.5, 0.5, 1);
@@ -40,9 +39,9 @@ void Player::Create(void)
     mat->texture = NULL;
     mat->id = 0;
 
+    // create anode
     node = new R3Node(new R3Mesh("arwing.off"),
             mat, params.transform);
-
     globals.scene->root->AddChild(node);
 
     // camera targets
@@ -50,6 +49,9 @@ void Player::Create(void)
     cameramovetarget = new R3Node(NULL, NULL, R3Matrix(R3Point(0, 1.5, 12)));
     node->AddChild(cameramovetarget);
     globals.camerahandler->SetMoveTarget(cameramovetarget);
+
+    // initialize some values
+    rotation = 0;
     lastFire = 0;
 }
 
