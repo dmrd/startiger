@@ -62,9 +62,13 @@ void Player::Create(void)
 
     globals.camerahandler->SetLookTarget(nodes.yawpos);
 
-    nodes.cameraMove = new R3Node(NULL, NULL, R3Matrix(R3Point(0, 5, 25)));
-    nodes.pitch->AddChild(nodes.cameraMove);
-    globals.camerahandler->SetMoveTarget(nodes.cameraMove);
+    nodes.camMove = new R3Node(NULL, NULL, R3Matrix(R3Point(0, 6, 21)));
+    nodes.pitch->AddChild(nodes.camMove);
+    globals.camerahandler->SetMoveTarget(nodes.camMove);
+
+    nodes.camLook = new R3Node(NULL, NULL, R3Matrix(R3Point(0, 3.5, 0)));
+    nodes.yawpos->AddChild(nodes.camLook);
+    globals.camerahandler->SetLookTarget(nodes.camLook);
 
     // initialize some values
     fireTimer = 0;
@@ -93,8 +97,8 @@ void Player::Update(double dt)
 
     // actually set the transform
 
-    nodes.yawpos->transformation = R3Matrix(position);
-    nodes.yawpos->transformation.YRotate(rotation.yaw);
+    nodes.yawpos->transformation = R3Matrix(position);     // have to translate first then rotate
+    nodes.yawpos->transformation.YRotate(rotation.yaw);    // else it gets weird
     nodes.pitch->transformation = R3Matrix::XRotation(rotation.pitch);
     nodes.roll->transformation = R3Matrix::ZRotation(rotation.roll);
 

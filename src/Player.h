@@ -29,7 +29,8 @@ class Player : public GameObject
             R3Node *pitch;
             R3Node *roll;
 
-            R3Node *cameraMove;
+            R3Node *camMove;   // camera position target
+            R3Node *camLook;   // camera look target
         } nodes;
 
         struct
