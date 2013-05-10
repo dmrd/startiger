@@ -23,12 +23,27 @@ class Player : public GameObject
     protected:
         Params params;
 
-        R3Node *node;
-        R3Node *cameramovetarget;
+        struct
+        {
+            R3Node *yawpos;
+            R3Node *pitch;
+            R3Node *roll;
+
+            R3Node *cameraMove;
+        } nodes;
+
+        struct
+        {
+            double yaw;
+            double pitch;
+            double roll;
+        } rotation;
+
+        R3Point position;
+
         R3Material *mat;
 
-        double rotation;
-        double lastFire;
+        double fireTimer;
 };
 
 #endif
