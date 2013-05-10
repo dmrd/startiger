@@ -14,7 +14,7 @@ Boid::Boid(R3Point spawn_, R3Vector velocity_, Flock *flock_) :
     velocity(velocity_),
     flock(flock_),
     alive(true),
-    firingRate(1)
+    firingRate(0.2)
 {
 }
 
@@ -25,6 +25,9 @@ Boid::~Boid()
 
 void Boid::Create(void)
 {
+    // Initialize bullet to random number to prevent flock all firing at once
+    bullets = Util::UnitRandom();
+
     // create material, node
 
     mat = new R3Material();
@@ -50,10 +53,9 @@ void Boid::Update(double dt)
 
 /* Manage accumulating bullet firing probabilities and act of firing*/
 void Boid::ManageBullets(double dt) {
-    std::cout << bullets << "\n";
-    bullets += Util::UnitRandom() * dt * firingRate;
+    bullets += dt * firingRate;
     if (bullets > 1) {
-        bullets -= 1;
+        bullets = Util::UnitRandom() - firingRate;
         Shot::Params shotparams;
         shotparams.transform = GetPosition();
         shotparams.direction = globals.player->Player::GetPosition() - GetPosition();
