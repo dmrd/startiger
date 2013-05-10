@@ -20,7 +20,6 @@ Player::Player(const Params &params_) :
 
 Player::~Player()
 {
-    delete mat;
 }
 
 void Player::Create(void)
@@ -119,6 +118,7 @@ void Player::Update(double dt)
 void Player::Destroy()
 {
     globals.player = NULL;
+    delete mat;
 }
 
 R3Point Player::GetPosition()

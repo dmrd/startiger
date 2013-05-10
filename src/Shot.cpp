@@ -7,6 +7,7 @@
 
 
 #define BULLET_SPEED 40
+#define LIFETIME 1
 
 Shot::Shot(const Params &params_) :
     params(params_)
@@ -16,7 +17,6 @@ Shot::Shot(const Params &params_) :
 
 Shot::~Shot()
 {
-    delete mat;
 }
 
 void Shot::Create(void)
@@ -42,16 +42,25 @@ void Shot::Create(void)
     node->transformation.Rotate(R3negz_vector, params.direction);
     globals.scene->root->AddChild(node);
 
+    // initialize some stuff
+    timeleft = LIFETIME;
 }
 
 void Shot::Update(double dt)
 {
+    // die?
+    timeleft -= dt;
+    if (globals.keys['g'] || timeleft <= 0)
+        globals.gomgr->Destroy(GetID());
+    
     // move
     node->transformation.Translate(R3Vector(0, 0, -BULLET_SPEED * dt));
 }
 
 void Shot::Destroy()
 {
+    node->Destroy();
+    delete mat;
 }
 
 R3Point Shot::GetPosition()

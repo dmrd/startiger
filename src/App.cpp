@@ -122,6 +122,11 @@ void App::Loop(void)
 void App::Quit(void)
 {
     glutDestroyWindow(globals.window.glutid);
+
+    // cleanup
+    delete globals.scene;
+    delete globals.gomgr;
+
     exit(0);
 }
 
@@ -174,7 +179,9 @@ void App::Draw(void)
     glutSwapBuffers();
 }
 
-void App::HUD() {
+void App::HUD()
+{
+    return;
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();

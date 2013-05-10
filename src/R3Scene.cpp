@@ -31,6 +31,12 @@ R3Scene::R3Scene(void) :
     root = new R3Node();
 }
 
+R3Scene::~R3Scene()
+{
+    ClearLights();
+    root->Destroy();
+}
+
 
 
 // --- draw ----------------------------------------------------------------------------
@@ -834,6 +840,13 @@ int R3Scene::Read(const string &name, R3Node *node)
 
     // Return success
     return 1;
+}
+
+void R3Scene::ClearLights(void)
+{
+    for (vector<R3Light *>::iterator iter = lights.begin();
+            iter != lights.end(); ++iter)
+        delete *iter;
 }
 
 

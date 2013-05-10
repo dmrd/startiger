@@ -25,6 +25,8 @@ class Shot : public GameObject
 
         R3Node *node;
         R3Material *mat;
+
+        double timeleft;
 };
 
 #endif

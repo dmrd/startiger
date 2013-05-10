@@ -6,10 +6,13 @@
 #include "R3Material.h"
 #include "R3Scene.h"
 
+#include <algorithm>
+#include <list>
+
 struct R3Node
 {
     struct R3Node *parent;
-    vector<R3Node *> children;
+    list<R3Node *> children;
     R3Shape *shape;
     R3Matrix transformation;
     R3Material *material;
@@ -31,6 +34,14 @@ struct R3Node
         material(material_),
         transformation(transformation_)
     {
+        if (shape)
+            REFCOUNT_UP(shape);
+    }
+
+    ~R3Node()
+    {
+        if (shape)
+            REFCOUNT_DOWN(shape);
     }
 
     void UpdateBbox(const R3Matrix &parentworldtransform)
@@ -45,7 +56,7 @@ struct R3Node
         else
             bbox = R3null_box;
 
-        for (vector<R3Node *>::iterator iter = children.begin();
+        for (list<R3Node *>::iterator iter = children.begin();
                 iter != children.end(); ++iter) 
         {
             (*iter)->UpdateBbox(worldtransform);
@@ -69,6 +80,31 @@ struct R3Node
         if (parent)
             return parent->getWorldTransform() * transformation;
         return transformation;
+    }
+
+    void Destroy(void)
+    {
+        if (parent)
+            parent->RemoveChild(this);
+        _Destroy();
+    }
+
+    protected:
+
+    // destroy without removing self from parent
+    void _Destroy(void)
+    {
+        for (list<R3Node *>::iterator iter = children.begin();
+                iter != children.end(); ++iter) 
+            (*iter)->_Destroy();
+        delete this;
+    }
+
+    void RemoveChild(R3Node *node)
+    {
+        list<R3Node *>::iterator found = find(children.begin(), children.end(), node);
+        if (found != children.end())
+            children.erase(found);
     }
 };
 
