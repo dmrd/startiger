@@ -86,7 +86,6 @@ struct R3Node
     {
         if (parent)
             parent->RemoveChild(this);
-
         _Destroy();
     }
 
@@ -97,10 +96,8 @@ struct R3Node
     {
         for (list<R3Node *>::iterator iter = children.begin();
                 iter != children.end(); ++iter) 
-        {
             (*iter)->_Destroy();
-            delete *iter;
-        }
+        delete this;
     }
 
     void RemoveChild(R3Node *node)
