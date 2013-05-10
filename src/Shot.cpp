@@ -11,6 +11,7 @@
 Shot::Shot(const Params &params_) :
     params(params_)
 {
+    params.direction.Normalize();
 }
 
 Shot::~Shot()
@@ -20,11 +21,10 @@ Shot::~Shot()
 
 void Shot::Create(void)
 {
-    // Direction vector must be normalized
+    // need unit-length direction
     params.direction.Normalize();
 
-    // create material, node
-
+    // create material
     mat = new R3Material();
     mat->ka = R3Rgb(0.2, 0.2, 0.2, 1);
     mat->kd = R3Rgb(0.8, 0.2, 0.1, 1);
@@ -36,17 +36,10 @@ void Shot::Create(void)
     mat->texture = NULL;
     mat->id = 0;
 
-    node = new R3Node(new R3Cylinder(R3Point(0, 0, 0), .05, 1),
-            mat);
-
-    node->transformation.Transform(params.transform);
-    //node->transformation.ZTranslate(-1);
-    //node->transformation.XRotate(1.57);
-    node->transformation.Rotate(R3negy_vector, params.direction);
-    //Adjust the direction vector to account for rotated bullet
-    R3Vector axis = R3Vector(R3negy_vector);
-    axis.Cross(params.direction);
-    params.direction.Rotate(axis, -1.57);
+    // create node
+    node = new R3Node(new R3Box(-0.05, -0.05, -0.5, 0.05, 0.05, 0.5), mat);
+    node->transformation = params.transform;
+    node->transformation.Rotate(R3negz_vector, params.direction);
     globals.scene->root->AddChild(node);
 
 }
@@ -54,7 +47,7 @@ void Shot::Create(void)
 void Shot::Update(double dt)
 {
     // move
-    node->transformation.Translate(params.direction * BULLET_SPEED * dt);
+    node->transformation.Translate(R3Vector(0, 0, -BULLET_SPEED * dt));
 }
 
 void Shot::Destroy()
