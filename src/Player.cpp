@@ -72,73 +72,11 @@ void Player::Create(void)
 
 void Player::Update(double dt)
 {
-    // yaw (easy)
+    // yaw/pitch/roll
 
-    rotation.yaw += ROLL_SPEED * dt * (globals.keys['z'] - globals.keys['c']);
-    
-    // pitch
-
-    if (globals.keys['r'])
-    {
-        if (rotation.pitch < ROLL_MAX)
-            rotation.pitch += ROLL_SPEED * dt;
-        if (rotation.pitch > ROLL_MAX)
-            rotation.pitch = ROLL_MAX;
-    }
-    else if (globals.keys['f'])
-    {
-        if (rotation.pitch > -ROLL_MAX)
-            rotation.pitch -= ROLL_SPEED * dt;
-        if (rotation.pitch < -ROLL_MAX)
-            rotation.pitch = -ROLL_MAX;
-    }
-    else
-    {
-        if (rotation.pitch < 0)
-        {
-            rotation.pitch += ROLL_SPEED * dt;
-            if (rotation.pitch > 0)
-                rotation.pitch = 0;
-        }
-        if (rotation.pitch > 0)
-        {
-            rotation.pitch -= ROLL_SPEED * dt;
-            if (rotation.pitch < 0)
-                rotation.pitch = 0;
-        }
-    }
-
-    // roll
-
-    if (globals.keys['a'])
-    {
-        if (rotation.roll < ROLL_MAX)
-            rotation.roll += ROLL_SPEED * dt;
-        if (rotation.roll > ROLL_MAX)
-            rotation.roll = ROLL_MAX;
-    }
-    else if (globals.keys['d'])
-    {
-        if (rotation.roll > -ROLL_MAX)
-            rotation.roll -= ROLL_SPEED * dt;
-        if (rotation.roll < -ROLL_MAX)
-            rotation.roll = -ROLL_MAX;
-    }
-    else
-    {
-        if (rotation.roll < 0)
-        {
-            rotation.roll += ROLL_SPEED * dt;
-            if (rotation.roll > 0)
-                rotation.roll = 0;
-        }
-        if (rotation.roll > 0)
-        {
-            rotation.roll -= ROLL_SPEED * dt;
-            if (rotation.roll < 0)
-                rotation.roll = 0;
-        }
-    }
+    rotation.yaw += (globals.keys['z'] - globals.keys['c']) * ROLL_SPEED * dt;
+    RotAnim(rotation.pitch, ROLL_MAX * (globals.keys['r'] - globals.keys['f']), ROLL_SPEED, dt);
+    RotAnim(rotation.roll,  ROLL_MAX * (globals.keys['a'] - globals.keys['d']), ROLL_SPEED, dt);
 
     // move
 
@@ -148,7 +86,7 @@ void Player::Update(double dt)
             globals.keys['k'] - globals.keys['i']
             );
 
-    dx.Transform(R3Matrix::XRotation(rotation.pitch));
+    dx.Transform(R3Matrix::XRotation(rotation.pitch));     // direction given by yaw, pitch
     dx.Transform(R3Matrix::YRotation(rotation.yaw));
 
     position += MOVE_SPEED * dx * dt;

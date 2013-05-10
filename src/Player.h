@@ -41,6 +41,23 @@ class Player : public GameObject
 
         R3Point position;
 
+        // move rotvar toward target
+        inline void RotAnim(double &rotvar, double target, double speed, double dt)
+        {
+            if (rotvar < target)
+            {
+                rotvar += speed * dt;
+                if (rotvar > target)
+                    rotvar = target;
+            }
+            else if (rotvar > target)
+            {
+                rotvar -= speed * dt;
+                if (rotvar < target)
+                    rotvar = target;
+            }
+        }
+
         R3Material *mat;
 
         double fireTimer;
