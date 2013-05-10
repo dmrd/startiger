@@ -32,7 +32,8 @@ void Boid::Create(void)
 
     mat = new R3Material();
     mat->ka = R3Rgb(0.2, 0.2, 0.2, 1);
-    mat->kd = R3Rgb(0.5, 0.5, 0.5, 1);
+    mat->kd = R3Rgb(Util::UnitRandom(), Util::UnitRandom(), Util::UnitRandom(), 1.0);
+    mat->kd = mat->kd * 0.5 + R3Rgb(0.5, 0.5, 0.5, 1.0);
     mat->ks = R3Rgb(0.5, 0.5, 0.5, 1);
     mat->kt = R3Rgb(0.0, 0.0, 0.0, 1);
     mat->emission = R3Rgb(0, 0, 0, 1);
@@ -41,7 +42,7 @@ void Boid::Create(void)
     mat->texture = NULL;
     mat->id = 0;
 
-    node = new R3Node(new R3Sphere(R3null_point, 0.02),
+    node = new R3Node(new R3Sphere(R3null_point, 0.2 + 0.3 * Util::UnitRandom()),
             mat, R3Matrix(spawn));
 
     globals.scene->root->AddChild(node);

@@ -42,10 +42,10 @@ void Player::Create(void)
 
     // create nodes
 
-    R3Cylinder *debugshape = new R3Cylinder(R3null_point, 0.2, 3);
+    //R3Cylinder *debugshape = new R3Cylinder(R3null_point, 0.2, 3);
 
-    nodes.yawpos = new R3Node(debugshape, mat, params.transform);
-    nodes.pitch = new R3Node(debugshape, mat, R3identity_matrix);
+    nodes.yawpos = new R3Node(NULL, NULL, params.transform);
+    nodes.pitch = new R3Node(NULL, NULL, R3identity_matrix);
     nodes.roll = new R3Node(new R3Mesh("arwing.off"), mat, R3identity_matrix);
 
     globals.scene->root->AddChild(nodes.yawpos);
