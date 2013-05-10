@@ -14,7 +14,7 @@ void R3Node::Draw(void) const
         material->Load();
     if (shape)
         shape->Draw();
-    for (vector<R3Node *>::const_iterator iter = children.begin();
+    for (list<R3Node *>::const_iterator iter = children.begin();
             iter != children.end(); ++iter) 
         (*iter)->Draw();
 

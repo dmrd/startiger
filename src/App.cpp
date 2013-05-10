@@ -122,6 +122,11 @@ void App::Loop(void)
 void App::Quit(void)
 {
     glutDestroyWindow(globals.window.glutid);
+
+    // cleanup
+    delete globals.scene;
+    delete globals.gomgr;
+
     exit(0);
 }
 

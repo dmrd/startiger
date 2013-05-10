@@ -20,7 +20,6 @@ Boid::Boid(R3Point spawn_, R3Vector velocity_, Flock *flock_) :
 
 Boid::~Boid()
 {
-    delete mat;
 }
 
 void Boid::Create(void)
@@ -67,6 +66,7 @@ void Boid::ManageBullets(double dt) {
 /* TODO: write delete function */
 void Boid::Destroy()
 {
+    delete mat;
     //delete node;
 }
 

@@ -70,8 +70,9 @@ class R3Node;
 struct R3Scene
 {
     public:
-        // Constructor functions
+        // Constructor/destructor
         R3Scene(void);
+        ~R3Scene();
 
         // Access functions
         R3Node *Root(void) const;
@@ -95,6 +96,9 @@ struct R3Scene
 
         // I/O
         int Read(const string &name, R3Node *root = NULL);
+
+        // Clear
+        void ClearLights(void);
 
     public:
         R3Node *root;

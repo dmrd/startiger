@@ -666,8 +666,10 @@ R3Node *IntersectWithScene(R3Scene *scene, R3Ray *ray, R3Node *node, R3Point *po
         *t = (*point - ray->Start()).Dot(ray->Vector());
 
     // Check intersections with the children
-    for (unsigned int i = 0; i < node->children.size(); i++) {
-        R3Node *result = IntersectWithScene(scene, ray, node->children[i], &tmpPoint, &tmpNormal, &tmpT);
+    for (list<R3Node *>::iterator iter = node->children.begin();
+            iter != node->children.end(); ++iter)
+    {
+        R3Node *result = IntersectWithScene(scene, ray, *iter, &tmpPoint, &tmpNormal, &tmpT);
         if(result != NULL){
             tmpPoint.Transform(node->transformation);
             if (tmpT != -1)
