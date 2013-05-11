@@ -6,6 +6,7 @@
 
 #include "R2/R2.h"
 #include "R3/R3.h"
+#include "R3Material.h"
 #include "R3Scene.h"
 #include "particle.h"
 #include <cmath>
@@ -83,20 +84,7 @@ R3Vector GetForce(R3Point position, R3Vector velocity, R3Scene *scene, R3Particl
         force += magnitude * direction;
     }
 
-    // Mutual attraction
-    double G = 6.67e-11;
 
-    for (int i = 0; i < scene->NParticles(); i++) {
-        R3Particle *other = scene->particles[i];
-        if (other == particle)
-            continue;
-
-        R3Vector direction = (other->position - position);
-        double length = direction.Length();
-        direction /= length;
-        double magnitude = G *particle->mass * other->mass / (length * length);
-        force += magnitude * direction;
-    }
 
 
     // Attempt at boids, not completed
@@ -338,10 +326,12 @@ void UpdateParticles(R3Scene *scene, double current_time, double delta_time, int
         double t;
 
         // If collided, move out of surface
+        /*
         if (NULL != IntersectWithScene(scene, segment, scene->root, &point, &normal, &t)){
             particle->velocity += -normal * (1 + particle->elasticity) * normal.Dot(particle->velocity);
             particle->position = point + normal/1000.0;
         }
+        */
 
         // Update trails
         if (particle->last_trail < 0 || particle->last_trail >= TRAIL_LENGTH) {
@@ -366,7 +356,8 @@ void UpdateParticles(R3Scene *scene, double current_time, double delta_time, int
         }
 
         // If we were told to remove the particle, or we've hit a sink, remove it
-        if (remove || RemoveSinkIntersections(scene, &segment)) {
+        
+        if (remove){// || RemoveSinkIntersections(scene, &segment)) {
             delete scene->particles[i];
             scene->particles[i] = scene->particles.back();
             scene->particles.pop_back();
@@ -384,15 +375,14 @@ void UpdateParticles(R3Scene *scene, double current_time, double delta_time, int
 void RenderParticles(R3Scene *scene, double current_time, double delta_time)
 {
 /* TEMPORARILY COMMENTED OUT
+ * */
   // Draw every particle
 
   // REPLACE CODE HERE
-  glDisable(GL_LIGHTING);
   glPointSize(5);
 
   // Allow alphas
-  glEnable(GL_BLEND);
-  glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
   for (int i = 0; i < scene->NParticles(); i++) {
       R3Particle *particle = scene->Particle(i);
@@ -401,19 +391,18 @@ void RenderParticles(R3Scene *scene, double current_time, double delta_time)
       // Dynamically chose alpha based on lifetime
       double alpha = 1;
       if (particle->startLifetime != 0)
-          alpha = particle->lifetime/particle->startLifetime;;
+          alpha = particle->lifetime/particle->startLifetime;
       const R3Point& position = particle->position;
 
       // If there is a texture, draw a square facing the camera and
       // add the texture to it.
-      if (particle->material->texture != NULL) {
-          glColor4d(particle->material->kd[0], particle->material->kd[1], particle->material->kd[2], alpha);
-          glDepthMask(GL_FALSE);
-          glEnable(GL_TEXTURE_2D);
+//      if (particle->material->texture != NULL) {
+          //glColor4d(particle->material->params.kd[0], particle->material->params.kd[1], particle->material->params.kd[2], alpha);
 
           //TODO: fix this to use R3Material::Load() with GL_LIGHTING
           //      disabled
           //glBindTexture(GL_TEXTURE_2D, particle->material->textureName);
+          particle->material->Load();
 
 
           glBegin(GL_QUADS);
@@ -431,9 +420,8 @@ void RenderParticles(R3Scene *scene, double current_time, double delta_time)
           glVertex3d(position[0] - right[0] + up[0], position[1] - right[1] + up[1], position[2] - right[2] + up[2]);
 
           glEnd();
-          glDisable(GL_TEXTURE_2D);
 
-      } else {
+/*      } else {
 
 #ifdef FADE
           glColor4d(particle->material->kd[0], particle->material->kd[1], particle->material->kd[2], alpha);
@@ -444,14 +432,13 @@ void RenderParticles(R3Scene *scene, double current_time, double delta_time)
           glBegin(GL_POINTS);
           glVertex3d(position[0], position[1], position[2]);
           glEnd();
-      }
+      }*/
   }   
 
-  glDisable(GL_BLEND);
 
 #ifdef TRAILS_ON
   // Draw the trails
-  for (int i = 0; i < scene->NParticles(); i++) {
+/*  for (int i = 0; i < scene->NParticles(); i++) {
       R3Particle *particle = scene->Particle(i);
       glBegin(GL_LINE_STRIP);
       for (int j = 0; j < TRAIL_LENGTH; j++) {
@@ -463,10 +450,10 @@ void RenderParticles(R3Scene *scene, double current_time, double delta_time)
       }
       glEnd();
   }
+  */
 #endif
 
-  glDepthMask(GL_TRUE);
-  */
+  /**/
 }
 
 

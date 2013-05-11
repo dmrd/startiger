@@ -6,6 +6,7 @@
 #include "R3/R3.h"
 #include "R3Scene.h"
 #include "Player.h"
+#include "particle.h"
 #include "Flock.h"
 #include "Boid.h"
 #include <string>
@@ -182,6 +183,8 @@ void App::Draw(void)
     // draw scene
     globals.scene->Draw();
 
+    RenderParticles(globals.scene, 0, 0);
+
     // draw HUD
     HUD();
 
@@ -190,32 +193,7 @@ void App::Draw(void)
 
 void App::HUD()
 {
-    /*glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    glOrtho(0.0, globals.window.width, globals.window.height, 0.0, -1.0, 10.0);
-    glDisable(GL_DEPTH_TEST);
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();        //----Not sure if I need this
-    glLoadIdentity();
-    //glDisable(GL_CULL_FACE);
 
-    glClear(GL_DEPTH_BUFFER_BIT);
-
-    glBegin(GL_QUADS);
-    glColor3f(1.0f, 0.0f, 0.0);
-    glVertex2f(0.0, 0.0);
-    glVertex2f(100.0, 0.0);
-    glVertex2f(100.0, 100.0);
-    glVertex2f(0.0, 100.0);
-    glEnd();
-
-    // Making sure we can render 3d again
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-    glMatrixMode(GL_MODELVIEW);
-    glPopMatrix();       // ----and this?
-    */
     glDisable(GL_DEPTH_TEST);
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
@@ -329,6 +307,9 @@ void App::Update()
 
     // update objects
     globals.gomgr->Update(delta_time);
+
+    UpdateParticles(globals.scene, current_time, delta_time, 0);
+    GenerateParticles(globals.scene, current_time, delta_time);
 
     // quit?
     if (globals.quit)

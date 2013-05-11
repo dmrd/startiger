@@ -13,6 +13,10 @@
 
 #define FIRE_PERIOD .25
 
+#define FORWARD_VELCOITY 1
+
+#define BOUNDARY 10 
+
 Player::Player(const Params &params_) :
     params(params_)
 {
@@ -95,7 +99,17 @@ void Player::Update(double dt)
 
     // actually set the transform
 
+    if (position.X() < -BOUNDARY)
+        position.SetX(-BOUNDARY);
+    if (position.X() > BOUNDARY)
+        position.SetX(BOUNDARY);
+    if (position.Y() < -BOUNDARY)
+        position.SetY(-BOUNDARY);
+    if (position.Y() > BOUNDARY)
+        position.SetY(BOUNDARY);
+
     nodes.yawpos->transformation = R3Matrix(position);     // have to translate first then rotate
+
     nodes.yawpos->transformation.YRotate(rotation.yaw);    // else it gets weird
     nodes.pitch->transformation = R3Matrix::XRotation(rotation.pitch);
     nodes.roll->transformation = R3Matrix::ZRotation(rotation.roll);
