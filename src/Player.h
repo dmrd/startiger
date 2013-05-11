@@ -22,7 +22,6 @@ class Player : public GameObject
 
         float GetHealth();
 
-    protected:
     public:
         Params params;
 
@@ -67,6 +66,7 @@ class Player : public GameObject
         float health;
         double fireTimer;
         int lives;
+        int score;
 };
 
 #endif

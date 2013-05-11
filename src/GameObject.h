@@ -68,7 +68,7 @@ class GameObjectManager
             {
                 gameObjects.erase(found);
                 found->second->Destroy();
-                delete found->second;
+                //delete found->second;
             }
         }
 

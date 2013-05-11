@@ -1,5 +1,6 @@
 #include "Util.h"
 #include "R2/R2Image.h"
+#include "R2/R2Pixel.h"
 
 namespace Util {
 
@@ -109,7 +110,7 @@ namespace Util {
     }
 
 
-    int GetTransparentTexture(char *imageName, char *transName) {
+    GLuint GetTransparentTexture(char *imageName, char *transName) {
 
         // Read texture image
         R2Image img = R2Image();
@@ -149,14 +150,17 @@ namespace Util {
         for (int i = 0; i < img.Width(); i++) {
             for (int j = 0; j < img.Height(); j++) {
                 for (int k = 0; k < 4; k++) {
-                    data[i * img.Height()*4 + j * 4 + k] = transparent_part.Pixel(i, j)[0] * 255;
+                    if (k == 3)
+                        data[i * img.Height()*4 + j * 4 + k] = transparent_part.Pixel(i,j)[0]*255;
+                    else
+                        data[i * img.Height()*4 + j * 4 + k] = img.Pixel(i,j)[k]*255;
                 }
             }
         }
         gluBuild2DMipmaps( GL_TEXTURE_2D, GL_RGBA, img.Width(), img.Height(),
                 GL_RGBA, GL_UNSIGNED_BYTE, data );
 
-        //delete data;
+        delete data;
 
         return texName;
 

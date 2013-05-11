@@ -8,11 +8,13 @@
 #include "Player.h"
 #include "Flock.h"
 #include "Boid.h"
+#include <string>
+#include <sstream>
 
 #define START_WIN_WIDTH    800
 #define START_WIN_HEIGHT   600
 
-int hud_img;
+GLuint hud_img;
 
 // --- main -----------------------------------------------------------------
 
@@ -22,13 +24,12 @@ void App::Init(int *argc, char **argv)
     if (!App::ParseArgs(*argc, argv))
         exit(1);
 
-    // load scene
-    printf("Input scene: %s\n", globals.input_scene_name.c_str());
-    globals.scene = new R3Scene();
-    globals.scene->Read(globals.input_scene_name);
+
 
     // initialize GLUT
     glutInit(argc, argv);
+
+
 
     // window
     glutInitWindowPosition(100, 100);
@@ -37,6 +38,11 @@ void App::Init(int *argc, char **argv)
     glutInitWindowSize(globals.window.width, globals.window.height);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     globals.window.glutid = glutCreateWindow("StarTiger");
+
+    // load scene
+    printf("Input scene: %s\n", globals.input_scene_name.c_str());
+    globals.scene = new R3Scene();
+    globals.scene->Read(globals.input_scene_name);
 
     // callbacks
     glutIdleFunc(App::Idle);
@@ -72,7 +78,7 @@ void App::Init(int *argc, char **argv)
     flockparams.radius = 1;
     globals.gomgr->Add(new Flock(flockparams));
 
-    hud_img = Util::GetTransparentTexture("snowflake.jpg", "snowflake_transparent.jpg");
+    hud_img = Util::GetTransparentTexture("ship.jpg", "ship_transparent.jpg");
 }
 
 int App::ParseArgs(int argc, char **argv)
@@ -257,25 +263,46 @@ void App::HUD()
 
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     glBindTexture(GL_TEXTURE_2D, hud_img);
-    printf("hud_img %d\n", hud_img);
 
 
     glBegin(GL_QUADS);
 
+    glTexCoord2d(1.0, 0.0); 
+    glVertex2d(globals.window.width - 150.0, 15.0);
+
     glTexCoord2d(0.0, 0.0);
-    glVertex2d(0.0, 0.0);
+    glVertex2d(globals.window.width - 150.0, 65.0);
 
     glTexCoord2d(0.0, 1.0);
-    glVertex2d(0.0, 100.0);
+    glVertex2d(globals.window.width - 100.0, 65.0);
 
     glTexCoord2d(1.0, 1.0);
-    glVertex2d(100.0, 100.0);
-
-    glTexCoord2d(1.0, 0.0); 
-    glVertex2d(100.0, 0.0);
+    glVertex2d(globals.window.width - 100.0, 15.0);
 
     glEnd();
     glDisable(GL_TEXTURE_2D);
+
+    // lives
+    stringstream ss;
+    ss << "x" << globals.player->lives;
+    glColor3f(0.8f, 0.8f, 0.3f);
+    glRasterPos2f(globals.window.width - 90.0, 45.0);
+
+    for (int i = 0; i < ss.str().length(); i++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ss.str().at(i));
+    }
+
+    // score
+    stringstream ss2;
+    ss2 << "Score: " << globals.player->score;
+    glColor3f(0.8f, 0.8f, 0.3f);
+    glRasterPos2f(globals.window.width/2, 45.0);
+
+    for (int i = 0; i < ss2.str().length(); i++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ss2.str().at(i));
+    }
+
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);

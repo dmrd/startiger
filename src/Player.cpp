@@ -68,6 +68,7 @@ void Player::Create(void)
     fireTimer = 0;
     health = 1;
     lives = 3;
+    score = 0;
 }
 
 void Player::Update(double dt)
