@@ -11,6 +11,7 @@
 #include "R3/R3.h"
 #include "R3Camera.h"
 #include "Dirs.h"
+#include "Player.h"
 
 
 R3Scene::R3Scene(void) :
@@ -29,10 +30,17 @@ R3Scene::R3Scene(void) :
 
     // Create root node
     root = new R3Node();
+
+    // Create skybox
+    skybox.material = NULL;
+    skybox.mesh = new R3Mesh("skybox.off", true);
 }
 
 R3Scene::~R3Scene()
 {
+    delete skybox.mesh;
+    delete skybox.material;
+
     ClearLights();
     root->Destroy();
 }
@@ -61,6 +69,27 @@ void R3Scene::Draw()
     // camera!
     camera.Load();
     camera.UpdateFrustumPlanes();
+
+    // skybox!
+    glDisable(GL_LIGHTING);
+
+    if (!skybox.material)
+    {
+        R3Material::Params skyboxMatParams;
+        skyboxMatParams.textureName = "space3.jpg";
+        skybox.material = new R3Material(skyboxMatParams);
+    }
+    skybox.material->Load();
+
+    R3Matrix skyboxTransform(camera.eye);
+    skyboxTransform.XRotate(M_PI/2);
+    skyboxTransform.Push();
+
+    R3Sphere(R3null_point, 100).Draw();
+
+    skyboxTransform.Pop();
+
+    glEnable(GL_LIGHTING);
     
     // action!
     UpdateBboxes();
@@ -228,16 +257,15 @@ int R3Scene::Read(const string &name, R3Node *node)
     vector<R3Material *> materials;
 
     // Create default material
-    R3Material *default_material = new R3Material();
-    default_material->ka = R3Rgb(0.2, 0.2, 0.2, 1);
-    default_material->kd = R3Rgb(0.5, 0.5, 0.5, 1);
-    default_material->ks = R3Rgb(0.5, 0.5, 0.5, 1);
-    default_material->kt = R3Rgb(0.0, 0.0, 0.0, 1);
-    default_material->emission = R3Rgb(0, 0, 0, 1);
-    default_material->shininess = 10;
-    default_material->indexofrefraction = 1;
-    default_material->texture = NULL;
-    default_material->id = 0;
+    R3Material::Params defaultMatParams;
+    defaultMatParams.ka = R3Rgb(0.2, 0.2, 0.2, 1);
+    defaultMatParams.kd = R3Rgb(0.5, 0.5, 0.5, 1);
+    defaultMatParams.ks = R3Rgb(0.5, 0.5, 0.5, 1);
+    defaultMatParams.kt = R3Rgb(0.0, 0.0, 0.0, 1);
+    defaultMatParams.emission = R3Rgb(0, 0, 0, 1);
+    defaultMatParams.shininess = 10;
+    defaultMatParams.textureName = "";
+    R3Material *default_material = new R3Material(defaultMatParams);
 
     // Create stack of group information
     const int max_depth = 1024;
@@ -546,27 +574,18 @@ int R3Scene::Read(const string &name, R3Node *node)
             }
 
             // Create material
-            R3Material *material = new R3Material();
-            material->ka = ka;
-            material->kd = kd;
-            material->ks = ks;
-            material->kt = kt;
-            material->emission = e;
-            material->shininess = n;
-            material->indexofrefraction = ir;
-            material->texture = NULL;
-
-            // Read texture
+            R3Material::Params matParams;
+            matParams.ka = ka;
+            matParams.kd = kd;
+            matParams.ks = ks;
+            matParams.kt = kt;
+            matParams.emission = e;
+            matParams.shininess = n;
             if (strcmp(texture_name, "0"))
-            {
-                // Read texture image
-                material->texture = new R2Image();
-                if (!material->texture->Read(texture_name))
-                {
-                    fprintf(stderr, "Unable to read texture from %s at command %d in file %s\n", texture_name, command_number, path.c_str());
-                    return 0;
-                }
-            }
+                matParams.textureName = texture_name;
+            else
+                matParams.textureName = "";
+            R3Material *material = new R3Material(matParams);
 
             // Insert material
             materials.push_back(material);

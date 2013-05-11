@@ -83,7 +83,7 @@ struct R3Mesh : public R3Shape
     // Constructors
     R3Mesh(void);
     R3Mesh(const R3Mesh& mesh);
-    R3Mesh(const string &name);
+    R3Mesh(const string &name, bool uv = false);
     ~R3Mesh(void);
 
     // Properties
@@ -178,6 +178,7 @@ struct R3Mesh : public R3Shape
     R3Box bbox;
     double totalArea;
     vector<double> meshAreas;
+    bool readuvs;
 };
 
 

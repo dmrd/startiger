@@ -25,16 +25,9 @@ void Shot::Create(void)
     params.direction.Normalize();
 
     // create material
-    mat = new R3Material();
-    mat->ka = R3Rgb(0.2, 0.2, 0.2, 1);
-    mat->kd = R3Rgb(0.8, 0.2, 0.1, 1);
-    mat->ks = R3Rgb(0.8, 0.2, 0.1, 1);
-    mat->kt = R3Rgb(0.0, 0.0, 0.0, 1);
-    mat->emission = R3Rgb(0, 0, 0, 1);
-    mat->shininess = 10;
-    mat->indexofrefraction = 1;
-    mat->texture = NULL;
-    mat->id = 0;
+    R3Material::Params matParams;
+    matParams.kd = R3Rgb(0.8, 0.1, 0.1, 1);
+    mat = new R3Material(matParams);
 
     // create node
     node = new R3Node(new R3Box(-0.05, -0.05, -0.5, 0.05, 0.05, 0.5), mat);

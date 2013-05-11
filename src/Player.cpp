@@ -28,16 +28,9 @@ void Player::Create(void)
     globals.player = this;
 
     // create material
-    mat = new R3Material();
-    mat->ka = R3Rgb(0.2, 0.2, 0.2, 1);
-    mat->kd = R3Rgb(0.5, 0.5, 0.5, 1);
-    mat->ks = R3Rgb(0.5, 0.5, 0.5, 1);
-    mat->kt = R3Rgb(0.0, 0.0, 0.0, 1);
-    mat->emission = R3Rgb(0, 0, 0, 1);
-    mat->shininess = 10;
-    mat->indexofrefraction = 1;
-    mat->texture = NULL;
-    mat->id = 0;
+    R3Material::Params matParams;
+    //matParams.textureName = "skybox1.jpg";
+    mat = new R3Material(matParams);
 
     // create nodes
 
@@ -46,6 +39,8 @@ void Player::Create(void)
     nodes.yawpos = new R3Node(NULL, NULL, params.transform);
     nodes.pitch = new R3Node(NULL, NULL, R3identity_matrix);
     nodes.roll = new R3Node(new R3Mesh("arwing.off"), mat, R3identity_matrix);
+    //nodes.roll = new R3Node(new R3Mesh("skybox.off", true), mat, R3identity_matrix);
+    //nodes.roll = new R3Node(new R3Box(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5), mat, R3identity_matrix);
 
     globals.scene->root->AddChild(nodes.yawpos);
     nodes.yawpos->AddChild(nodes.pitch);
@@ -112,7 +107,7 @@ void Player::Update(double dt)
     {
         Shot::Params shotparams;
         shotparams.transform = GetPosition();
-        shotparams.direction = R3negz_vector;
+        shotparams.direction = nodes.pitch->getWorldTransform() * R3negz_vector;
         globals.gomgr->Add(new Shot(shotparams));
         fireTimer = FIRE_PERIOD;
     }

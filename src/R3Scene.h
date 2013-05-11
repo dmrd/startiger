@@ -112,6 +112,12 @@ struct R3Scene
         R2Pixel background;
         R2Pixel ambient;
         double time;
+
+        struct
+        {
+            R3Mesh *mesh;
+            R3Material *material;
+        } skybox;
 };
 
 

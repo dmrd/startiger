@@ -20,10 +20,13 @@ class Player : public GameObject
 
         R3Point GetPosition();
 
+<<<<<<< HEAD
         float GetHealth();
 
     protected:
+=======
     public:
+>>>>>>> 71753bf096c94e3a13bdafab6afa1804be3a8d59
         Params params;
 
         struct

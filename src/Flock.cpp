@@ -51,6 +51,9 @@ void Flock::Create(void)
 /*
  * Update velocity of a single boid based on its neighborhood
  * Basic rules based on http://www.kfish.org/boids/pseudocode.html
+ * Fly to center of boids
+ * Avoid getting too close to other boids
+ * Align velocity with nearby boids
  */
 void Flock::UpdateBoidVelocity(int current)
 {
@@ -73,6 +76,7 @@ void Flock::UpdateBoidVelocity(int current)
         //Can only see ahead of self within a small area
         if (dist > neighborhood || boid->velocity.Dot(vec) < 0) { continue; }
         numNeighbors++;
+
         center += boids[id]->position;
         velocity += boids[id]->velocity;
         if (dist < repulsionArea) {
@@ -82,8 +86,9 @@ void Flock::UpdateBoidVelocity(int current)
 
     if (numNeighbors > 0) {
         center /= numNeighbors;
+        R3Vector centerV = (center - boid->position) / 100;
         velocity /= numNeighbors;
-        R3Vector centerV = (center - boid->position) / 8;
+        velocity -= boid->velocity;
         velocity /= 100;
         boid->velocity += velocity + centerV + repulsion;
     }
