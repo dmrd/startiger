@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "R3Node.h"
 #include "GameObject.h"
+#include "Player.h"
 
 class Flock;
 
@@ -28,6 +29,7 @@ class Boid : public GameObject
             if (other && other->GetType() == OBJ_PLAYERSHOT)
             {
                 globals.gomgr->Destroy(other->GetID());
+                globals.player->score += 20;
                 alive = false;
             }
         }
