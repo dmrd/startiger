@@ -110,7 +110,7 @@ namespace Util {
     }
 
 
-    GLuint GetTransparentTexture(char *imageName, char *transName) {
+    GLuint GetTransparentTexture(const char *imageName, const char *transName) {
 
         // Read texture image
         R2Image img = R2Image();

@@ -17,7 +17,7 @@ namespace Util {
     double SymmetricRandom(void);    // random in [-1, 1]
     R3Vector BallRandom(double r);   // random in ball of radius r
     R3Point PointFromMatrix(const R3Matrix &mat);
-    GLuint GetTransparentTexture(char *image, char *trans);
+    GLuint GetTransparentTexture(const char *image, const char *trans);
 }
 
 #endif
