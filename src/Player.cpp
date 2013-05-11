@@ -29,6 +29,7 @@ void Player::Create(void)
 
     // create material
     R3Material::Params matParams;
+    //matParams.textureName = "skybox1.jpg";
     mat = new R3Material(matParams);
 
     // create nodes
@@ -38,6 +39,8 @@ void Player::Create(void)
     nodes.yawpos = new R3Node(NULL, NULL, params.transform);
     nodes.pitch = new R3Node(NULL, NULL, R3identity_matrix);
     nodes.roll = new R3Node(new R3Mesh("arwing.off"), mat, R3identity_matrix);
+    //nodes.roll = new R3Node(new R3Mesh("skybox.off", true), mat, R3identity_matrix);
+    //nodes.roll = new R3Node(new R3Box(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5), mat, R3identity_matrix);
 
     globals.scene->root->AddChild(nodes.yawpos);
     nodes.yawpos->AddChild(nodes.pitch);

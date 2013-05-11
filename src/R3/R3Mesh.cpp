@@ -808,6 +808,8 @@ void R3Mesh::Draw(void) const
         {
             R3MeshVertex *vertex = face->vertices[j];
             const R3Point& p = vertex->position;
+            const R2Point& t = vertex->texcoords;
+            glTexCoord2d(t[0], t[1]);
             glVertex3d(p[0], p[1], p[2]);
         }
         glEnd();
