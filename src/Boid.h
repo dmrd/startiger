@@ -19,13 +19,25 @@ class Boid : public GameObject
 
         Boid(R3Point spawn_, R3Vector velocity_, Flock *flock_);
         ~Boid();
+
         void Create(void);
         void Update(double dt);
         void Destroy();
+        void Collide(GameObject *other)
+        {
+            if (other && other->GetType() == OBJ_PLAYERSHOT)
+            {
+                globals.gomgr->Destroy(other->GetID());
+                alive = false;
+            }
+        }
+
         void ManageBullets(double dt);
         R3Point GetPosition();
 
         R3Node *node;
+        R3Node *child;
+
         R3Vector velocity;
         R3Point position; // Used by Flock to calculate relative locations
         int targetID; // Current target index in flock targets

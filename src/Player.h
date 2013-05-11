@@ -22,7 +22,7 @@ class Player : public GameObject
         void Destroy();
         void Collide(GameObject *other)
         {
-            if (other && other->GetType() == OBJ_SHOT)
+            if (other && other->GetType() == OBJ_ENEMYSHOT)
             {
                 globals.gomgr->Destroy(other->GetID());
                 health -= 0.01;

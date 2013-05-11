@@ -122,7 +122,8 @@ void Flock::Update(double dt)
             boids[params.swarmSize] = boids[i];
             params.swarmSize++;
         } else {
-            boids[i]->Destroy();
+            //boids[i]->Destroy();
+            globals.gomgr->Destroy(boids[i]->GetID());
         }
     }
     if (oSize != params.swarmSize) {

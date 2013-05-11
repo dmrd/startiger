@@ -96,14 +96,14 @@ void Player::Update(double dt)
 
     // actually set the transform
 
-    if (position.X() < -BOUNDARY)
-        position.SetX(-BOUNDARY);
-    if (position.X() > BOUNDARY)
-        position.SetX(BOUNDARY);
-    if (position.Y() < -BOUNDARY)
-        position.SetY(-BOUNDARY);
-    if (position.Y() > BOUNDARY)
-        position.SetY(BOUNDARY);
+    //if (position.X() < -BOUNDARY)
+        //position.SetX(-BOUNDARY);
+    //if (position.X() > BOUNDARY)
+        //position.SetX(BOUNDARY);
+    //if (position.Y() < -BOUNDARY)
+        //position.SetY(-BOUNDARY);
+    //if (position.Y() > BOUNDARY)
+        //position.SetY(BOUNDARY);
 
     nodes.yawpos->transformation = R3Matrix(position);     // have to translate first then rotate
 
@@ -120,6 +120,7 @@ void Player::Update(double dt)
         Shot::Params shotparams;
         shotparams.transform = GetPosition();
         shotparams.direction = nodes.pitch->getWorldTransform() * R3negz_vector;
+        shotparams.playershot = true;
         globals.gomgr->Add(new Shot(shotparams));
         fireTimer = FIRE_PERIOD;
     }

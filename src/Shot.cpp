@@ -26,7 +26,7 @@ void Shot::Create(void)
 
     // create material
     R3Material::Params matParams;
-    matParams.kd = R3Rgb(0.8, 0.1, 0.1, 1);
+    matParams.kd = params.playershot ? R3Rgb(0.9, 0.8, 0.0, 1) : R3Rgb(0.8, 0.1, 0.1, 1);
     mat = new R3Material(matParams);
 
     // create node
@@ -34,6 +34,9 @@ void Shot::Create(void)
     node->transformation = params.transform;
     node->transformation.Rotate(R3negz_vector, params.direction);
     globals.scene->root->AddChild(node);
+
+    // set shot type
+    type = params.playershot ? OBJ_PLAYERSHOT : OBJ_ENEMYSHOT;
 
     // initialize some stuff
     timeleft = LIFETIME;

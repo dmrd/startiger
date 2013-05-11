@@ -13,7 +13,8 @@ enum GameObjectType
 {
     OBJ_UNDEF,
     OBJ_PLAYER,
-    OBJ_SHOT,
+    OBJ_PLAYERSHOT,
+    OBJ_ENEMYSHOT,
     OBJ_FLOCK,
     OBJ_BOID
 };
