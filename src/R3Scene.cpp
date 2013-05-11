@@ -32,7 +32,8 @@ R3Scene::R3Scene(void) :
     root = new R3Node();
 
     // Create skybox
-    skybox.material = NULL;
+    skybox.material = NULL; // will initialize later, doesn't work here
+                            // for some reason
     skybox.mesh = new R3Mesh("skybox.off", true);
 }
 
@@ -82,11 +83,9 @@ void R3Scene::Draw()
     skybox.material->Load();
 
     R3Matrix skyboxTransform(camera.eye);
-    skyboxTransform.XRotate(M_PI/2);
+    skyboxTransform.XRotate(M_PI/2);    // look at side of skysphere
     skyboxTransform.Push();
-
     R3Sphere(R3null_point, 100).Draw();
-
     skyboxTransform.Pop();
 
     glEnable(GL_LIGHTING);
