@@ -71,10 +71,13 @@ void Player::Create(void)
 
     // initialize some values
     fireTimer = 0;
+    health = 1;
+    lives = 3;
 }
 
 void Player::Update(double dt)
 {
+    health -= dt*.01;
     // yaw/pitch/roll
 
     rotation.yaw += (globals.keys['z'] - globals.keys['c']) * ROLL_SPEED * dt;
@@ -126,3 +129,7 @@ R3Point Player::GetPosition()
     return position;
 }
 
+float Player::GetHealth()
+{
+    return health;
+}

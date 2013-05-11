@@ -1,4 +1,5 @@
 #include "Util.h"
+#include "R2/R2Image.h"
 
 namespace Util {
 
@@ -105,6 +106,60 @@ namespace Util {
 
     R3Point PointFromMatrix(const R3Matrix &mat) {
         return R3Point(mat[0][3], mat[1][3], mat[2][3]);
+    }
+
+
+    int GetTransparentTexture(char *imageName, char *transName) {
+
+        // Read texture image
+        R2Image img = R2Image();
+        if (!img.Read(imageName)) {
+            return -1;
+
+        }
+        R2Image transparent_part = R2Image();
+        // Get texture filename
+
+        // Read texture image
+        if (!transparent_part.Read(transName)) {
+            return -1;
+        }
+        GLuint texName;
+
+        glGenTextures(1, &texName);
+        glBindTexture(GL_TEXTURE_2D, texName);
+        glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+
+        // when texture area is small, bilinear filter the closest mipmap
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                GL_LINEAR_MIPMAP_NEAREST );
+        // when texture area is large, bilinear filter the first mipmap
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+
+        bool wrap = true;
+        // if wrap is true, the texture wraps over at the edges (repeat)
+        //       ... false, the texture ends at the edges (clamp)
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+                wrap ? GL_REPEAT : GL_CLAMP );
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
+                wrap ? GL_REPEAT : GL_CLAMP );
+
+        // build our texture mipmaps
+        unsigned char *data = new unsigned char[img.Width()*img.Height()*4];
+        for (int i = 0; i < img.Width(); i++) {
+            for (int j = 0; j < img.Height(); j++) {
+                for (int k = 0; k < 4; k++) {
+                    data[i * img.Height()*4 + j * 4 + k] = transparent_part.Pixel(i, j)[0] * 255;
+                }
+            }
+        }
+        gluBuild2DMipmaps( GL_TEXTURE_2D, GL_RGBA, img.Width(), img.Height(),
+                GL_RGBA, GL_UNSIGNED_BYTE, data );
+
+        //delete data;
+
+        return texName;
+
     }
 
 }

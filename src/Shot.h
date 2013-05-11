@@ -20,6 +20,7 @@ class Shot : public GameObject
 
         R3Point GetPosition();
 
+
     protected:
         Params params;
 

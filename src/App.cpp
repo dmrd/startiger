@@ -12,6 +12,7 @@
 #define START_WIN_WIDTH    800
 #define START_WIN_HEIGHT   600
 
+int hud_img;
 
 // --- main -----------------------------------------------------------------
 
@@ -70,6 +71,8 @@ void App::Init(int *argc, char **argv)
     flockparams.swarmSize = 10;
     flockparams.radius = 1;
     globals.gomgr->Add(new Flock(flockparams));
+
+    hud_img = Util::GetTransparentTexture("snowflake.jpg", "snowflake_transparent.jpg");
 }
 
 int App::ParseArgs(int argc, char **argv)
@@ -181,16 +184,15 @@ void App::Draw(void)
 
 void App::HUD()
 {
-    return;
-    glMatrixMode(GL_PROJECTION);
+    /*glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
     glOrtho(0.0, globals.window.width, globals.window.height, 0.0, -1.0, 10.0);
     glDisable(GL_DEPTH_TEST);
     glMatrixMode(GL_MODELVIEW);
-    //glPushMatrix();        ----Not sure if I need this
+    glPushMatrix();        //----Not sure if I need this
     glLoadIdentity();
-    glDisable(GL_CULL_FACE);
+    //glDisable(GL_CULL_FACE);
 
     glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -206,7 +208,80 @@ void App::HUD()
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
-    //glPopMatrix();        ----and this?
+    glPopMatrix();       // ----and this?
+    */
+    glDisable(GL_DEPTH_TEST);
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0.0, globals.window.width, globals.window.height, 0.0, -1.0, 10.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+
+    glDisable(GL_LIGHTING);
+    // Health Bar
+    // White outline
+    glBegin(GL_QUADS);
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    glVertex2f(47.0, 27.0);
+    glVertex2f(47.0, 53.0);
+    glVertex2f(253.0, 53.0);
+    glVertex2f(253.0, 27.0);
+    glEnd();
+
+
+    // Black Background
+    glBegin(GL_QUADS);
+    glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+    glVertex2f(50.0, 30.0);
+    glVertex2f(50.0, 50.0);
+    glVertex2f(250.0, 50.0);
+    glVertex2f(250.0, 30.0);
+    glEnd();
+
+    // Red Health Bar
+    glBegin(GL_QUADS);
+    glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+    glVertex2f(50.0, 30.0);
+    glVertex2f(50.0, 50.0);
+    glVertex2f(250.0*globals.player->GetHealth(), 50.0);
+    glVertex2f(250.0*globals.player->GetHealth(), 30.0);
+    glEnd();
+
+
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glEnable(GL_TEXTURE_2D);
+
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    glBindTexture(GL_TEXTURE_2D, hud_img);
+    printf("hud_img %d\n", hud_img);
+
+
+    glBegin(GL_QUADS);
+
+    glTexCoord2d(0.0, 0.0);
+    glVertex2d(0.0, 0.0);
+
+    glTexCoord2d(0.0, 1.0);
+    glVertex2d(0.0, 100.0);
+
+    glTexCoord2d(1.0, 1.0);
+    glVertex2d(100.0, 100.0);
+
+    glTexCoord2d(1.0, 0.0); 
+    glVertex2d(100.0, 0.0);
+
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_DEPTH_TEST);
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
 
 }
 

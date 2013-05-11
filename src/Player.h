@@ -20,6 +20,8 @@ class Player : public GameObject
 
         R3Point GetPosition();
 
+        float GetHealth();
+
     protected:
         Params params;
 
@@ -61,7 +63,9 @@ class Player : public GameObject
 
         R3Material *mat;
 
+        float health;
         double fireTimer;
+        int lives;
 };
 
 #endif
