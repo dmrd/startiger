@@ -867,5 +867,9 @@ void R3Scene::ClearLights(void)
         delete *iter;
 }
 
+void R3Scene::Collide(void)
+{
+    root->Collide();
+}
 
 

@@ -303,13 +303,17 @@ void App::Update()
     previous_time = current_time;
     
     // fps
-    printf("fps: %f\n", 1/delta_time);
+    //printf("fps: %f\n", 1/delta_time);
 
     // update objects
     globals.gomgr->Update(delta_time);
 
+    // update particles
     UpdateParticles(globals.scene, current_time, delta_time, 0);
     GenerateParticles(globals.scene, current_time, delta_time);
+
+    // collide
+    globals.scene->Collide();
 
     // quit?
     if (globals.quit)

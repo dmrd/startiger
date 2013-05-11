@@ -49,7 +49,7 @@ struct Globals
     {
         // defaults
 
-        settings.show_bboxes = false;
+        settings.show_bboxes = true;
 
         quit = false;
         input_scene_name = "";

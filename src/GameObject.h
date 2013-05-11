@@ -6,6 +6,21 @@
 #include <vector>
 
 /*
+ * GameObject types (maybe a better way to do this?)
+ */
+
+enum GameObjectType
+{
+    OBJ_UNDEF,
+    OBJ_PLAYER,
+    OBJ_SHOT,
+    OBJ_FLOCK,
+    OBJ_BOID
+};
+
+
+
+/*
  * base class for all game logic types
  */
 
@@ -30,13 +45,15 @@ class GameObject
 
 
         // events
-        virtual void Update(double dt) { }    // logic update
-        virtual void Create(void) { }         // logic create (independent of malloc)
-        virtual void Destroy(void) { }        // logic destroy (independent of free)
+        virtual void Update(double dt) { }            // logic update
+        virtual void Create(void) { }                 // logic create (independent of malloc)
+        virtual void Destroy(void) { }                // logic destroy (independent of free)
+        virtual void Collide(GameObject *other) { }   // physical collision with `other'
 
 
         // public API
         ID GetID(void) { return id; }
+        virtual GameObjectType GetType(void) { return OBJ_UNDEF; }
 
 
     private:

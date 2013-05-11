@@ -100,6 +100,9 @@ struct R3Scene
         // Clear
         void ClearLights(void);
 
+        // Collision
+        void Collide(void);
+
     public:
         R3Node *root;
         vector<R3Particle *> particles;

@@ -11,6 +11,8 @@
 class Flock : public GameObject
 {
     public:
+        GameObjectType GetType(void) { return OBJ_FLOCK; }
+
         struct Params { R3Point spawn; int swarmSize; double radius; };
         Flock(const Params &params_);
 

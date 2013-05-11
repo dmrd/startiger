@@ -30,7 +30,7 @@ void Shot::Create(void)
     mat = new R3Material(matParams);
 
     // create node
-    node = new R3Node(new R3Box(-0.05, -0.05, -0.5, 0.05, 0.05, 0.5), mat);
+    node = new R3Node(this, new R3Box(-0.05, -0.05, -0.5, 0.05, 0.05, 0.5), mat);
     node->transformation = params.transform;
     node->transformation.Rotate(R3negz_vector, params.direction);
     globals.scene->root->AddChild(node);

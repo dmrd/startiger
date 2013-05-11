@@ -15,6 +15,8 @@ class Boid : public GameObject
         Flock *flock;
 
     public:
+        GameObjectType GetType(void) { return OBJ_BOID; }
+
         Boid(R3Point spawn_, R3Vector velocity_, Flock *flock_);
         ~Boid();
         void Create(void);

@@ -17,13 +17,17 @@ struct R3Node
     R3Matrix transformation;
     R3Material *material;
     R3Box bbox; // stored in world space!
+    GameObject *object;
+    bool intracollide;
 
     R3Node(const R3Matrix &transformation_ = R3identity_matrix) :
         parent(NULL),
         shape(NULL),
         transformation(transformation_),
         material(NULL),
-        bbox(R3null_box)
+        bbox(R3null_box),
+        object(NULL),
+        intracollide(true)
     {
     }
 
@@ -32,7 +36,22 @@ struct R3Node
         parent(NULL),
         shape(shape_),
         material(material_),
-        transformation(transformation_)
+        transformation(transformation_),
+        object(NULL),
+        intracollide(true)
+    {
+        if (shape)
+            REFCOUNT_UP(shape);
+    }
+
+    R3Node(GameObject *object_, R3Shape *shape_, R3Material *material_,
+            const R3Matrix &transformation_ = R3identity_matrix) :
+        parent(NULL),
+        shape(shape_),
+        material(material_),
+        transformation(transformation_),
+        object(object_),
+        intracollide(true)
     {
         if (shape)
             REFCOUNT_UP(shape);
@@ -88,6 +107,11 @@ struct R3Node
             parent->RemoveChild(this);
         _Destroy();
     }
+
+    // Collisions
+
+    void Collide(void);
+    void Collide(R3Node *other);
 
     protected:
 

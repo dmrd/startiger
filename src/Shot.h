@@ -10,6 +10,8 @@
 class Shot : public GameObject
 {
     public:
+        GameObjectType GetType(void) { return OBJ_SHOT; }
+
         struct Params { R3Matrix transform; R3Vector direction;};
         Shot(const Params &params_);
         ~Shot();

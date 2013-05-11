@@ -10,19 +10,33 @@
 class Player : public GameObject
 {
     public:
+        GameObjectType GetType(void) { return OBJ_PLAYER; }
+
         struct Params { R3Matrix transform; };
         Player(const Params &params_);
         ~Player();
 
+        // events
         void Create(void);
         void Update(double dt);
         void Destroy();
+        void Collide(GameObject *other)
+        {
+            if (other && other->GetType() == OBJ_SHOT)
+            {
+                globals.gomgr->Destroy(other->GetID());
+                health -= 0.01;
+            }
+        }
 
+        // public API
         R3Point GetPosition();
-
         float GetHealth();
 
-    public:
+        int lives;
+        int score;
+
+    protected:
         Params params;
 
         struct
@@ -65,8 +79,6 @@ class Player : public GameObject
 
         float health;
         double fireTimer;
-        int lives;
-        int score;
 };
 
 #endif

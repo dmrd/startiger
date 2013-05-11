@@ -36,3 +36,57 @@ void R3Node::Draw(void) const
     // pop transform
     transformation.Pop();
 }
+
+void R3Node::Collide(void)
+{
+    // skip?
+    if (!intracollide)
+        return;
+
+    // intra-child
+    for (list<R3Node *>::iterator iter = children.begin();
+            iter != children.end(); ++iter)
+        (*iter)->Collide();
+
+    // inter-child
+    for (list<R3Node *>::iterator iter1 = children.begin();
+            iter1 != children.end(); ++iter1)
+    {
+        list<R3Node *>::iterator iter2 = iter1;
+        while (++iter2 != children.end())
+            (*iter1)->Collide(*iter2);
+    }
+}
+
+void R3Node::Collide(R3Node *other)
+{
+    // skip?
+    if (!bbox.Intersects(other->bbox))
+        return;
+
+    // notify (TODO: do narrowphase here?)
+    if (object)
+        object->Collide(other->object);
+    if (other->object)
+        other->object->Collide(object);
+
+    // our children vs. other
+    for (list<R3Node *>::iterator iter = children.begin();
+            iter != children.end(); ++iter)
+        (*iter)->Collide(other);
+
+    // other children vs. this
+    for (list<R3Node *>::iterator iter = other->children.begin();
+            iter != other->children.end(); ++iter)
+        (*iter)->Collide(this);
+
+    // our children vs. other children
+    for (list<R3Node *>::iterator iter1 = children.begin();
+            iter1 != children.end(); ++iter1)
+        for (list<R3Node *>::iterator iter2 = other->children.begin();
+                iter2 != other->children.end(); ++iter2)
+            (*iter1)->Collide(*iter2);
+}
+
+
+

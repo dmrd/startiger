@@ -65,6 +65,7 @@ class R3Box : public R3Shape
         // Relationship functions/operators
         bool operator==(const R3Box& box) const;
         bool operator!=(const R3Box& box) const;
+        inline bool Intersects(const R3Box& box) const;
 
         // Output functions
         void Draw(void) const;
@@ -302,5 +303,17 @@ inline bool R3Box::operator!=(const R3Box& box) const
     return (!(*this == box));
 }
 
+inline bool R3Box::Intersects(const R3Box &box) const
+{
+    if (XMin() > box.XMax()) return false;
+    if (YMin() > box.YMax()) return false;
+    if (ZMin() > box.ZMax()) return false;
+
+    if (XMax() < box.XMin()) return false;
+    if (YMax() < box.YMin()) return false;
+    if (ZMax() < box.ZMin()) return false;
+
+    return true;
+}
 
 
