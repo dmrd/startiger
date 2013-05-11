@@ -14,14 +14,16 @@
 ////////////////////////////////////////////////////////////
 
 R3Mesh::R3Mesh(void) :
-    bbox(R3null_box)
+    bbox(R3null_box),
+    readuvs(false)
 {
 }
 
 
 
 R3Mesh::R3Mesh(const R3Mesh& mesh) :
-    bbox(R3null_box)
+    bbox(R3null_box),
+    readuvs(false)
 {
     // Create vertices
     for (int i = 0; i < mesh.NVertices(); i++)
@@ -45,8 +47,9 @@ R3Mesh::R3Mesh(const R3Mesh& mesh) :
     }
 }
 
-R3Mesh::R3Mesh(const string &name) :
-    bbox(R3null_box)
+R3Mesh::R3Mesh(const string &name, bool uv) :
+    bbox(R3null_box),
+    readuvs(uv)
 {
     Read(name);
 }
@@ -1018,16 +1021,28 @@ int R3Mesh::ReadOff(const char *filename)
         else if (vertex_count < nverts)
         {
             // Read vertex coordinates
-            double x, y, z;
-            if (sscanf(bufferp, "%lf%lf%lf", &x, &y, &z) != 3)
+            double x, y, z, u = 0, v = 0;
+            if (readuvs)
             {
-                fprintf(stderr, "Syntax error with vertex coordinates on line %d in file %s\n", line_count, filename);
-                fclose(fp);
-                return 0;
+                if (sscanf(bufferp, "%lf%lf%lf%lf%lf", &x, &y, &z, &u, &v) != 5)
+                {
+                    fprintf(stderr, "Syntax error with vertex coordinates on line %d in file %s (expected uv)\n", line_count, filename);
+                    fclose(fp);
+                    return 0;
+                }
+            }
+            else
+            {
+                if (sscanf(bufferp, "%lf%lf%lf", &x, &y, &z) != 3)
+                {
+                    fprintf(stderr, "Syntax error with vertex coordinates on line %d in file %s (no uv expected)\n", line_count, filename);
+                    fclose(fp);
+                    return 0;
+                }
             }
 
             // Create vertex
-            CreateVertex(R3Point(x, y, z), R3zero_vector, R2zero_point);
+            CreateVertex(R3Point(x, y, z), R3zero_vector, R2Point(u, v));
 
             // Increment counter
             vertex_count++;

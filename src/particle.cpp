@@ -383,6 +383,7 @@ void UpdateParticles(R3Scene *scene, double current_time, double delta_time, int
 
 void RenderParticles(R3Scene *scene, double current_time, double delta_time)
 {
+/* TEMPORARILY COMMENTED OUT
   // Draw every particle
 
   // REPLACE CODE HERE
@@ -465,6 +466,7 @@ void RenderParticles(R3Scene *scene, double current_time, double delta_time)
 #endif
 
   glDepthMask(GL_TRUE);
+  */
 }
 
 

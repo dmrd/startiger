@@ -20,7 +20,7 @@ class Player : public GameObject
 
         R3Point GetPosition();
 
-    protected:
+    public:
         Params params;
 
         struct

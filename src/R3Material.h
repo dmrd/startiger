@@ -3,94 +3,73 @@
 
 #include "R3/R3.h"
 
+#include <string>
+
 class R3Material
 {
-    private:
-        static const R3Material *current_material;   // the currently applied material
-
     public:
-        R2Pixel ka;
-        R2Pixel kd;
-        R2Pixel ks;
-        R2Pixel kt;
-        R2Pixel emission;
-        double shininess;
-        double indexofrefraction;
-        R2Image *texture;
-        int texture_index;
-        int id;
+        struct Params
+        {
+            R2Pixel ka;
+            R2Pixel kd;
+            R2Pixel ks;
+            R2Pixel kt;
+            R2Pixel emission;
+            double shininess;
+            //double indexofrefraction;
+            string textureName;
+
+            Params() :
+                ka(R3Rgb(0.2, 0.2, 0.2, 1)),
+                kd(R3Rgb(0.5, 0.5, 0.5, 1)),
+                ks(R3Rgb(0.5, 0.5, 0.5, 1)),
+                kt(R3Rgb(0.0, 0.0, 0.0, 1)),
+                emission(R3Rgb(0.0, 0.0, 0.0, 1)),
+                shininess(10),
+                textureName("")
+            {
+            }
+        };
+
+        R3Material(const Params &params_) :
+            params(params_),
+            textureImage(NULL),
+            initialized(false)
+        {
+            Initialize();
+        }
 
         void Load(void) const
         {
-            GLfloat c[4];
-
-            // skip if current
-            if (current_material == this)
+            // skip if previous
+            if (lastMaterial == this)
                 return;
-            current_material = this;
+            lastMaterial = this;
 
-            // load ambient, diffuse, specular, emmision, shininess
-
-            double opacity = 1 - kt.Luminance();
-
-            c[0] = ka[0]; c[1] = ka[1]; c[2] = ka[2]; c[3] = opacity;
+            // ambient, diffuse, specular, emmision, shininess
+            GLfloat c[4];
+            double opacity = 1 - params.kt.Luminance();
+            c[0] = params.ka[0]; c[1] = params.ka[1]; c[2] = params.ka[2]; c[3] = opacity;
             glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, c);
-
-            c[0] = kd[0]; c[1] = kd[1]; c[2] = kd[2]; c[3] = opacity;
+            c[0] = params.kd[0]; c[1] = params.kd[1]; c[2] = params.kd[2]; c[3] = opacity;
             glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, c);
-
-            c[0] = ks[0]; c[1] = ks[1]; c[2] = ks[2]; c[3] = opacity;
+            c[0] = params.ks[0]; c[1] = params.ks[1]; c[2] = params.ks[2]; c[3] = opacity;
             glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, c);
-
-            c[0] = emission.Red(); c[1] = emission.Green(); c[2] = emission.Blue(); c[3] = opacity;
+            c[0] = params.emission.Red(); c[1] = params.emission.Green(); c[2] = params.emission.Blue(); c[3] = opacity;
             glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, c);
-
-            c[0] = shininess;
+            c[0] = params.shininess;
             glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, c[0]);
 
-            // Load texture
-            if (texture)
+            // texture
+            if (textured)
             {
-                if (texture_index <= 0)
-                {
-                    // Create texture in OpenGL
-                    GLuint texture_index;
-                    glGenTextures(1, &texture_index);
-                    texture_index = (int) texture_index;
-                    glBindTexture(GL_TEXTURE_2D, texture_index); 
-                    R2Image *image = texture;
-                    int npixels = image->NPixels();
-                    R2Pixel *pixels = image->Pixels();
-                    GLfloat *buffer = new GLfloat [ 4 * npixels ];
-                    R2Pixel *pixelsp = pixels;
-                    GLfloat *bufferp = buffer;
-                    for (int j = 0; j < npixels; j++)
-                    {
-                        *(bufferp++) = pixelsp->Red();
-                        *(bufferp++) = pixelsp->Green();
-                        *(bufferp++) = pixelsp->Blue();
-                        *(bufferp++) = pixelsp->Alpha();
-                        pixelsp++;
-                    }
-                    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-                    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-                    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-                    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
-                    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                    glTexImage2D(GL_TEXTURE_2D, 0, 4, image->Width(), image->Height(), 0, GL_RGBA, GL_FLOAT, buffer);
-                    delete [] buffer;
-                }
-
-                // Select texture
-                glBindTexture(GL_TEXTURE_2D, texture_index); 
+                glBindTexture(GL_TEXTURE_2D, textureIndex); 
                 glEnable(GL_TEXTURE_2D);
             }
             else
-            {
                 glDisable(GL_TEXTURE_2D);
-            }
 
-            // Enable blending for transparent surfaces
+            // transparency
             if (opacity < 1)
             {
                 glDepthMask(false);
@@ -104,6 +83,55 @@ class R3Material
                 glDepthMask(true);
             }
         }
+
+    private:
+        void Initialize(void)
+        {
+            if (params.textureName == "")
+                textured = false;
+            else
+            {
+                textured = true;
+
+                glGenTextures(1, &textureIndex);
+                glBindTexture(GL_TEXTURE_2D, textureIndex); 
+
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+                glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+                textureImage = new R2Image(params.textureName.c_str());
+                int npixels = textureImage->NPixels();
+                R2Pixel *pixels = textureImage->Pixels();
+                GLfloat *buffer = new GLfloat [ 4 * npixels ];
+                R2Pixel *pixelsp = pixels;
+                GLfloat *bufferp = buffer;
+                for (int j = 0; j < npixels; j++)
+                {
+                    *(bufferp++) = pixelsp->Red();
+                    *(bufferp++) = pixelsp->Green();
+                    *(bufferp++) = pixelsp->Blue();
+                    *(bufferp++) = pixelsp->Alpha();
+                    pixelsp++;
+                }
+
+                glTexImage2D(GL_TEXTURE_2D, 0, 4, textureImage->Width(), textureImage->Height(), 0, GL_RGBA, GL_FLOAT, buffer);
+                delete [] buffer;
+            }
+        }
+
+        bool initialized;
+
+        Params params;
+
+        static const R3Material *lastMaterial;   // the last loaded material
+
+        bool textured;
+        R2Image *textureImage;
+        GLuint textureIndex;
 };
 
 #endif
