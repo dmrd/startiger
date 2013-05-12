@@ -18,6 +18,9 @@ class R3Matrix
         static R3Matrix XRotation(double radians);
         static R3Matrix YRotation(double radians);
         static R3Matrix ZRotation(double radians);
+        static R3Matrix Rotation(const R3Vector& vector, double radians);
+        static R3Matrix Rotation(const R3Vector& from, const R3Vector& to);
+        static R3Matrix Rotation(const R3Vector& from, const R3Vector& to, double factor);
 
         // Entry acccess
         double *operator[](int i);

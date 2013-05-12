@@ -16,6 +16,7 @@
 #define START_WIN_HEIGHT   600
 
 GLuint hud_img;
+double fps;
 
 // --- main -----------------------------------------------------------------
 
@@ -280,6 +281,16 @@ void App::HUD()
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ss2.str().at(i));
     }
 
+    // score
+    stringstream ss3;
+    ss3 << "FPS: " << fps;
+    glColor3f(0.8f, 0.8f, 0.3f);
+    glRasterPos2f(globals.window.width/2, 90.0);
+
+    for (int i = 0; i < ss3.str().length(); i++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ss3.str().at(i));
+    }
+
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
     glEnable(GL_LIGHTING);
@@ -301,6 +312,7 @@ void App::Update()
     // time passed since starting
     double delta_time = current_time - previous_time;
     previous_time = current_time;
+    fps = 1/delta_time;
     
     // fps
     //printf("fps: %f\n", 1/delta_time);

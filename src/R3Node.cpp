@@ -1,4 +1,6 @@
 #include "R3Node.h"
+#include "Globals.h"
+#include "R3Scene.h"
 
 void R3Node::Draw(void) const
 {
@@ -90,3 +92,26 @@ void R3Node::Collide(R3Node *other)
 
 
 
+// destroy without removing self from parent
+void R3Node::_Destroy(void)
+{
+    for (list<R3Node *>::iterator iter = children.begin();
+            iter != children.end(); ++iter) 
+        (*iter)->_Destroy();
+
+    if (source != NULL) {
+        //globals.scene->RemoveParticleSource(source);
+        delete source;
+    }
+
+    delete this;
+}
+
+void R3Node::AttachSource(R3ParticleSource *sourceToAdd) {
+    if (source != NULL)
+        return;
+
+    source = sourceToAdd;
+    source->node = this;
+    //globals.scene->AddParticleSource(sourceToAdd);
+}

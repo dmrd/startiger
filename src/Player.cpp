@@ -43,6 +43,36 @@ void Player::Create(void)
     nodes.pitch = new R3Node(NULL, NULL, R3identity_matrix);
     nodes.roll = new R3Node(this, new R3Mesh("arwing.off"), mat, R3identity_matrix);
 
+    R3ParticleSource *source = new R3ParticleSource();
+    source->shape = new R3Circle(R3Point(0, 0, 0), .05, R3posz_vector);
+    source->rate = 100;
+    source->velocity = 10;
+    source->angle_cutoff = .5;
+    source->mass = 1;
+    source->fixed = false;
+    source->drag = 0;
+    source->elasticity = 0;
+    source->lifetime = .1;
+    source->size = .05;
+
+    source->numMaterials = 4;
+    source->materials = new R3Material*[4];
+
+    R3Material::Params fireParams; 
+    fireParams.kd = R2Pixel(.5, .5, .25, 0);
+    source->materials[0] = new R3Material(fireParams);
+
+    fireParams.kd = R2Pixel(.5, .5, 0, 0);
+    source->materials[1] = new R3Material(fireParams);
+
+    fireParams.kd = R2Pixel(.5, .25, 0, 0);
+    source->materials[2] = new R3Material(fireParams);
+
+    fireParams.kd = R2Pixel(.5, 0, 0, 0);
+    source->materials[3] = new R3Material(fireParams);
+
+    nodes.roll->AttachSource(source);
+
     globals.scene->root->AddChild(nodes.yawpos);
     nodes.yawpos->AddChild(nodes.pitch);
     nodes.pitch->AddChild(nodes.roll);
