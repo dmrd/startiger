@@ -18,6 +18,7 @@ enum {
 R3Vector GetForce(R3Point position, R3Vector velocity, R3Scene *scene, R3Particle *particle, double time, bool *remove);
 void UpdateParticles(R3Scene *scene, double current_time, double delta_time, int integration_type);
 void GenerateParticles(R3Scene *scene, double current_time, double delta_time);
+void GenerateParticlesForNode(R3Scene *scene, R3Node *node, R3Matrix transformation, double current_time, double delta_time);
 void RenderParticles(R3Scene *scene, double current_time, double delta_time);
 
 // Intersection Code

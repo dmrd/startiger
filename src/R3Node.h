@@ -4,7 +4,6 @@
 #include "R3/R3.h"
 #include "Globals.h"
 #include "R3Material.h"
-#include "R3Scene.h"
 
 #include <algorithm>
 #include <list>
@@ -18,6 +17,7 @@ struct R3Node
     R3Material *material;
     R3Box bbox; // stored in world space!
     GameObject *object;
+    struct R3ParticleSource *source;
     bool intracollide;
 
     R3Node(const R3Matrix &transformation_ = R3identity_matrix) :
@@ -27,7 +27,8 @@ struct R3Node
         material(NULL),
         bbox(R3null_box),
         object(NULL),
-        intracollide(true)
+        intracollide(true),
+        source(NULL)
     {
     }
 
@@ -38,7 +39,8 @@ struct R3Node
         material(material_),
         transformation(transformation_),
         object(NULL),
-        intracollide(true)
+        intracollide(true),
+        source(NULL)
     {
         if (shape)
             REFCOUNT_UP(shape);
@@ -51,7 +53,8 @@ struct R3Node
         material(material_),
         transformation(transformation_),
         object(object_),
-        intracollide(true)
+        intracollide(true),
+        source(NULL)
     {
         if (shape)
             REFCOUNT_UP(shape);
@@ -113,16 +116,15 @@ struct R3Node
     void Collide(void);
     void Collide(R3Node *other);
 
+    // Particles
+    
+    void AttachSource(R3ParticleSource *sourceToAdd);
+
     protected:
 
     // destroy without removing self from parent
-    void _Destroy(void)
-    {
-        for (list<R3Node *>::iterator iter = children.begin();
-                iter != children.end(); ++iter) 
-            (*iter)->_Destroy();
-        delete this;
-    }
+    void _Destroy(void);
+
 
     void RemoveChild(R3Node *node)
     {

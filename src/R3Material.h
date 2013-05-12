@@ -84,6 +84,9 @@ class R3Material
             }
         }
 
+        void SetColor(void) {
+            glColor4d(params.kd[0], params.kd[1], params.kd[2], params.kd[3]);
+        }
     private:
         void Initialize(void)
         {

@@ -43,6 +43,19 @@ void Player::Create(void)
     nodes.pitch = new R3Node(NULL, NULL, R3identity_matrix);
     nodes.roll = new R3Node(this, new R3Mesh("arwing.off"), mat, R3identity_matrix);
 
+    R3ParticleSource *source = new R3ParticleSource();
+    source->shape = new R3Sphere(R3Point(0, 0, 0), 1);
+    source->rate = 10;
+    source->velocity = 1;
+    source->angle_cutoff = 0;
+    source->mass = 1;
+    source->fixed = false;
+    source->drag = 0;
+    source->elasticity = 0;
+    source->lifetime = 10;
+    source->material = mat;
+    nodes.roll->AttachSource(source);
+
     globals.scene->root->AddChild(nodes.yawpos);
     nodes.yawpos->AddChild(nodes.pitch);
     nodes.pitch->AddChild(nodes.roll);

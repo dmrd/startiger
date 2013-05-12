@@ -31,6 +31,7 @@ struct R3Particle {
 
 struct R3ParticleSource {
   R3Shape *shape;
+  R3Node *node;
   double rate;
   double velocity;
   double angle_cutoff;
@@ -83,6 +84,8 @@ struct R3Scene
         // Particle stuff
         int NParticleSources(void) const;
         R3ParticleSource *ParticleSource(int k) const;
+        int AddParticleSource(R3ParticleSource *source);
+        int RemoveParticleSource(R3ParticleSource *source);
         int NParticleSinks(void) const;
         R3ParticleSink *ParticleSink(int k) const;
         int NParticles(void) const;
@@ -165,7 +168,25 @@ inline int R3Scene::NParticleSources(void) const
     return particle_sources.size();
 }
 
+inline int R3Scene::AddParticleSource(R3ParticleSource *source){
+    // Return kth particle source
+    particle_sources.push_back(source);
+    return 0;
+}
 
+inline int R3Scene::RemoveParticleSource(R3ParticleSource *source)
+{
+    int i = 0;
+    for (i = 0; i < NParticleSources(); i++) {
+        if (particle_sources[i] == source)
+            break;
+    }
+    if (i == NParticleSources())
+        return -1;
+    particle_sources[i] = particle_sources[NParticleSources() - 1];
+    particle_sources.pop_back();
+    return 0;
+}
 
 inline R3ParticleSource *R3Scene::ParticleSource(int k) const
 {
