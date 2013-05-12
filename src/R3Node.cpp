@@ -1,5 +1,5 @@
 #include "R3Node.h"
-#include "globals.h"
+#include "Globals.h"
 #include "R3Scene.h"
 
 void R3Node::Draw(void) const
