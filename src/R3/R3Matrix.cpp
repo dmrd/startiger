@@ -105,6 +105,51 @@ R3Matrix::R3Matrix(const R3Point &point)
     m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
 }
 
+R3Matrix R3Matrix::Rotation(const R3Vector& axis, double radians)
+{
+    // rotate matrix for arbitrary axis counterclockwise
+    // From Graphics Gems I, p. 466
+    double x = axis.X();
+    double y = axis.Y();
+    double z = axis.Z();
+    double c = cos(radians);
+    double s = sin(radians);
+    double t = 1.0 - c;
+    return R3Matrix(t*x*x + c, t*x*y - s*z, t*x*z + s*y, 0.0,
+            t*x*y + s*z, t*y*y + c, t*y*z - s*x, 0.0,
+            t*x*z - s*y, t*y*z + s*x, t*z*z + c, 0.0,
+            0.0, 0.0, 0.0, 1.0);
+}
+
+R3Matrix R3Matrix::Rotation(const R3Vector& from, const R3Vector& to)
+{
+    // rotate matrix that takes direction of vector "from" -> "to"
+    // This is a quickie hack -- there's got to be a better way
+    double d1 = from.Length();
+    if (d1 == 0) return R3identity_matrix;
+    double d2 = to.Length();
+    if (d2 == 0) return R3identity_matrix;
+    double cosine = from.Dot(to) / (d1 * d2);
+    double radians = acos(cosine);
+    R3Vector axis = from % to;
+    axis.Normalize();
+    return Rotation(axis, radians);
+}
+
+R3Matrix R3Matrix::Rotation(const R3Vector& from, const R3Vector& to, double factor)
+{
+    // rotate matrix that takes direction of vector "from" -> "to"
+    // This is a quickie hack -- there's got to be a better way
+    double d1 = from.Length();
+    if (d1 == 0) return R3identity_matrix;
+    double d2 = to.Length();
+    if (d2 == 0) return R3identity_matrix;
+    double cosine = from.Dot(to) / (d1 * d2);
+    double radians = factor * acos(cosine);
+    R3Vector axis = from % to;
+    axis.Normalize();
+    return Rotation(axis, radians);
+}
 
 const bool R3Matrix::IsZero(void) const
 {

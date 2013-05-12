@@ -42,13 +42,22 @@ void Boid::Create(void)
 
 void Boid::Update(double dt)
 {
-    // face player -- will have to fix to yaw/pitch/roll later
+    // face player
+
+    child->transformation = R3identity_matrix;
 
     R3Vector dir = globals.player->GetPosition() - GetPosition();
     dir.Normalize();
+    R3Vector dirXZ = R3Vector(dir.X(), 0, dir.Z());
+    dirXZ.Normalize();
 
-    child->transformation = R3identity_matrix;
-    child->transformation.Rotate(R3negz_vector, dir);
+    R3Matrix yaw = R3Matrix::Rotation(R3negz_vector, dirXZ);
+    child->transformation.Transform(yaw);
+    dir.Transform(yaw.Inverse());
+
+    R3Matrix pitch = R3Matrix::Rotation(R3negz_vector, dir);
+    child->transformation.Transform(pitch);
+
     child->transformation.Scale(0.5);
 }
 
