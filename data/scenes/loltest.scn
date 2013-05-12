@@ -53,5 +53,5 @@ begin  0
 end
 
  
-particle_gravity 0 -9.80665 0
+particle_gravity 0 0 0
 

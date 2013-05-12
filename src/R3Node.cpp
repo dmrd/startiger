@@ -100,7 +100,7 @@ void R3Node::_Destroy(void)
         (*iter)->_Destroy();
 
     if (source != NULL) {
-        globals.scene->RemoveParticleSource(source);
+        //globals.scene->RemoveParticleSource(source);
         delete source;
     }
 
@@ -113,5 +113,5 @@ void R3Node::AttachSource(R3ParticleSource *sourceToAdd) {
 
     source = sourceToAdd;
     source->node = this;
-    globals.scene->AddParticleSource(sourceToAdd);
+    //globals.scene->AddParticleSource(sourceToAdd);
 }

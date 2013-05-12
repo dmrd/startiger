@@ -26,7 +26,8 @@ struct R3Particle {
   vector<struct R3ParticleSpring *> springs;
   R3Point trail[TRAIL_LENGTH];
   int last_trail;
-    int boid;
+  int boid;
+  double size;
 };
 
 struct R3ParticleSource {
@@ -40,9 +41,18 @@ struct R3ParticleSource {
   double drag;
   double elasticity;
   double lifetime;
+  double size;
   R3Material *material;
   R3Material **materials;
   int numMaterials;
+
+  ~R3ParticleSource() {
+        delete material;
+        for (int i = 0; i < numMaterials; i++)
+            delete materials[i];
+        delete materials;
+        delete shape;
+  }
 };
 
 struct R3ParticleSink
@@ -82,10 +92,10 @@ struct R3Scene
         R3Camera& Camera(void);
 
         // Particle stuff
+        /*
         int NParticleSources(void) const;
         R3ParticleSource *ParticleSource(int k) const;
-        int AddParticleSource(R3ParticleSource *source);
-        int RemoveParticleSource(R3ParticleSource *source);
+        */
         int NParticleSinks(void) const;
         R3ParticleSink *ParticleSink(int k) const;
         int NParticles(void) const;
@@ -161,7 +171,7 @@ inline R3Camera& R3Scene::Camera(void)
 }
 
 
-
+/*
 inline int R3Scene::NParticleSources(void) const
 {
     // Return number of particle sources
@@ -173,6 +183,7 @@ inline int R3Scene::AddParticleSource(R3ParticleSource *source){
     particle_sources.push_back(source);
     return 0;
 }
+
 
 inline int R3Scene::RemoveParticleSource(R3ParticleSource *source)
 {
@@ -193,7 +204,7 @@ inline R3ParticleSource *R3Scene::ParticleSource(int k) const
     // Return kth particle source
     return particle_sources[k];
 }
-
+*/
 
 
 inline int R3Scene::NParticleSinks(void) const

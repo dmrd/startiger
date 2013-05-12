@@ -207,6 +207,7 @@ void GenerateParticlesForNode(R3Scene *scene, R3Node *node, R3Matrix transformat
                         velocity.Rotate(perp, acos(angle2));
 
                         particle->velocity = source->velocity * velocity;
+                        particle->position.Transform(transformation);
                     }
                     break;
 
@@ -218,6 +219,7 @@ void GenerateParticlesForNode(R3Scene *scene, R3Node *node, R3Matrix transformat
                         // Find vectors perpindicular to the normal to allow
                         // correct velocity generation
                         R3Vector normal = circle->Normal();
+                        normal.Transform(transformation);
                         R3Vector axis1 = R3posz_vector;
                         axis1.Cross(normal);
                         // Attempt crossing with the z vector, unless they're parallel
@@ -236,6 +238,7 @@ void GenerateParticlesForNode(R3Scene *scene, R3Node *node, R3Matrix transformat
                         R3Point position = circle->Center();
                         position += r*cos(theta)*axis1 + r*sin(theta)*axis2;
 
+                        position.Transform(transformation);
                         particle->position = position;  
 
                         double angle1, angle2;
@@ -244,7 +247,7 @@ void GenerateParticlesForNode(R3Scene *scene, R3Node *node, R3Matrix transformat
 
                         R3Vector velocity = axis1*cos(angle1) + axis2*sin(angle1);
                         R3Vector perp = velocity;
-                        perp.Cross(circle->Normal());
+                        perp.Cross(normal);
 
                         velocity.Rotate(perp, acos(angle2));
 
@@ -279,8 +282,8 @@ void GenerateParticlesForNode(R3Scene *scene, R3Node *node, R3Matrix transformat
             particle->material = source->material;
             particle->materials = source->materials;
             particle->numMaterials = source->numMaterials;
+            particle->size = source->size;
 
-            particle->position.Transform(transformation);
 
             if (particle->material == NULL)
                 particle->material = particle->materials[0];
@@ -415,15 +418,15 @@ void RenderParticles(R3Scene *scene, double current_time, double delta_time)
           //      disabled
           //glBindTexture(GL_TEXTURE_2D, particle->material->textureName);
           particle->material->Load();
-          particle->material->SetColor();
+          particle->material->SetColor(alpha);
 
 
           glBegin(GL_QUADS);
 
           glTexCoord2d(0.0, 0.0);
 
-          R3Vector right = scene->camera.right * .5;
-          R3Vector up = scene->camera.up * .5;
+          R3Vector right = scene->camera.right * particle->size;
+          R3Vector up = scene->camera.up * particle->size;
           glVertex3d(position[0] - right[0] - up[0], position[1] - right[1] - up[1], position[2] - right[2] - up[2]);
           glTexCoord2d(0.0, 1.0);
           glVertex3d(position[0] + right[0] - up[0], position[1] + right[1] - up[1], position[2] + right[2] - up[2]);
@@ -532,6 +535,7 @@ int FindSource(R3Scene *scene, R3Camera *camera, int x, int y, int width, int he
     double t = -1;
     int best = -1;
 
+    /*
     for (int i = 0; i < scene->NParticleSources(); i++) {
         R3ParticleSource *source = scene->ParticleSource(i);
         double ret = IntersectWithObjects(source->shape, &ray);
@@ -540,6 +544,7 @@ int FindSource(R3Scene *scene, R3Camera *camera, int x, int y, int width, int he
             best = i;
         }
     }
+    */
 
     return best;
 }
