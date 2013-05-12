@@ -16,6 +16,9 @@ obj/*
 # compiled executables
 bin/*
 
+# stackdumps
+*.stackdump
+
 # dependency lists
 .deps
 
