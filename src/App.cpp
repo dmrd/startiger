@@ -95,6 +95,7 @@ void App::Init(int *argc, char **argv)
 
     // HUD
     R3Material::Params hudParams; 
+    hudParams.lit = false;
     hudParams.textureName = "ship.jpg";
     hud_mat = new R3Material(hudParams);//Util::GetTransparentTexture("ship.jpg", "ship_transparent.jpg");
 

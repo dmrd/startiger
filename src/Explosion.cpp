@@ -24,6 +24,7 @@ void Explosion::Initialize() {
     Explosion::mat = new R3Material*[4];
 
     R3Material::Params fireParams; 
+    fireParams.lit = false;
     fireParams.kd = R2Pixel(.5, .5, .25, 0);
     fireParams.textureName = "smoke.jpg";
     mat[0] = new R3Material(fireParams);

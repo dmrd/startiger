@@ -11,7 +11,7 @@
 
 #define MOVE_SPEED 20
 
-#define FIRE_PERIOD .25
+#define FIRE_PERIOD .05
 
 #define FORWARD_VELCOITY 1
 
@@ -70,6 +70,7 @@ void Player::Create(void)
     source->materials = new R3Material*[4];
 
     R3Material::Params fireParams; 
+    fireParams.lit = false;
     fireParams.kd = R2Pixel(.5, .5, .25, 0);
     fireParams.textureName = "smoke.jpg";
     source->materials[0] = new R3Material(fireParams);
