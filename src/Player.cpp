@@ -64,13 +64,14 @@ void Player::Create(void)
     source->drag = 0;
     source->elasticity = 0;
     source->lifetime = .1;
-    source->size = .05;
+    source->size = .5;
 
     source->numMaterials = 4;
     source->materials = new R3Material*[4];
 
     R3Material::Params fireParams; 
     fireParams.kd = R2Pixel(.5, .5, .25, 0);
+    fireParams.textureName = "smoke.jpg";
     source->materials[0] = new R3Material(fireParams);
 
     fireParams.kd = R2Pixel(.5, .5, 0, 0);

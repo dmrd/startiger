@@ -17,7 +17,8 @@ enum GameObjectType
     OBJ_PLAYERSHOT,
     OBJ_ENEMYSHOT,
     OBJ_FLOCK,
-    OBJ_BOID
+    OBJ_BOID,
+    OBJ_EXPLOSION
 };
 
 

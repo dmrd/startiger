@@ -47,10 +47,10 @@ struct R3ParticleSource {
   int numMaterials;
 
   ~R3ParticleSource() {
-        delete material;
-        for (int i = 0; i < numMaterials; i++)
-            delete materials[i];
-        delete materials;
+        //delete material;
+        //for (int i = 0; i < numMaterials; i++)
+        //    delete materials[i];
+        //delete materials;
         delete shape;
   }
 };

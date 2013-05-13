@@ -94,7 +94,6 @@ void R3Scene::Draw()
     UpdateBboxes();
     root->Draw();
 
-    // TODO: draw particles...
 }
 
 

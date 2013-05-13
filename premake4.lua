@@ -40,7 +40,7 @@ if os.is("linux") then
 elseif os.is("windows") then
     links { "glut32", "glu32", "opengl32" }
 else
-    linkoptions "-framework GLUT -framework OpenGL"
+    linkoptions "-framework GLUT -framework OpenGL -lGLEW"
 end
 
 
