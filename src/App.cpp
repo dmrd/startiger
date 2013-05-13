@@ -87,7 +87,12 @@ void App::Init(int *argc, char **argv)
     globals.gsmgr->Add(new BasicLevel());
     globals.gsmgr->Start();
 
-    hud_img = Util::GetTransparentTexture("ship.jpg", "ship_transparent.jpg");
+    R3Material::Params hudParams; 
+    hudParams.textureName = "ship.jpg";
+    hud_mat = new R3Material(hudParams);//Util::GetTransparentTexture("ship.jpg", "ship_transparent.jpg");
+
+    shader = App::setShaders();
+    //glUseProgram(shader);
 }
 
 int App::ParseArgs(int argc, char **argv)
