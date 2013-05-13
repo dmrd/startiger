@@ -22,6 +22,8 @@ class Flock : public GameObject
         void Update(double dt);
         void Destroy();
 
+        unsigned int NBoids();
+
     protected:
         Params params;
         vector<Boid *> boids;

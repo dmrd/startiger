@@ -4,6 +4,7 @@
 #include <string>
 
 #include "GameObject.h"
+#include "GameState.h"
 
 
 /*
@@ -42,6 +43,7 @@ struct Globals
     R3Scene *scene;       // current scene
 
     GameObjectManager *gomgr;
+    GameStateManager *gsmgr;
     Player *player;
     CameraHandler *camerahandler;
 
