@@ -86,8 +86,8 @@ class GameObjectManager
             if (found != gameObjects.end())
             {
                 found->second->Destroy();
+                delete found->second;
                 gameObjects.erase(found);
-                //delete found->second;
             }
         }
 
