@@ -91,7 +91,7 @@ void App::Init(int *argc, char **argv)
     hudParams.textureName = "ship.jpg";
     hud_mat = new R3Material(hudParams);//Util::GetTransparentTexture("ship.jpg", "ship_transparent.jpg");
 
-    shader = App::setShaders();
+    //shader = App::setShaders();
     //glUseProgram(shader);
 }
 

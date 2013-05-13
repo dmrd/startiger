@@ -33,20 +33,25 @@ void Player::Create(void)
 
     // create material
     R3Material::Params matParams;
-    //matParams.textureName = "reticle.jpg";
-    //matParams.lit = false;
-    //mat = new R3Material(matParams);
     mat = new R3Material(matParams);
 
-    // create nodes
+    matParams.textureName = "reticle.jpg";
+    matParams.lit = false;
+    reticleMat = new R3Material(matParams);
 
-    //R3Cylinder *debugshape = new R3Cylinder(R3null_point, 0.2, 3);
+    // create nodes
+    //
+    nodes.reticleFar = new R3Node(new R3Mesh("reticleFar.off", true), reticleMat, R3Matrix(R3Point(0,0,-10)));
+    nodes.reticleNear = new R3Node(new R3Mesh("reticle.off", true), reticleMat, R3Matrix(R3Point(0,0,-5)));
 
     nodes.yawpos = new R3Node(NULL, NULL, params.transform);
     nodes.pitch = new R3Node(NULL, NULL, R3identity_matrix);
-    nodes.roll = new R3Node(this, new R3Mesh("arwing.off"), mat, R3identity_matrix);
-    //nodes.roll = new R3Node(this, new R3Mesh("reticle.off", true), mat, R3identity_matrix);
 
+    nodes.pitch->AddChild(nodes.reticleFar);
+    nodes.pitch->AddChild(nodes.reticleNear);
+
+    //nodes.roll = new R3Node(this, new R3Mesh("arwing.off"), mat, R3identity_matrix);
+    nodes.roll = new R3Node(this, new R3Mesh("arwing.off"), mat, R3identity_matrix);
     R3ParticleSource *source = new R3ParticleSource();
     source->shape = new R3Circle(R3Point(0, 0, 0), .05, R3posz_vector);
     source->rate = 100;
