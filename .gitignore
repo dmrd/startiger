@@ -36,3 +36,13 @@ tags
 .DS_Store
 
 *.swo
+
+# Visual Studio
+*.opensdf
+*.sdf
+*.sln
+*.suo
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+ipch/

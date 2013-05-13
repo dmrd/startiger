@@ -19,6 +19,8 @@ enum GameObjectType
     OBJ_FLOCK,
     OBJ_BOID,
     OBJ_EXPLOSION
+    OBJ_BOID,
+    OBJ_TERRAIN
 };
 
 
@@ -87,8 +89,8 @@ class GameObjectManager
             if (found != gameObjects.end())
             {
                 found->second->Destroy();
+                delete found->second;
                 gameObjects.erase(found);
-                //delete found->second;
             }
         }
 

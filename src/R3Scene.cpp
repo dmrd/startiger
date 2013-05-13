@@ -85,7 +85,7 @@ void R3Scene::Draw()
     R3Matrix skyboxTransform(camera.eye);
     skyboxTransform.XRotate(M_PI/2);    // look at side of skysphere
     skyboxTransform.Push();
-    R3Sphere(R3null_point, 100).Draw();
+    R3Sphere(R3null_point, 500).Draw();
     skyboxTransform.Pop();
 
     glEnable(GL_LIGHTING);

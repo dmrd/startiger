@@ -84,14 +84,16 @@ void App::Init(int *argc, char **argv)
     // GameStateManager
     globals.gsmgr = new GameStateManager();
 
-    // test Player, CameraHandler
-
+    // CameraHandler
     globals.gomgr->Add(new CameraHandler(&globals.scene->camera));
 
-    // Load first level:
+    // Levels
     globals.gsmgr->Add(new BasicLevel());
+
+    // Run game!
     globals.gsmgr->Start();
 
+    // HUD
     R3Material::Params hudParams; 
     hudParams.textureName = "ship.jpg";
     hud_mat = new R3Material(hudParams);//Util::GetTransparentTexture("ship.jpg", "ship_transparent.jpg");

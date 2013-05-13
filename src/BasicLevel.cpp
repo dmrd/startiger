@@ -3,6 +3,7 @@
 #include "Util.h"
 #include "Player.h"
 #include "Flock.h"
+#include "Terrain.h"
 
 Flock *flock;
 
@@ -26,6 +27,10 @@ void BasicLevel::Start()
     flockparams.radius = 1;
     flock = new Flock(flockparams);
     globals.gomgr->Add(flock);
+
+    Terrain::Params terrainparams;
+    terrainparams.heightMap = new R2Image("heightmap.jpg");
+    globals.gomgr->Add(new Terrain(terrainparams));
 }
 
 void BasicLevel::Stop()

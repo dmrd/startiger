@@ -118,7 +118,6 @@ namespace Util {
         R2Image img = R2Image();
         if (!img.Read(imageName)) {
             return -1;
-
         }
         R2Image transparent_part = R2Image();
         // Get texture filename

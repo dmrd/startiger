@@ -33,8 +33,8 @@ void Player::Create(void)
 
     // create material
     R3Material::Params matParams;
-    matParams.vertShaderName = "toon.vert";
-    matParams.fragShaderName = "toon.frag";
+    //matParams.vertShaderName = "toon.vert";
+    //matParams.fragShaderName = "toon.frag";
     mat = new R3Material(matParams);
 
     matParams.textureName = "reticle.jpg";
@@ -142,8 +142,8 @@ void Player::Update(double dt)
         //position.SetX(-BOUNDARY);
     //if (position.X() > BOUNDARY)
         //position.SetX(BOUNDARY);
-    //if (position.Y() < -BOUNDARY)
-        //position.SetY(-BOUNDARY);
+    if (position.Y() < -2)
+        position.SetY(-2);
     //if (position.Y() > BOUNDARY)
         //position.SetY(BOUNDARY);
 
