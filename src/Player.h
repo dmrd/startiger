@@ -47,6 +47,9 @@ class Player : public GameObject
 
             R3Node *camMove;   // camera position target
             R3Node *camLook;   // camera look target
+
+            R3Node *reticleNear;
+            R3Node *reticleFar;
         } nodes;
 
         struct
@@ -76,6 +79,7 @@ class Player : public GameObject
         }
 
         R3Material *mat;
+        R3Material *reticleMat;
 
         float health;
         double fireTimer;

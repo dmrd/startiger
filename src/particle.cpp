@@ -388,8 +388,7 @@ void UpdateParticles(R3Scene *scene, double current_time, double delta_time, int
 
 void RenderParticles(R3Scene *scene, double current_time, double delta_time)
 {
-/* TEMPORARILY COMMENTED OUT
- * */
+
   // Draw every particle
 
   // REPLACE CODE HERE
@@ -417,7 +416,9 @@ void RenderParticles(R3Scene *scene, double current_time, double delta_time)
           //TODO: fix this to use R3Material::Load() with GL_LIGHTING
           //      disabled
           //glBindTexture(GL_TEXTURE_2D, particle->material->textureName);
+
           particle->material->Load();
+
           particle->material->SetColor(alpha);
 
 

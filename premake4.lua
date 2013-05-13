@@ -36,7 +36,7 @@ libdirs  {
 linkoptions "-ljpeg"
 
 if os.is("linux") then
-    links { "glut", "GLU", "GL" }
+    links { "glut", "GLU", "GL", "GLEW" }
 elseif os.is("windows") then
     links { "glut32", "glu32", "opengl32" }
 else

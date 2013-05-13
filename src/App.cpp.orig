@@ -91,7 +91,8 @@ void App::Init(int *argc, char **argv)
     hudParams.textureName = "ship.jpg";
     hud_mat = new R3Material(hudParams);//Util::GetTransparentTexture("ship.jpg", "ship_transparent.jpg");
 
-    //shader = App::setShaders();
+
+    shader = App::setShaders();
     //glUseProgram(shader);
 }
 
@@ -329,7 +330,21 @@ void App::Update()
     // time passed since starting
     double delta_time = current_time - previous_time;
     previous_time = current_time;
+<<<<<<< HEAD
+    if (changeFps == 0) {
+        fps = 1/delta_time;
+        changeFps++;
+    } else {
+        changeFps++;
+        if(changeFps > 200)
+            changeFps = 0;
+    }
+    
+    // fps
+    //printf("fps: %f\n", 1/delta_time);
+=======
     fps = 1/delta_time;
+>>>>>>> a395cc4e7320549d7731b70cbd1f4fae23cacdb9
 
     // update objects
     globals.gomgr->Update(delta_time);

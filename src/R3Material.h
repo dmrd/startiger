@@ -4,6 +4,7 @@
 #include "R3/R3.h"
 
 #include <string>
+#include <iostream>
 
 class R3Material
 {
@@ -16,6 +17,7 @@ class R3Material
             R2Pixel kt;
             R2Pixel emission;
             double shininess;
+            bool lit; // Disable lighting for this material
             //double indexofrefraction;
             string textureName;
 
@@ -26,6 +28,7 @@ class R3Material
                 kt(R3Rgb(0.0, 0.0, 0.0, 1)),
                 emission(R3Rgb(0.0, 0.0, 0.0, 1)),
                 shininess(10),
+                lit(true),
                 textureName("")
             {
             }
@@ -41,6 +44,11 @@ class R3Material
 
         void Load(void) const
         {
+            if (params.lit) {
+                glEnable(GL_LIGHTING);
+            } else {
+                glDisable(GL_LIGHTING);
+            }
             // skip if previous
             if (lastMaterial == this)
                 return;
@@ -60,17 +68,19 @@ class R3Material
             c[0] = params.shininess;
             glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, c[0]);
 
+
             // texture
             if (textured)
             {
-                glBindTexture(GL_TEXTURE_2D, textureIndex); 
                 glEnable(GL_TEXTURE_2D);
+                glBindTexture(GL_TEXTURE_2D, textureIndex); 
             }
             else
                 glDisable(GL_TEXTURE_2D);
 
+
             // transparency
-            if (opacity < 1)
+            if (opacity < 1 || transparent)
             {
                 glDepthMask(false);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -82,14 +92,15 @@ class R3Material
                 glBlendFunc(GL_ONE, GL_ZERO);
                 glDepthMask(true);
             }
+
         }
 
         void SetColor(void) {
-            glColor4d(params.kd[0], params.kd[1], params.kd[2], params.kd[3]);
+            glColor4d(params.kd[0], params.kd[1], params.kd[2], 1 - params.kt.Luminance());
         }
 
         void SetColor(double alpha) {
-            glColor4d(params.kd[0], params.kd[1], params.kd[2], params.kd[3]*alpha);
+            glColor4d(params.kd[0], params.kd[1], params.kd[2], alpha);
         }
     private:
         void Initialize(void)
@@ -111,21 +122,41 @@ class R3Material
                 glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
                 textureImage = new R2Image(params.textureName.c_str());
+
+                string transparentName = params.textureName.c_str();
+                transparentName = transparentName.insert(transparentName.find_last_of("."), "_transparent");
+                R2Image transparentImage = R2Image();
+                transparent = transparentImage.Read(transparentName);
+
                 int npixels = textureImage->NPixels();
                 R2Pixel *pixels = textureImage->Pixels();
                 GLfloat *buffer = new GLfloat [ 4 * npixels ];
                 R2Pixel *pixelsp = pixels;
+
+                R2Pixel *transPixelsp = pixelsp;
+                if (transparent)
+                    transPixelsp = transparentImage.Pixels();
+                
+                cout << transparentName << " " << transparent << endl;
+
                 GLfloat *bufferp = buffer;
                 for (int j = 0; j < npixels; j++)
                 {
                     *(bufferp++) = pixelsp->Red();
                     *(bufferp++) = pixelsp->Green();
                     *(bufferp++) = pixelsp->Blue();
-                    *(bufferp++) = pixelsp->Alpha();
+                    if (transparent) {
+                        *(bufferp++) = transPixelsp->Red();
+                    } else {
+                        *(bufferp++) = pixelsp->Alpha();
+                    }
+
                     pixelsp++;
+                    transPixelsp++;
                 }
 
                 glTexImage2D(GL_TEXTURE_2D, 0, 4, textureImage->Width(), textureImage->Height(), 0, GL_RGBA, GL_FLOAT, buffer);
+                //gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, textureImage->Width(), textureImage->Height(), GL_RGBA, GL_FLOAT, buffer);
                 delete [] buffer;
             }
         }
@@ -137,6 +168,7 @@ class R3Material
         static const R3Material *lastMaterial;   // the last loaded material
 
         bool textured;
+        bool transparent;
         R2Image *textureImage;
         GLuint textureIndex;
 };
