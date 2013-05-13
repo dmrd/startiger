@@ -28,7 +28,9 @@ void BasicLevel::Start()
     flock = new Flock(flockparams);
     globals.gomgr->Add(flock);
 
-    globals.gomgr->Add(new Terrain());
+    Terrain::Params terrainparams;
+    terrainparams.heightMap = new R2Image("ship.jpg");
+    globals.gomgr->Add(new Terrain(terrainparams));
 }
 
 void BasicLevel::Stop()
