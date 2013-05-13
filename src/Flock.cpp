@@ -146,5 +146,10 @@ void Flock::Destroy()
 {
 }
 
+unsigned int Flock::NBoids()
+{
+    return boids.size();
+}
+
 
 

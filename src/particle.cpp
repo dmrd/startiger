@@ -354,7 +354,7 @@ void UpdateParticles(R3Scene *scene, double current_time, double delta_time, int
 
 
         if (particle->numMaterials > 1) {
-            int index = particle->numMaterials * (1-particle->lifetime/particle->startLifetime);
+            int index = (int) (particle->numMaterials * (1-particle->lifetime/particle->startLifetime));
             particle->material = particle->materials[index];
         }
         

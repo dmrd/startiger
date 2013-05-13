@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <algorithm>
 
 /*
  * GameObject types (maybe a better way to do this?)
@@ -84,8 +85,8 @@ class GameObjectManager
 
             if (found != gameObjects.end())
             {
-                gameObjects.erase(found);
                 found->second->Destroy();
+                gameObjects.erase(found);
                 //delete found->second;
             }
         }
@@ -110,7 +111,8 @@ class GameObjectManager
 
         void Destroy(GameObject::ID id)
         {
-            toDestroy.push_back(id);
+            if (find(toDestroy.begin(), toDestroy.end(), id) == toDestroy.end())
+                toDestroy.push_back(id);
         }
 
         void Update(double dt)

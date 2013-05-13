@@ -9,6 +9,7 @@
 #include "particle.h"
 #include "Flock.h"
 #include "Boid.h"
+#include "BasicLevel.h"
 #include <string>
 #include <sstream>
 
@@ -66,19 +67,16 @@ void App::Init(int *argc, char **argv)
     // GameObjectManager
     globals.gomgr = new GameObjectManager();
 
+    // GameStateManager
+    globals.gsmgr = new GameStateManager();
+
     // test Player, CameraHandler
 
     globals.gomgr->Add(new CameraHandler(&globals.scene->camera));
 
-    Player::Params playerparams;
-    playerparams.transform = R3identity_matrix;
-    globals.gomgr->Add(new Player(playerparams));
-
-    Flock::Params flockparams;
-    flockparams.spawn = R3Point(-5,0,-10);
-    flockparams.swarmSize = 10;
-    flockparams.radius = 1;
-    globals.gomgr->Add(new Flock(flockparams));
+    // Load first level:
+    globals.gsmgr->Add(new BasicLevel());
+    globals.gsmgr->Start();
 
     hud_img = Util::GetTransparentTexture("ship.jpg", "ship_transparent.jpg");
 }
@@ -313,12 +311,10 @@ void App::Update()
     double delta_time = current_time - previous_time;
     previous_time = current_time;
     fps = 1/delta_time;
-    
-    // fps
-    //printf("fps: %f\n", 1/delta_time);
 
     // update objects
     globals.gomgr->Update(delta_time);
+    globals.gsmgr->Update(delta_time);
 
     // update particles
     UpdateParticles(globals.scene, current_time, delta_time, 0);
