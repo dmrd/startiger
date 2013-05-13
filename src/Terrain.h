@@ -5,37 +5,28 @@
 #include "R3Node.h"
 #include "GameObject.h"
 
-class Patch
-{
-    public:
-        typedef unsigned int ID;
-
-    private:
-        ID id;
-};
-
 class Terrain : public GameObject
 {
-    protected:
-        R3Node *node;
-        //std::map<location, R3Mesh> map;
-
     public:
         typedef unsigned int ID;
 
         GameObjectType GetType(void) { return OBJ_TERRAIN; }
 
-        Patch::ID nextID;
-        typedef std::map<Patch::ID, Patch*> PatchMap;
-
-
-        struct Params { };
-        Terrain() { };
+        struct Params { R2Image *heightMap; };
+        Terrain();
         Terrain(const Params &params_);
 
         void Create(void);
         void Update(double dt);
         void Destroy(void);
+        
+    protected:
+        R3Mesh *Patch(R3Point center, R2Point size, R2Point dps);
+
+        Params params;
+        R3Node *node;
+        //std::map<location, R3Mesh> map;
+
 };
 
 #endif
