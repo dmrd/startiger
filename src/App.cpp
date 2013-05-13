@@ -15,8 +15,17 @@
 #define START_WIN_WIDTH    800
 #define START_WIN_HEIGHT   600
 
-GLuint hud_img;
+R3Material *hud_mat;
 double fps;
+int changeFps = 0;
+
+//vertex shader handle
+static GLuint v; 
+//fragment shader handle
+static GLuint f; 
+//shader program handle
+//using zero value sets OpenGL back to using fixed pipeline
+static GLuint shader=0; 
 
 // --- main -----------------------------------------------------------------
 
@@ -80,7 +89,13 @@ void App::Init(int *argc, char **argv)
     flockparams.radius = 1;
     globals.gomgr->Add(new Flock(flockparams));
 
-    hud_img = Util::GetTransparentTexture("ship.jpg", "ship_transparent.jpg");
+    R3Material::Params hudParams; 
+    hudParams.textureName = "ship.jpg";
+    hud_mat = new R3Material(hudParams);//Util::GetTransparentTexture("ship.jpg", "ship_transparent.jpg");
+
+
+    shader = App::setShaders();
+    //glUseProgram(shader);
 }
 
 int App::ParseArgs(int argc, char **argv)
@@ -205,6 +220,9 @@ void App::HUD()
 
 
     glDisable(GL_LIGHTING);
+    glDisable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ZERO);
+    glDepthMask(true);
     // Health Bar
     // White outline
     glBegin(GL_QUADS);
@@ -235,14 +253,15 @@ void App::HUD()
     glEnd();
 
 
-    glEnable(GL_BLEND);
+    /*glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glEnable(GL_TEXTURE_2D);
-
+*/
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-    glBindTexture(GL_TEXTURE_2D, hud_img);
+    //glBindTexture(GL_TEXTURE_2D, hud_img);
 
+    hud_mat->Load();
 
     glBegin(GL_QUADS);
 
@@ -283,6 +302,7 @@ void App::HUD()
 
     // score
     stringstream ss3;
+
     ss3 << "FPS: " << fps;
     glColor3f(0.8f, 0.8f, 0.3f);
     glRasterPos2f(globals.window.width/2, 90.0);
@@ -312,7 +332,14 @@ void App::Update()
     // time passed since starting
     double delta_time = current_time - previous_time;
     previous_time = current_time;
-    fps = 1/delta_time;
+    if (changeFps == 0) {
+        fps = 1/delta_time;
+        changeFps++;
+    } else {
+        changeFps++;
+        if(changeFps > 200)
+            changeFps = 0;
+    }
     
     // fps
     //printf("fps: %f\n", 1/delta_time);
@@ -372,5 +399,42 @@ void App::KeyReleasedSpecial(int key, int x, int y)
 {
 }
 
+GLuint App::setShaders() {
 
+    char *vs,*fs;
+
+    v = glCreateShader(GL_VERTEX_SHADER);
+    f = glCreateShader(GL_FRAGMENT_SHADER);
+
+    vs = Util::textFileRead("./toon.vert");
+    fs = Util::textFileRead("./toon.frag");
+
+    if(vs && fs)
+    {
+
+        const char * vv = vs;
+        const char * ff = fs;
+
+        glShaderSource(v, 1, &vv,NULL);
+        glShaderSource(f, 1, &ff,NULL);
+
+        free(vs);free(fs);
+
+        glCompileShader(v);
+        glCompileShader(f);
+
+        GLuint p = glCreateProgram();
+
+        glAttachShader(p,v);
+        glAttachShader(p,f);
+
+        glLinkProgram(p);
+        //glUseProgram(p); --> let's not rush with using the shader right away
+        //see processNormalKeys for turning shader on and off
+
+        return p;
+    }
+    cerr<<"Could not read the shader source"<<endl;
+    return 0;
+}
 
