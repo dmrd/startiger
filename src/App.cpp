@@ -334,7 +334,13 @@ void App::Update()
     // time passed since starting
     double delta_time = current_time - previous_time;
     previous_time = current_time;
-    fps = 1/delta_time;
+
+    if (changeFps > 200) {
+        fps = 1/delta_time;
+        changeFps = 0;
+    } else {
+        changeFps++;
+    }
 
     // update objects
     globals.gomgr->Update(delta_time);
