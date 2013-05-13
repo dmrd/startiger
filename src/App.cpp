@@ -84,12 +84,13 @@ void App::Init(int *argc, char **argv)
     // GameStateManager
     globals.gsmgr = new GameStateManager();
 
-    // test Player, CameraHandler
-
+    // CameraHandler
     globals.gomgr->Add(new CameraHandler(&globals.scene->camera));
 
-    // Load first level:
+    // Levels
     globals.gsmgr->Add(new BasicLevel());
+
+    // Run game!
     globals.gsmgr->Start();
 
     R3Material::Params hudParams; 
