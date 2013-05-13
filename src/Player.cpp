@@ -130,8 +130,8 @@ void Player::Update(double dt)
         //position.SetX(-BOUNDARY);
     //if (position.X() > BOUNDARY)
         //position.SetX(BOUNDARY);
-    //if (position.Y() < -BOUNDARY)
-        //position.SetY(-BOUNDARY);
+    if (position.Y() < -2)
+        position.SetY(-2);
     //if (position.Y() > BOUNDARY)
         //position.SetY(BOUNDARY);
 
