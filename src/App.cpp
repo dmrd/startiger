@@ -41,8 +41,6 @@ void App::Init(int *argc, char **argv)
     // initialize GLUT
     glutInit(argc, argv);
 
-
-
     // window
     glutInitWindowPosition(100, 100);
     globals.window.width = START_WIN_WIDTH;
@@ -91,8 +89,16 @@ void App::Init(int *argc, char **argv)
     hudParams.textureName = "ship.jpg";
     hud_mat = new R3Material(hudParams);//Util::GetTransparentTexture("ship.jpg", "ship_transparent.jpg");
 
-    //shader = App::setShaders();
-    //glUseProgram(shader);
+    // initialize shaders
+
+    GLenum err = glewInit();
+    if (err != GLEW_OK)
+        exit(1); // or handle the error in a nicer way
+    if (!GLEW_VERSION_2_1)  // check that the machine supports the 2.1 API.
+        exit(1); // or handle the error in a nicer way
+
+    shader = App::setShaders();
+    glUseProgram(shader);
 }
 
 int App::ParseArgs(int argc, char **argv)
@@ -251,10 +257,10 @@ void App::HUD()
 
 
     /*glEnable(GL_BLEND);
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glEnable(GL_TEXTURE_2D);
-*/
+      glEnable(GL_TEXTURE_2D);
+      */
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     //glBindTexture(GL_TEXTURE_2D, hud_img);
 
