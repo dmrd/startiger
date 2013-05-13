@@ -29,7 +29,7 @@ void BasicLevel::Start()
     globals.gomgr->Add(flock);
 
     Terrain::Params terrainparams;
-    terrainparams.heightMap = new R2Image("ship.jpg");
+    terrainparams.heightMap = new R2Image("heightmap.jpg");
     globals.gomgr->Add(new Terrain(terrainparams));
 }
 

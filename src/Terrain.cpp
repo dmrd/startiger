@@ -24,14 +24,24 @@ R3Mesh* Terrain::Patch(R3Point center, R2Point size, R2Point dps) { // dps: dots
       double dy = (r + c) % 2 * Util::UnitRandom(); // default
 
       if (params.heightMap) {
-        int x = (int)((double)c / dps.X() * params.heightMap->Width());
-        int y = (int)((double)r / dps.Y() * params.heightMap->Height());
-        dy = 10 * params.heightMap->Pixel(x,y).Luminance();
+        int x = ((double)c / dps.X()) * params.heightMap->Width();
+        int y = ((double)r / dps.Y()) * params.heightMap->Height();
+        dy = 25 * params.heightMap->Pixel(x,y).Luminance();
       }
 
       double dz = (double)r / dps.Y() * size.Y() - size.Y() / 2;
       R3Point position(center.X() + dx, center.Y() + dy, center.Z() + dz);
-      patch->CreateVertex(position, R3Vector(0,1,0), R2Point(r%2, c%2)); // id's go up along x axis, then along y
+
+      double tx = position.X() / 80;
+      double ty = position.Z() / 80;
+
+      //R2Point texcoord = R2Point(tx - ((int) tx), ty - ((int) ty));
+      //if (texcoord.X() < 0)
+          //texcoord.SetX(1 + texcoord.X());
+      //if (texcoord.Y() < 0)
+          //texcoord.SetY(1 + texcoord.Y());
+
+      patch->CreateVertex(position, R3Vector(0,1,0), R2Point(tx, ty)); // id's go up along x axis, then along y
     }
   }
   
@@ -53,6 +63,8 @@ R3Mesh* Terrain::Patch(R3Point center, R2Point size, R2Point dps) { // dps: dots
     }
   }
 
+  patch->Update();
+
   return patch;
 }
 
@@ -62,11 +74,13 @@ void Terrain::Create(void)
     node->transformation = R3identity_matrix;
 
     R3Material::Params matParams;
-    matParams.kd = R3Rgb(0, 1, 0, 1.0);
-    matParams.textureName = "tile.jpg";
+    matParams.textureName = "mars.jpg";
+    matParams.kd = R3Rgb(1, 1, 1, 1);
     R3Material *mat = new R3Material(matParams);
 
-    node->AddChild(new R3Node(Patch(R3Point(0,-3, 0), R2Point(1000,1000), R2Point(100,100)), mat, R3identity_matrix));
+    node->AddChild(new R3Node(Patch(R3Point(0,-3, 0),
+                    R2Point(300,300), R2Point(200,200)),
+                mat, R3identity_matrix));
     //node->AddChild(new R3Node(Patch(R3Point(10,-3, 0), R2Point(10,10), R2Point(60,60)), NULL, R3identity_matrix));
     globals.scene->root->AddChild(node);
 }

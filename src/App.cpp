@@ -93,6 +93,7 @@ void App::Init(int *argc, char **argv)
     // Run game!
     globals.gsmgr->Start();
 
+    // HUD
     R3Material::Params hudParams; 
     hudParams.textureName = "ship.jpg";
     hud_mat = new R3Material(hudParams);//Util::GetTransparentTexture("ship.jpg", "ship_transparent.jpg");
