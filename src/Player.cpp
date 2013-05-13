@@ -33,6 +33,9 @@ void Player::Create(void)
 
     // create material
     R3Material::Params matParams;
+    //matParams.textureName = "reticle.jpg";
+    //matParams.lit = false;
+    //mat = new R3Material(matParams);
     mat = new R3Material(matParams);
 
     // create nodes
@@ -42,6 +45,7 @@ void Player::Create(void)
     nodes.yawpos = new R3Node(NULL, NULL, params.transform);
     nodes.pitch = new R3Node(NULL, NULL, R3identity_matrix);
     nodes.roll = new R3Node(this, new R3Mesh("arwing.off"), mat, R3identity_matrix);
+    //nodes.roll = new R3Node(this, new R3Mesh("reticle.off", true), mat, R3identity_matrix);
 
     R3ParticleSource *source = new R3ParticleSource();
     source->shape = new R3Circle(R3Point(0, 0, 0), .05, R3posz_vector);

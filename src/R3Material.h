@@ -16,6 +16,7 @@ class R3Material
             R2Pixel kt;
             R2Pixel emission;
             double shininess;
+            bool lit; // Disable lighting for this material
             //double indexofrefraction;
             string textureName;
 
@@ -26,6 +27,7 @@ class R3Material
                 kt(R3Rgb(0.0, 0.0, 0.0, 1)),
                 emission(R3Rgb(0.0, 0.0, 0.0, 1)),
                 shininess(10),
+                lit(true),
                 textureName("")
             {
             }
@@ -41,6 +43,11 @@ class R3Material
 
         void Load(void) const
         {
+            if (params.lit) {
+                glEnable(GL_LIGHTING);
+            } else {
+                glDisable(GL_LIGHTING);
+            }
             // skip if previous
             if (lastMaterial == this)
                 return;
