@@ -2,6 +2,8 @@
 #include "R2/R2Image.h"
 #include "R2/R2Pixel.h"
 
+#include <fstream>
+
 namespace Util {
 
     double GetTime(void)
@@ -168,29 +170,29 @@ namespace Util {
 }
 
 
-
 char *Util::textFileRead(const char *fn) {
-	FILE *fp;
-	char *content = NULL;
+    FILE *fp;
+    char *content = NULL;
 
-	int count=0;
+    int count=0;
 
-	if (fn != NULL) {
-		fp = fopen(fn,"rt");
+    if (fn != NULL) {
+        fp = fopen(fn,"rt");
 
-		if (fp != NULL) {
+        if (fp != NULL) {
 
-			fseek(fp, 0, SEEK_END);
-			count = ftell(fp);
-			rewind(fp);
+            fseek(fp, 0, SEEK_END);
+            count = ftell(fp);
+            rewind(fp);
 
-			if (count > 0) {
-				content = (char *)malloc(sizeof(char) * (count+1));
-				count = fread(content,sizeof(char),count,fp);
-				content[count] = '\0';
-			}
-			fclose(fp);
-		}
-	}
-	return content;
+            if (count > 0) {
+                content = new char[count + 1];//(char *)malloc(sizeof(char) * (count+1));
+                count = fread(content,sizeof(char),count,fp);
+                content[count] = '\0';
+            }
+            fclose(fp);
+        }
+    }
+    return content;
 }
+

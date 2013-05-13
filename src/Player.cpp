@@ -33,6 +33,8 @@ void Player::Create(void)
 
     // create material
     R3Material::Params matParams;
+    matParams.vertShaderName = "toon.vert";
+    matParams.fragShaderName = "toon.frag";
     mat = new R3Material(matParams);
 
     matParams.textureName = "reticle.jpg";

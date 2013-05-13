@@ -10,6 +10,8 @@
 
 #include "R3/R3.h"
 
+#include <string>
+
 namespace Util {
 
     double GetTime(void);            // time in seconds

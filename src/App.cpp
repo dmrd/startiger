@@ -71,6 +71,13 @@ void App::Init(int *argc, char **argv)
     glEnable(GL_DEPTH_TEST);
     glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
 
+    // initialize shaders
+    GLenum err = glewInit();
+    if (err != GLEW_OK)
+        exit(1); // or handle the error in a nicer way
+    if (!GLEW_VERSION_2_1)  // check that the machine supports the 2.1 API.
+        exit(1); // or handle the error in a nicer way
+
     // GameObjectManager
     globals.gomgr = new GameObjectManager();
 
@@ -89,16 +96,8 @@ void App::Init(int *argc, char **argv)
     hudParams.textureName = "ship.jpg";
     hud_mat = new R3Material(hudParams);//Util::GetTransparentTexture("ship.jpg", "ship_transparent.jpg");
 
-    // initialize shaders
-
-    GLenum err = glewInit();
-    if (err != GLEW_OK)
-        exit(1); // or handle the error in a nicer way
-    if (!GLEW_VERSION_2_1)  // check that the machine supports the 2.1 API.
-        exit(1); // or handle the error in a nicer way
-
-    shader = App::setShaders();
-    glUseProgram(shader);
+    //shader = App::setShaders();
+    //glUseProgram(shader);
 }
 
 int App::ParseArgs(int argc, char **argv)
@@ -394,8 +393,7 @@ void App::KeyReleasedSpecial(int key, int x, int y)
 }
 
 GLuint App::setShaders() {
-
-    char *vs,*fs;
+    const char *vs,*fs;
 
     v = glCreateShader(GL_VERTEX_SHADER);
     f = glCreateShader(GL_FRAGMENT_SHADER);
@@ -405,17 +403,14 @@ GLuint App::setShaders() {
 
     if(vs && fs)
     {
-
-        const char * vv = vs;
-        const char * ff = fs;
-
-        glShaderSource(v, 1, &vv,NULL);
-        glShaderSource(f, 1, &ff,NULL);
-
-        free(vs);free(fs);
+        glShaderSource(v, 1, &vs, NULL);
+        glShaderSource(f, 1, &fs, NULL);
 
         glCompileShader(v);
         glCompileShader(f);
+
+        delete vs;
+        delete fs;
 
         GLuint p = glCreateProgram();
 
@@ -423,7 +418,6 @@ GLuint App::setShaders() {
         glAttachShader(p,f);
 
         glLinkProgram(p);
-        //glUseProgram(p); --> let's not rush with using the shader right away
         //see processNormalKeys for turning shader on and off
 
         return p;
