@@ -18,6 +18,7 @@ namespace Util {
     R3Vector BallRandom(double r);   // random in ball of radius r
     R3Point PointFromMatrix(const R3Matrix &mat);
     GLuint GetTransparentTexture(const char *image, const char *trans);
+    char *textFileRead(const char *fn);
 }
 
 #endif

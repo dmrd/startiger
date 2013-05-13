@@ -1,6 +1,7 @@
 #ifndef __APP_H__
 #define __APP_H__
 
+#include "glutfix.h"
 /*
  * main application class
  *
@@ -34,6 +35,7 @@ class App
         static void KeyReleased(unsigned char key, int x, int y);
         static void KeyReleasedSpecial(int key, int x, int y);
 
+        static GLuint setShaders();
     public:
         static void Run(int *argc, char **argv)
         {
