@@ -29,13 +29,13 @@ void Explosion::Initialize() {
     fireParams.textureName = "smoke.jpg";
     mat[0] = new R3Material(fireParams);
 
-    fireParams.kd = R2Pixel(.5, .5, 0, 0);
+    fireParams.kd = R2Pixel(.5, .25, .25, 0);
     mat[1] = new R3Material(fireParams);
 
-    fireParams.kd = R2Pixel(.5, .25, 0, 0);
+    fireParams.kd = R2Pixel(.3, .25, .2, 0);
     mat[2] = new R3Material(fireParams);
 
-    fireParams.kd = R2Pixel(.5, 0, 0, 0);
+    fireParams.kd = R2Pixel(.2, .2, 0.2, 0);
     mat[3] = new R3Material(fireParams);
 }
 
@@ -50,16 +50,16 @@ void Explosion::Create(void)
     globals.scene->root->AddChild(node);
 
     R3ParticleSource *source = new R3ParticleSource();
-    source->shape = new R3Sphere(R3Point(0, 0, 0), .05);
-    source->rate = 300;
-    source->velocity = 20;
+    source->shape = new R3Sphere(R3Point(0, 0, 0), 0.8);
+    source->rate = 200;
+    source->velocity = 2;
     source->angle_cutoff = .5;
     source->mass = 1;
     source->fixed = false;
-    source->drag = 0;
+    source->drag = 0.15;
     source->elasticity = 0;
-    source->lifetime = .25;
-    source->size = .5;
+    source->lifetime = 1.2;
+    source->size = 1.3;
 
     source->numMaterials = 4;
     source->materials = Explosion::mat;

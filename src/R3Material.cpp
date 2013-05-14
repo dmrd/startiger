@@ -42,17 +42,23 @@ void R3Material::Load(void) const
 
 
     // transparency
-    if (opacity < 1 || transparent)
+    if (params.additive)
     {
         glDepthMask(false);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE);
+    }
+    else if (opacity < 1 || transparent)
+    {
+        glDepthMask(false);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
     else
     {
+        glDepthMask(true);
         glDisable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ZERO);
-        glDepthMask(true);
     }
 
     // shader

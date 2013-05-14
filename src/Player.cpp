@@ -17,6 +17,8 @@
 
 #define BOUNDARY 10 
 
+#define JET_RATE 100
+
 Player::Player(const Params &params_) :
     params(params_)
 {
@@ -52,19 +54,19 @@ void Player::Create(void)
     nodes.pitch->AddChild(nodes.reticleFar);
     nodes.pitch->AddChild(nodes.reticleNear);
 
-    //nodes.roll = new R3Node(this, new R3Mesh("arwing.off"), mat, R3identity_matrix);
     nodes.roll = new R3Node(this, new R3Mesh("arwing.off"), mat, R3identity_matrix);
+
     R3ParticleSource *source = new R3ParticleSource();
-    source->shape = new R3Circle(R3Point(0, 0, 0), .05, R3posz_vector);
-    source->rate = 100;
+    source->shape = new R3Circle(R3Point(0, 0, 0), .3, R3posz_vector);
+    source->rate = 0;
     source->velocity = 10;
-    source->angle_cutoff = .5;
+    source->angle_cutoff = M_PI/7;
     source->mass = 1;
     source->fixed = false;
-    source->drag = 0;
+    source->drag = 0.2;
     source->elasticity = 0;
-    source->lifetime = .1;
-    source->size = .5;
+    source->lifetime = .2;
+    source->size = .8;
 
     source->numMaterials = 4;
     source->materials = new R3Material*[4];
@@ -72,7 +74,8 @@ void Player::Create(void)
     R3Material::Params fireParams; 
     fireParams.lit = false;
     fireParams.kd = R2Pixel(.5, .5, .25, 0);
-    fireParams.textureName = "smoke.jpg";
+    fireParams.additive = true;
+    fireParams.textureName = "smoke_transparent.jpg";
     source->materials[0] = new R3Material(fireParams);
 
     fireParams.kd = R2Pixel(.5, .5, 0, 0);
@@ -84,7 +87,9 @@ void Player::Create(void)
     fireParams.kd = R2Pixel(.5, 0, 0, 0);
     source->materials[3] = new R3Material(fireParams);
 
-    nodes.roll->AttachSource(source);
+    nodes.jet = new R3Node(NULL, NULL, R3Matrix(R3Point(0, 0, 1)));
+    nodes.pitch->AddChild(nodes.jet);
+    nodes.jet->AttachSource(source);
 
     globals.scene->root->AddChild(nodes.yawpos);
     nodes.yawpos->AddChild(nodes.pitch);
@@ -131,6 +136,11 @@ void Player::Update(double dt)
             globals.keys['w'] - globals.keys['s'],
             globals.keys['k'] - globals.keys['i']
             );
+
+    if (dx.IsZero())
+        nodes.jet->source->rate = 0;
+    else
+        nodes.jet->source->rate = JET_RATE;
 
     dx.Transform(R3Matrix::XRotation(rotation.pitch));     // direction given by yaw, pitch
     dx.Transform(R3Matrix::YRotation(rotation.yaw));
