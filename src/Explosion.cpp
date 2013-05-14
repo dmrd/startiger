@@ -53,7 +53,7 @@ void Explosion::Create(void)
 
     R3ParticleSource *source = new R3ParticleSource();
     source->shape = new R3Sphere(R3Point(0, 0, 0), 0.8);
-    source->rate = 200;
+    source->rate = 50;
     source->velocity = 2;
     source->angle_cutoff = .5;
     source->mass = 1;

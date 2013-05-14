@@ -12,7 +12,7 @@ class Shot : public GameObject
     public:
         GameObjectType GetType(void) { return type; }
 
-        struct Params { R3Matrix transform; R3Vector direction; bool playershot; };
+        struct Params { R3Matrix transform; R3Vector direction; bool playershot; R3Vector basevel; };
         Shot(const Params &params_);
         ~Shot();
 

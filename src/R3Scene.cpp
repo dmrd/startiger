@@ -57,6 +57,10 @@ void R3Scene::UpdateBboxes(void)
 
 void R3Scene::Draw()
 {
+    // camera!
+    camera.Load();
+    camera.UpdateFrustumPlanes();
+
     // lights!
     static GLfloat glambient[4];
     glambient[0] = ambient[0];
@@ -66,10 +70,6 @@ void R3Scene::Draw()
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, glambient);
     for (int i = 0; i < lights.size(); ++i)
         lights[i]->Load(i);
-
-    // camera!
-    camera.Load();
-    camera.UpdateFrustumPlanes();
 
     // skybox!
     glDisable(GL_LIGHTING);

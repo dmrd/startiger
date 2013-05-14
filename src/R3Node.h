@@ -8,6 +8,9 @@
 #include <algorithm>
 #include <list>
 
+class R3Light;
+class R3ParticleSource;
+
 struct R3Node
 {
     struct R3Node *parent;
@@ -17,7 +20,8 @@ struct R3Node
     R3Material *material;
     R3Box bbox; // stored in world space!
     GameObject *object;
-    struct R3ParticleSource *source;
+    R3ParticleSource *source;
+    R3Light *light;
     bool intracollide;
 
     R3Node(const R3Matrix &transformation_ = R3identity_matrix) :
@@ -28,7 +32,8 @@ struct R3Node
         bbox(R3null_box),
         object(NULL),
         intracollide(true),
-        source(NULL)
+        source(NULL),
+        light(NULL)
     {
     }
 
@@ -40,7 +45,8 @@ struct R3Node
         transformation(transformation_),
         object(NULL),
         intracollide(true),
-        source(NULL)
+        source(NULL),
+        light(NULL)
     {
         if (shape)
             REFCOUNT_UP(shape);
@@ -119,6 +125,7 @@ struct R3Node
     // Particles
     
     void AttachSource(R3ParticleSource *sourceToAdd);
+    void AttachLight(R3Light *light_);
 
     protected:
 

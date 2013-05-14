@@ -15,7 +15,7 @@ Boid::Boid(R3Point spawn_, R3Vector velocity_, Flock *flock_) :
     velocity(velocity_),
     flock(flock_),
     alive(true),
-    firingRate(0.08)
+    firingRate(0.2)
 {
 }
 

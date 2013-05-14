@@ -7,7 +7,7 @@
 #include "Sound.h"
 
 
-#define BULLET_SPEED 40
+#define BULLET_SPEED 80
 #define LIFETIME 1
 
 Shot::Shot(const Params &params_) :
@@ -36,6 +36,10 @@ void Shot::Create(void)
     node->transformation.Rotate(R3negz_vector, params.direction);
     globals.scene->root->AddChild(node);
 
+    // apply transformation to basevel
+    params.basevel.Transform(node->transformation.Inverse());
+    params.basevel *= 0.2;
+
     // set shot type
     type = params.playershot ? OBJ_PLAYERSHOT : OBJ_ENEMYSHOT;
 
@@ -51,7 +55,7 @@ void Shot::Update(double dt)
         globals.gomgr->Destroy(GetID());
     
     // move
-    node->transformation.Translate(R3Vector(0, 0, -BULLET_SPEED * dt));
+    node->transformation.Translate((params.basevel + R3Vector(0, 0, -BULLET_SPEED)) * dt);
 }
 
 void Shot::Destroy()

@@ -5,7 +5,6 @@
 #include "R3Node.h"
 #include "GameObject.h"
 #include "CameraHandler.h"
-#include "R3Scene.h"
 #include "Sound.h"
 
 class Player : public GameObject

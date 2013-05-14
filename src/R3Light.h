@@ -4,6 +4,11 @@
 #include "R3/R3.h"
 #include "stdio.h"
 
+#include "R3Node.h"
+#include "Globals.h"
+#include "Player.h"
+
+
 /*
  * light types
  */
@@ -35,6 +40,34 @@ struct R3Light
     double quadratic_attenuation;
     double angle_attenuation;
     double angle_cutoff;
+
+    R3Node *parent;
+
+    R3Light(
+        R3LightType type_ = R3_POINT_LIGHT,
+        R3Point position_ = R3null_point,
+        R3Vector direction_ = R3null_vector,
+        double radius_ = 0,
+        R2Pixel color_ = R3Rgb(1, 1, 1, 1),
+        double constant_attenuation_ = 1,
+        double linear_attenuation_ = 0,
+        double quadratic_attenuation_ = 0,
+        double angle_attenuation_ = 0,
+        double angle_cutoff_ = M_PI
+        ) :
+        type(type_),
+        position(position_),
+        direction(direction_),
+        radius(radius_),
+        color(color_),
+        constant_attenuation(constant_attenuation_),
+        linear_attenuation(linear_attenuation_),
+        quadratic_attenuation(quadratic_attenuation_),
+        angle_attenuation(angle_attenuation_),
+        angle_cutoff(angle_cutoff_),
+        parent(NULL)
+    {
+    }
 
     // load light at index i
     void Load(int i) const
@@ -68,54 +101,64 @@ struct R3Light
         glLightf(index, GL_SPOT_EXPONENT, buffer[1]);
 
         // Load positions/directions
+        R3Point transpos = position;    // nothing to do with 'transpose'...
+        R3Vector transdir = direction;
+
+        if (parent)
+        {
+            R3Matrix trans = parent->getWorldTransform();
+            transpos.Transform(trans);
+            //transdir.Transform(trans);
+        }
+
         switch (type)
         {
             case R3_DIRECTIONAL_LIGHT: 
                 // Load direction
-                buffer[0] = -(direction.X());
-                buffer[1] = -(direction.Y());
-                buffer[2] = -(direction.Z());
+                buffer[0] = -(transdir.X());
+                buffer[1] = -(transdir.Y());
+                buffer[2] = -(transdir.Z());
                 buffer[3] = 0.0;
                 glLightfv(index, GL_POSITION, buffer);
                 break;
 
             case R3_POINT_LIGHT: 
-                // Load position
-                buffer[0] = position.X();
-                buffer[1] = position.Y();
-                buffer[2] = position.Z();
+                // Load transpos
+                buffer[0] = transpos.X();
+                buffer[1] = transpos.Y();
+                buffer[2] = transpos.Z();
                 buffer[3] = 1.0;
                 glLightfv(index, GL_POSITION, buffer);
                 break;
 
             case R3_SPOT_LIGHT: 
-                // Load position
-                buffer[0] = position.X();
-                buffer[1] = position.Y();
-                buffer[2] = position.Z();
+                // Load transpos
+                buffer[0] = transpos.X();
+                buffer[1] = transpos.Y();
+                buffer[2] = transpos.Z();
                 buffer[3] = 1.0;
                 glLightfv(index, GL_POSITION, buffer);
 
-                // Load direction
-                buffer[0] = direction.X();
-                buffer[1] = direction.Y();
-                buffer[2] = direction.Z();
+                // Load transdir
+                buffer[0] = transdir.X();
+                buffer[1] = transdir.Y();
+                buffer[2] = transdir.Z();
                 buffer[3] = 1.0;
                 glLightfv(index, GL_SPOT_DIRECTION, buffer);
                 break;
 
             case R3_AREA_LIGHT: 
-                // Load position
-                buffer[0] = position.X();
-                buffer[1] = position.Y();
-                buffer[2] = position.Z();
+                // Load transpos
+                buffer[0] = transpos.X();
+                buffer[1] = transpos.Y();
+                buffer[2] = transpos.Z();
                 buffer[3] = 1.0;
                 glLightfv(index, GL_POSITION, buffer);
 
-                // Load direction
-                buffer[0] = direction.X();
-                buffer[1] = direction.Y();
-                buffer[2] = direction.Z();
+                // Load transdir
+                buffer[0] = transdir.X();
+                buffer[1] = transdir.Y();
+                buffer[2] = transdir.Z();
                 buffer[3] = 1.0;
                 glLightfv(index, GL_SPOT_DIRECTION, buffer);
                 break;

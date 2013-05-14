@@ -50,15 +50,15 @@ R3Mesh* Terrain::Patch(R3Point center, R2Point size, R2Point dps) { // dps: dots
       unsigned int cols = (unsigned int)dps.X();
       unsigned int k = c + r * cols;
       vector<R3MeshVertex*> vertices;
-      vertices.push_back(patch->Vertex(k));
-      vertices.push_back(patch->Vertex(k+1));
       vertices.push_back(patch->Vertex(k+cols));
+      vertices.push_back(patch->Vertex(k+1));
+      vertices.push_back(patch->Vertex(k));
       patch->CreateFace(vertices);
 
       vector<R3MeshVertex*> vertices2;
-      vertices2.push_back(patch->Vertex(k+1));
-      vertices2.push_back(patch->Vertex(k+1+cols));
       vertices2.push_back(patch->Vertex(k+cols));
+      vertices2.push_back(patch->Vertex(k+1+cols));
+      vertices2.push_back(patch->Vertex(k+1));
       patch->CreateFace(vertices2);
     }
   }

@@ -57,6 +57,11 @@ void Player::Create(void)
     nodes.pitch->AddChild(nodes.reticleFar);
     nodes.pitch->AddChild(nodes.reticleNear);
 
+    R3Light *light = new R3Light(R3_POINT_LIGHT, R3null_point, R3null_vector,
+            0, R3Rgb(0.8, 0.5, 0.1, 1), 1, 0, 0, 0, M_PI);
+    globals.scene->AddLight(light);
+    nodes.yawpos->AttachLight(light);
+
     nodes.roll = new R3Node(this, new R3Mesh("arwing.off"), mat, R3identity_matrix);
 
     R3ParticleSource *source = new R3ParticleSource();
@@ -158,7 +163,8 @@ void Player::Update(double dt)
     dx.Transform(R3Matrix::XRotation(rotation.pitch));     // direction given by yaw, pitch
     dx.Transform(R3Matrix::YRotation(rotation.yaw));
 
-    position += MOVE_SPEED * dx * dt;
+    dx *= MOVE_SPEED;
+    position += dx * dt;
 
     // actually set the transform
 
@@ -188,6 +194,7 @@ void Player::Update(double dt)
         shotparams.transform = GetPosition();
         shotparams.direction = nodes.pitch->getWorldTransform() * R3negz_vector;
         shotparams.playershot = true;
+        shotparams.basevel = dx;
         globals.gomgr->Add(new Shot(shotparams));
         fireTimer = FIRE_PERIOD;
     }

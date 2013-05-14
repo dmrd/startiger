@@ -27,8 +27,8 @@ void BasicLevel::Start()
 
     Flock::Params flockparams;
     flockparams.spawn = R3Point(-5,0,-10);
-    flockparams.swarmSize = 10;
-    flockparams.radius = 1;
+    flockparams.swarmSize = 20;
+    flockparams.radius = 20;
     flock = new Flock(flockparams);
     globals.gomgr->Add(flock);
 }
@@ -49,8 +49,8 @@ void BasicLevel::Update(double dt)
             printf("new flock \n");
             Flock::Params flockparams;
             flockparams.spawn = globals.player->GetPosition();
-            flockparams.swarmSize = 8;
-            flockparams.radius = 1;
+            flockparams.swarmSize = 10;
+            flockparams.radius = 20;
             flock = new Flock(flockparams);
             globals.gomgr->Add(flock);
         }

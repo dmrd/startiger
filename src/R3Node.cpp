@@ -1,6 +1,7 @@
 #include "R3Node.h"
 #include "Globals.h"
 #include "R3Scene.h"
+#include "R3Light.h"
 
 void R3Node::Draw(void) const
 {
@@ -115,3 +116,12 @@ void R3Node::AttachSource(R3ParticleSource *sourceToAdd) {
     source->node = this;
     //globals.scene->AddParticleSource(sourceToAdd);
 }
+
+void R3Node::AttachLight(R3Light *light_)
+{
+    light = light_;
+    light->parent = this;
+}
+
+
+
