@@ -35,6 +35,7 @@ struct R3Light
     R3Vector direction;
     double radius;
     R2Pixel color;
+    R2Pixel specular_color;
     double constant_attenuation;
     double linear_attenuation;
     double quadratic_attenuation;

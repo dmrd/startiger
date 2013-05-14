@@ -262,6 +262,7 @@ int R3Scene::Read(const string &name, R3Node *node)
     defaultMatParams.ks = R3Rgb(0.5, 0.5, 0.5, 1);
     defaultMatParams.kt = R3Rgb(0.0, 0.0, 0.0, 1);
     defaultMatParams.emission = R3Rgb(0, 0, 0, 1);
+    defaultMatParams.defaultShaders = false;
     defaultMatParams.shininess = 10;
     defaultMatParams.textureName = "";
     R3Material *default_material = new R3Material(defaultMatParams);

@@ -19,8 +19,6 @@
 
 #define BOUNDARY 10 
 
-#define JET_RATE 120
-
 Player::Player(const Params &params_) :
     params(params_)
 {
@@ -38,8 +36,6 @@ void Player::Create(void)
 
     // create material
     R3Material::Params matParams;
-    //matParams.vertShaderName = "toon.vert";
-    //matParams.fragShaderName = "toon.frag";
     mat = new R3Material(matParams);
 
     R3Material::Params reticleMatParams;
@@ -58,8 +54,8 @@ void Player::Create(void)
     nodes.pitch->AddChild(nodes.reticleFar);
     nodes.pitch->AddChild(nodes.reticleNear);
 
-    R3Light *light = new R3Light(R3_POINT_LIGHT, R3null_point, R3null_vector,
-            0, R3Rgb(0.8, 0.5, 0.1, 1), 1, 0, 0, 0, M_PI);
+    R3Light *light = new R3Light(R3_POINT_LIGHT, R3Point(0, 0, -5), R3null_vector,
+            0, R3Rgb(0.1, 0.4, 0.9, 1), 0.2, 0, 0.008, 0, M_PI);
     globals.scene->AddLight(light);
     nodes.yawpos->AttachLight(light);
 
@@ -82,7 +78,7 @@ void Player::Create(void)
 
     R3Material::Params fireParams; 
     fireParams.lit = false;
-    fireParams.kd = R2Pixel(.5, .5, .25, 0);
+    fireParams.kd = R2Pixel(.0, .1, .8, 0);
     fireParams.additive = true;
     fireParams.textureName = "flare.jpg";
     source->materials[0] = new R3Material(fireParams);
@@ -96,7 +92,7 @@ void Player::Create(void)
     fireParams.kd = R2Pixel(.5, 0, 0, 0);
     source->materials[3] = new R3Material(fireParams);
 
-    nodes.jet = new R3Node(NULL, NULL, R3Matrix(R3Point(0, 0, 1)));
+    nodes.jet = new R3Node(NULL, NULL, R3Matrix(R3Point(0, 0, 0.5)));
     nodes.pitch->AddChild(nodes.jet);
     nodes.jet->AttachSource(source);
 
@@ -146,6 +142,7 @@ void Player::Update(double dt)
             globals.keys['k'] - globals.keys['i']
             );
 
+#define JET_RATE 190
     if (dx.IsZero())
     {
         nodes.jet->source->rate = 0.6*JET_RATE;
@@ -156,9 +153,9 @@ void Player::Update(double dt)
     else
     {
         nodes.jet->source->rate = JET_RATE;
-        nodes.jet->source->size = 0.8;
+        nodes.jet->source->size = 1;
         nodes.jet->source->velocity = 10;
-        nodes.jet->source->lifetime = 0.3;
+        nodes.jet->source->lifetime = 0.2;
     }
 
     dx.Transform(R3Matrix::XRotation(rotation.pitch));     // direction given by yaw, pitch
@@ -188,6 +185,7 @@ void Player::Update(double dt)
     nodes.yawpos->transformation.YRotate(rotation.yaw);    // else it gets weird
     nodes.pitch->transformation = R3Matrix::XRotation(rotation.pitch);
     nodes.roll->transformation = R3Matrix::ZRotation(rotation.roll);
+    nodes.roll->transformation.Scale(1.3);
 
     // shoot
 
