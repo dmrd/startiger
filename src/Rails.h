@@ -23,6 +23,9 @@ class Rails : public GameObject
         void Destroy(void);
         
         R2Point currentLocation;
+        double GetWidth(void);
+        double GetHeight(void);
+
     protected:
 
 

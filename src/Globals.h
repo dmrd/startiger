@@ -57,6 +57,8 @@ struct Globals
     Terrain* terrain;
     Rails* rails;
 
+    int levelStatus;
+
 #ifndef __APPLE__
     struct Sounds
     {
@@ -79,6 +81,7 @@ struct Globals
 
         quit = false;
         input_scene_name = "";
+
 
 #ifndef __APPLE__
         sounds.rate = 22050;

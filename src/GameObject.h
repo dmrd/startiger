@@ -80,7 +80,6 @@ class GameObjectManager
         GameObjectMap gameObjects;
 
         std::vector<GameObject::ID> toDestroy;
-
         // actually destroy an object
         void _Destroy(GameObject::ID id)
         {
@@ -93,6 +92,11 @@ class GameObjectManager
                 gameObjects.erase(found);
             }
         }
+
+        void DestroyAll() {
+
+        }
+
 
     public:
         GameObjectManager()

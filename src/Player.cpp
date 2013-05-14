@@ -107,7 +107,11 @@ void Player::Create(void)
     rotation.roll = 0;
 
 //    nodes.yawpos->transformation = 
-    position = R3Point(-globals.rails->currentLocation.Y()-.5, 1, -globals.rails->currentLocation.X()-.5)*TERRAIN_SIZE/TERRAIN_DPS;
+    R2Point size = R2Point(TERRAIN_SIZE,TERRAIN_SIZE);
+    R2Point dps = R2Point(TERRAIN_DPS,TERRAIN_DPS);
+    double dx = (double)globals.rails->currentLocation.X()/globals.rails->GetWidth() * size.X() - size.X() / 2;
+    double dz = (double)globals.rails->currentLocation.Y()/globals.rails->GetHeight() * size.Y() - size.Y() / 2;
+    position = R3Point(dx, 1, dz);
 //params.transform.getOrigin();
 
     // camera targets
@@ -140,12 +144,15 @@ void Player::SetDirection(float angle) {
 
 void Player::Update(double dt)
 {
+    if (health < 0) {
+        globals.levelStatus = 2;
+    }
     //health -= dt*.01;
     // yaw/pitch/roll
 
-    //rotation.yaw += (globals.keys['z'] - globals.keys['c']) * ROLL_SPEED * dt;
+    rotation.yaw += (globals.keys['z'] - globals.keys['c']) * ROLL_SPEED * dt;
     //RotAnim(rotation.pitch, ROLL_MAX * (globals.keys['r'] - globals.keys['f']), ROLL_SPEED, dt);
-    RotAnim(rotation.roll,  ROLL_MAX * (globals.keys['a'] - globals.keys['d']), ROLL_SPEED, dt);
+    //RotAnim(rotation.roll,  ROLL_MAX * (globals.keys['a'] - globals.keys['d']), ROLL_SPEED, dt);
 
     // move
 
@@ -161,14 +168,7 @@ void Player::Update(double dt)
         horizontalMove = 0;
         rightleft = 0;
     }
-    if (yVal + verticalMove > BOUNDARY) {
-        verticalMove = 0;
-        updown = 0;
-    }
-    if (yVal + verticalMove < -BOUNDARY) {
-        verticalMove = 0;
-        updown = 0;
-    }
+
     xVal += horizontalMove;
     yVal += verticalMove;
     R3Vector dx(
@@ -204,6 +204,9 @@ void Player::Update(double dt)
     double height = globals.terrain->Height(GetPosition()); 
     if (position.Y() < height) {
         position.SetY(height);
+    }
+    if (position.Y() > height+10) {
+        position.SetY(height+10);
     }
 
     // actually set the transform
