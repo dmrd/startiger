@@ -5,6 +5,11 @@
 #include "R3Node.h"
 #include "GameObject.h"
 
+#define TERRAIN_SIZE 300
+#define TERRAIN_DPS 200
+
+
+
 class Terrain : public GameObject
 {
     public:
@@ -19,6 +24,7 @@ class Terrain : public GameObject
         void Create(void);
         void Update(double dt);
         void Destroy(void);
+        double Height(R3Point pos);
         
     protected:
         R3Mesh *Patch(R3Point center, R2Point size, R2Point dps);

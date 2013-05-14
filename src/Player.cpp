@@ -5,6 +5,7 @@
 #include "Shot.h"
 #include "R3Scene.h"
 #include "Sound.h"
+#include "Terrain.h"
 #include <cmath>
 
 #define ROLL_MAX 0.5
@@ -165,6 +166,11 @@ void Player::Update(double dt)
 
     dx *= MOVE_SPEED;
     position += dx * dt;
+    // Keep player above terrain
+    double height = globals.terrain->Height(GetPosition()); 
+    if (position.Y() < height) {
+        position.SetY(height);
+    }
 
     // actually set the transform
 

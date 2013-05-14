@@ -16,7 +16,7 @@ class Player;
 class CameraHandler;
 class Sound;
 
-
+class Terrain;
 
 /*
  * data accessible from everywhere
@@ -48,6 +48,8 @@ struct Globals
     GameStateManager *gsmgr;
     Player *player;
     CameraHandler *camerahandler;
+
+    Terrain* terrain;
 
     struct Sounds
     {

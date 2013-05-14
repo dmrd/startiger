@@ -19,7 +19,8 @@ void BasicLevel::Start()
 {
     Terrain::Params terrainparams;
     terrainparams.heightMap = new R2Image("heightmap.jpg");
-    globals.gomgr->Add(new Terrain(terrainparams));
+    globals.terrain = new Terrain(terrainparams);
+    globals.gomgr->Add(globals.terrain);
 
     Player::Params playerparams;
     playerparams.transform = R3identity_matrix;

@@ -81,7 +81,7 @@ void Terrain::Create(void)
     R3Material *mat = new R3Material(matParams);
 
     node->AddChild(new R3Node(Patch(R3Point(0,-3, 0),
-                    R2Point(300,300), R2Point(200,200)),
+                    R2Point(TERRAIN_SIZE,TERRAIN_SIZE), R2Point(TERRAIN_DPS,TERRAIN_DPS)),
                 mat, R3identity_matrix));
     //node->AddChild(new R3Node(Patch(R3Point(10,-3, 0), R2Point(10,10), R2Point(60,60)), NULL, R3identity_matrix));
     globals.scene->root->AddChild(node);
@@ -95,4 +95,18 @@ void Terrain::Update(double dt)
 void Terrain::Destroy(void)
 {
     
+}
+
+double Terrain::Height(R3Point pos) {
+    double x = ((pos.X() + TERRAIN_SIZE / 2) / (TERRAIN_SIZE)) * params.heightMap->Width();
+    double y = ((pos.Z() + TERRAIN_SIZE / 2) / (TERRAIN_SIZE)) * params.heightMap->Height();
+    //printf("%f %f\n", params.heightMap->Width(), params.heightMap->Height());
+    //printf("%f %f\n\n", x, y);
+    if (x > params.heightMap->Width() 
+            || x < 0
+            || y > params.heightMap->Height()
+            || y < 0) { 
+        return -100;
+    }
+    return 25 * params.heightMap->Pixel(round(x), round(y)).Luminance();
 }
