@@ -1,3 +1,4 @@
+#ifndef __APPLE__
 #include "Sound.h"
 #include <string>
 #include "Dirs.h"
@@ -46,3 +47,4 @@ void Sound::Play() {
     if (!loaded) { return; }
     Mix_PlayChannel(-1, sample, 0);
 }
+#endif

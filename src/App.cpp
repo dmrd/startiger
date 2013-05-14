@@ -8,7 +8,11 @@
 #include "particle.h"
 #include "Flock.h"
 #include "Boid.h"
-#include "Sound.h"
+
+#ifndef __APPLE__
+    #include "Sound.h"
+#endif
+
 #include "BasicLevel.h"
 #include <string>
 #include <sstream>
@@ -29,7 +33,9 @@ void App::Init(int *argc, char **argv)
         exit(1);
 
     /* Sound initialization */
+#ifndef __APPLE__
     InitSound();
+#endif
 
     // initialize GLUT
     glutInit(argc, argv);
@@ -86,11 +92,13 @@ void App::Init(int *argc, char **argv)
     globals.gsmgr->Add(new BasicLevel());
 
     // Sounds
+#ifndef __APPLE__
     globals.sounds.explosion = new Sound("explosion.wav");
     globals.sounds.shot[0] = new Sound("shot1.wav");
     globals.sounds.shot[1] = new Sound("shot2.wav");
     globals.sounds.shot[2] = new Sound("shot3.wav");
     globals.sounds.shot[3] = new Sound("shot4.wav");
+#endif
 
     // Run game!
     globals.gsmgr->Start();

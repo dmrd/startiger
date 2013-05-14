@@ -5,8 +5,10 @@
 
 #include "GameObject.h"
 #include "GameState.h"
-#include "SDL/SDL.h"
-#include "SDL/SDL_mixer.h"
+#ifndef __APPLE__
+    #include "SDL/SDL.h"
+    #include "SDL/SDL_mixer.h"
+#endif
 
 /*
  * forward declarations
@@ -14,7 +16,9 @@
 class R3Scene;
 class Player;
 class CameraHandler;
+#ifndef __APPLE__
 class Sound;
+#endif
 
 
 
@@ -48,7 +52,7 @@ struct Globals
     GameStateManager *gsmgr;
     Player *player;
     CameraHandler *camerahandler;
-
+#ifndef __APPLE__
     struct Sounds
     {
         Sound *explosion;
@@ -60,6 +64,7 @@ struct Globals
         int mix_channels; // number of channels to mix sounds in
         int buffers;
     } sounds;
+#endif
 
     Globals()
     {
@@ -70,11 +75,13 @@ struct Globals
         quit = false;
         input_scene_name = "";
 
+#ifndef __APPLE__
         sounds.rate = 22050;
         sounds.format = MIX_DEFAULT_FORMAT; 
         sounds.channels = 2;
         sounds.mix_channels = 32;
         sounds.buffers = 4096;
+#endif
     }
 };
 

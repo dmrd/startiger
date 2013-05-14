@@ -1,3 +1,4 @@
+#ifndef __APPLE__
 #ifndef __SOUND_H__
 #define __SOUND_H__
 #include <stdio.h>
@@ -24,4 +25,5 @@ class Sound
 
         void Play();
 };
+#endif
 #endif

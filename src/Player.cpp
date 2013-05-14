@@ -4,7 +4,9 @@
 #include "Player.h"
 #include "Shot.h"
 #include "R3Scene.h"
+#ifndef __APPLE__
 #include "Sound.h"
+#endif
 #include <cmath>
 
 #define ROLL_MAX 0.5
@@ -183,7 +185,9 @@ void Player::Update(double dt)
         fireTimer -= dt;
     else if (globals.keys['j'])
     {
+#ifndef __APPLE__
         globals.sounds.shot[(int) (2.9 * Util::UnitRandom())]->Play();
+#endif
         Shot::Params shotparams;
         shotparams.transform = GetPosition();
         shotparams.direction = nodes.pitch->getWorldTransform() * R3negz_vector;

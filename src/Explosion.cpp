@@ -5,7 +5,9 @@
 #include "Explosion.h"
 #include "R3Scene.h"
 #include <iostream>
+#ifndef __APPLE__
 #include "Sound.h"
+#endif
 
 bool Explosion::initialized = false;
 R3Material **Explosion::mat = NULL;
@@ -68,7 +70,9 @@ void Explosion::Create(void)
 
     node->AttachSource(source);
 
+#ifndef __APPLE__
     globals.sounds.explosion->Play();
+#endif
 }
 
 void Explosion::Update(double dt)

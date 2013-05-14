@@ -13,12 +13,15 @@ language "C++"
 
 files { "./src/**.h", "./src/**.cpp" }
 
-
+if os.is("apple") then
+    files { "./src/*[[!Sound]].h", "./src/*[[!Sound]].cpp" }
+end
 -- Include/library directories and libraries ------------------------------------------------
 
 includedirs { 
     -- project
     "./src",
+
 
     -- libs
     "./lib"
@@ -40,7 +43,7 @@ if os.is("linux") then
 elseif os.is("windows") then
     links { "glut32", "glu32", "opengl32" }
 else
-    linkoptions "lib/sdl/SDLmain.m -framework SDL -framework Cocoa -framework SDL_mixer -framework GLUT -framework OpenGL -lGLEW"
+    linkoptions "-framework GLUT -framework OpenGL -lGLEW"
 end
 
 

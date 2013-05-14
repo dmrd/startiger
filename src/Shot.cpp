@@ -4,7 +4,9 @@
 #include "Shot.h"
 #include "R3Scene.h"
 #include <cmath>
+#ifndef __APPLE__
 #include "Sound.h"
+#endif
 
 
 #define BULLET_SPEED 40

@@ -6,7 +6,9 @@
 #include "GameObject.h"
 #include "CameraHandler.h"
 #include "R3Scene.h"
+#ifndef __APPLE__
 #include "Sound.h"
+#endif
 
 class Player : public GameObject
 {
