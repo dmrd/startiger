@@ -12,6 +12,10 @@ bool InitSound() {
     }
     Mix_AllocateChannels(globals.sounds.mix_channels); 
     printf("Sound initialized\n");
+
+    Mix_Music *mus = Mix_LoadMUS((DIR_SOUNDS + std::string("DST-Assembly.wav")).c_str());
+    Mix_PlayMusic(mus, 1);
+
     return true;
 }
 
