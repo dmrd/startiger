@@ -332,8 +332,8 @@ void App::HUD()
         glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
         glVertex2f(50.0, 30.0);
         glVertex2f(50.0, 50.0);
-        glVertex2f(250.0*globals.player->GetHealth(), 50.0);
-        glVertex2f(250.0*globals.player->GetHealth(), 30.0);
+        glVertex2f(250.0*globals.player->GetHealth() + 50.0, 50.0);
+        glVertex2f(250.0*globals.player->GetHealth() + 50.0, 30.0);
         glEnd();
 
 
