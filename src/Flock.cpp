@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Flock.h"
 #include "Boid.h"
+#include "Terrain.h"
 
 /* Simple test "impulse" in a certain direction */
 double targetDist = 3;
@@ -137,6 +138,11 @@ void Flock::Update(double dt)
     /* Update positions */
     for (int i = 0; i < boids.size(); i++) {
         boids[i]->node->transformation.Translate((boids[i]->velocity) * dt);
+        R3Point pos = boids[i]->GetPosition();
+        double height = globals.terrain->Height(pos);
+        if (pos.Y() < height) {
+            boids[i]->node->transformation.Translate(R3Vector(0,height - pos.Y(),0));
+        }
         boids[i]->ManageBullets(dt);
     }
 
