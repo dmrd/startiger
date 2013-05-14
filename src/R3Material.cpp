@@ -46,7 +46,7 @@ void R3Material::Load(void) const
     {
         glDepthMask(false);
         glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     }
     else if (opacity < 1 || transparent)
     {
@@ -62,7 +62,9 @@ void R3Material::Load(void) const
     }
 
     // shader
+#if USE_SHADERS
     glUseProgram(shader);
+#endif
 }
 
 void R3Material::Initialize(void)
@@ -124,7 +126,7 @@ void R3Material::Initialize(void)
     }
 
     // shaders
-
+#if USE_SHADERS
     if (params.vertShaderName != "" && params.fragShaderName != "")
     {
         GLuint v = glCreateShader(GL_VERTEX_SHADER);
@@ -151,4 +153,5 @@ void R3Material::Initialize(void)
             glLinkProgram(shader);
         }
     }
+#endif
 }
