@@ -6,15 +6,16 @@
 bool InitSound() {
     printf("Sound initializing\n");
     SDL_Init(SDL_INIT_AUDIO);
-    if(Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers)) {
+    if(Mix_OpenAudio(globals.sounds.rate, globals.sounds.format, globals.sounds.channels, globals.sounds.buffers)) {
         printf("Unable to open audio!\n");
         exit(1);
     }
+    Mix_AllocateChannels(globals.sounds.mix_channels); 
     printf("Sound initialized\n");
     return true;
 }
 
-bool closeSound() {
+bool CloseSound() {
     Mix_CloseAudio();
     SDL_Quit();
     printf("Sound shutdown\n");

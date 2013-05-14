@@ -17,13 +17,13 @@ BasicLevel::~BasicLevel()
 
 void BasicLevel::Start()
 {
-    Player::Params playerparams;
-    playerparams.transform = R3identity_matrix;
-    globals.gomgr->Add(new Player(playerparams));
-
     Terrain::Params terrainparams;
     terrainparams.heightMap = new R2Image("heightmap.jpg");
     globals.gomgr->Add(new Terrain(terrainparams));
+
+    Player::Params playerparams;
+    playerparams.transform = R3identity_matrix;
+    globals.gomgr->Add(new Player(playerparams));
 
     Flock::Params flockparams;
     flockparams.spawn = R3Point(-5,0,-10);

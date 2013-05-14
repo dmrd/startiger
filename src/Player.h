@@ -86,8 +86,6 @@ class Player : public GameObject
 
         float health;
         double fireTimer;
-
-        Sound fireSound;
 };
 
 #endif

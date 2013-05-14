@@ -7,17 +7,8 @@
 #include <string>
 #include "Globals.h"
 
-static Mix_Music *music = NULL;
-
-void mixaudio(void *unused, Uint8 *stream, int len);
-
 bool InitSound();
-bool closeSound();
-
-static int audio_rate = 22050;
-static Uint16 audio_format = AUDIO_S16; 
-static int audio_channels = 2;
-static int audio_buffers = 4096;
+bool CloseSound();
 
 class Sound
 {

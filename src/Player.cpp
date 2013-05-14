@@ -18,12 +18,11 @@
 
 #define BOUNDARY 10 
 
-#define JET_RATE 100
+#define JET_RATE 120
 
 Player::Player(const Params &params_) :
     params(params_)
 {
-    fireSound = Sound("laser.wav");
 }
 
 Player::~Player()
@@ -79,7 +78,7 @@ void Player::Create(void)
     fireParams.lit = false;
     fireParams.kd = R2Pixel(.5, .5, .25, 0);
     fireParams.additive = true;
-    fireParams.textureName = "smoke_transparent.jpg";
+    fireParams.textureName = "flare.jpg";
     source->materials[0] = new R3Material(fireParams);
 
     fireParams.kd = R2Pixel(.5, .5, 0, 0);
@@ -142,9 +141,19 @@ void Player::Update(double dt)
             );
 
     if (dx.IsZero())
-        nodes.jet->source->rate = 0;
+    {
+        nodes.jet->source->rate = 0.6*JET_RATE;
+        nodes.jet->source->size = 0.3;
+        nodes.jet->source->velocity = 2;
+        nodes.jet->source->lifetime = 0.12;
+    }
     else
+    {
         nodes.jet->source->rate = JET_RATE;
+        nodes.jet->source->size = 0.8;
+        nodes.jet->source->velocity = 10;
+        nodes.jet->source->lifetime = 0.3;
+    }
 
     dx.Transform(R3Matrix::XRotation(rotation.pitch));     // direction given by yaw, pitch
     dx.Transform(R3Matrix::YRotation(rotation.yaw));
@@ -174,7 +183,7 @@ void Player::Update(double dt)
         fireTimer -= dt;
     else if (globals.keys['j'])
     {
-        fireSound.Play();
+        globals.sounds.shot[(int) (2.9 * Util::UnitRandom())]->Play();
         Shot::Params shotparams;
         shotparams.transform = GetPosition();
         shotparams.direction = nodes.pitch->getWorldTransform() * R3negz_vector;

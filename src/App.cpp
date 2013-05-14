@@ -85,6 +85,13 @@ void App::Init(int *argc, char **argv)
     // Levels
     globals.gsmgr->Add(new BasicLevel());
 
+    // Sounds
+    globals.sounds.explosion = new Sound("explosion.wav");
+    globals.sounds.shot[0] = new Sound("shot1.wav");
+    globals.sounds.shot[1] = new Sound("shot2.wav");
+    globals.sounds.shot[2] = new Sound("shot3.wav");
+    globals.sounds.shot[3] = new Sound("shot4.wav");
+
     // Run game!
     globals.gsmgr->Start();
 

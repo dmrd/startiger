@@ -14,6 +14,7 @@
 class R3Scene;
 class Player;
 class CameraHandler;
+class Sound;
 
 
 
@@ -48,6 +49,18 @@ struct Globals
     Player *player;
     CameraHandler *camerahandler;
 
+    struct Sounds
+    {
+        Sound *explosion;
+        Sound *shot[4];
+
+        int rate;
+        Uint16 format; 
+        int channels;
+        int mix_channels; // number of channels to mix sounds in
+        int buffers;
+    } sounds;
+
     Globals()
     {
         // defaults
@@ -56,6 +69,12 @@ struct Globals
 
         quit = false;
         input_scene_name = "";
+
+        sounds.rate = 22050;
+        sounds.format = MIX_DEFAULT_FORMAT; 
+        sounds.channels = 2;
+        sounds.mix_channels = 32;
+        sounds.buffers = 4096;
     }
 };
 
