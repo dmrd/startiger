@@ -101,11 +101,10 @@ double Terrain::Height(R3Point pos) {
     double y = ((pos.Z() + TERRAIN_SIZE / 2) / (TERRAIN_SIZE)) * params.heightMap->Height();
     //printf("%f %f\n", params.heightMap->Width(), params.heightMap->Height());
     //printf("%f %f\n\n", x, y);
-    if (x > params.heightMap->Width() 
-            || x < 0
-            || y > params.heightMap->Height()
-            || y < 0) { 
-        return -100;
-    }
+    if (x < 0) { x = 0; }
+    if (y < 0) { y = 0; }
+    if (x > params.heightMap->Width() - 1) { x = params.heightMap->Width() - 1; }
+    if (y > params.heightMap->Width() - 1) { y = params.heightMap->Width() - 1; }
+    printf("%f %f\n\n", x, y);
     return 25 * params.heightMap->Pixel(round(x), round(y)).Luminance();
 }
