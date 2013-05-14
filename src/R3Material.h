@@ -21,6 +21,7 @@ class R3Material
             R2Pixel emission;
             double shininess;
             bool lit; // Disable lighting for this material
+            bool additive;
             //double indexofrefraction;
             string textureName;
             string vertShaderName;
@@ -36,7 +37,8 @@ class R3Material
                 lit(true),
                 textureName(""),
                 vertShaderName(""),
-                fragShaderName("")
+                fragShaderName(""),
+                additive(false)
             {
             }
         };

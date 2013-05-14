@@ -51,6 +51,8 @@ class Player : public GameObject
 
             R3Node *reticleNear;
             R3Node *reticleFar;
+
+            R3Node *jet;
         } nodes;
 
         struct

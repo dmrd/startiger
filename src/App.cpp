@@ -20,14 +20,6 @@ R3Material *hud_mat;
 double fps;
 int changeFps = 0;
 
-//vertex shader handle
-static GLuint v; 
-//fragment shader handle
-static GLuint f; 
-//shader program handle
-//using zero value sets OpenGL back to using fixed pipeline
-static GLuint shader=0; 
-
 // --- main -----------------------------------------------------------------
 
 void App::Init(int *argc, char **argv)
@@ -73,11 +65,13 @@ void App::Init(int *argc, char **argv)
     glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
 
     // initialize shaders
+#if USE_SHADERS
     GLenum err = glewInit();
     if (err != GLEW_OK)
         exit(1); // or handle the error in a nicer way
     if (!GLEW_VERSION_2_1)  // check that the machine supports the 2.1 API.
         exit(1); // or handle the error in a nicer way
+#endif
 
     // GameObjectManager
     globals.gomgr = new GameObjectManager();
@@ -85,20 +79,20 @@ void App::Init(int *argc, char **argv)
     // GameStateManager
     globals.gsmgr = new GameStateManager();
 
-    // test Player, CameraHandler
-
+    // CameraHandler
     globals.gomgr->Add(new CameraHandler(&globals.scene->camera));
 
-    // Load first level:
+    // Levels
     globals.gsmgr->Add(new BasicLevel());
+
+    // Run game!
     globals.gsmgr->Start();
 
+    // HUD
     R3Material::Params hudParams; 
+    hudParams.lit = false;
     hudParams.textureName = "ship.jpg";
     hud_mat = new R3Material(hudParams);//Util::GetTransparentTexture("ship.jpg", "ship_transparent.jpg");
-
-    //shader = App::setShaders();
-    //glUseProgram(shader);
 }
 
 int App::ParseArgs(int argc, char **argv)
@@ -399,39 +393,5 @@ void App::KeyReleased(unsigned char key, int x, int y)
 
 void App::KeyReleasedSpecial(int key, int x, int y)
 {
-}
-
-GLuint App::setShaders() {
-    const char *vs,*fs;
-
-    v = glCreateShader(GL_VERTEX_SHADER);
-    f = glCreateShader(GL_FRAGMENT_SHADER);
-
-    vs = Util::textFileRead("./toon.vert");
-    fs = Util::textFileRead("./toon.frag");
-
-    if(vs && fs)
-    {
-        glShaderSource(v, 1, &vs, NULL);
-        glShaderSource(f, 1, &fs, NULL);
-
-        glCompileShader(v);
-        glCompileShader(f);
-
-        delete vs;
-        delete fs;
-
-        GLuint p = glCreateProgram();
-
-        glAttachShader(p,v);
-        glAttachShader(p,f);
-
-        glLinkProgram(p);
-        //see processNormalKeys for turning shader on and off
-
-        return p;
-    }
-    cerr<<"Could not read the shader source"<<endl;
-    return 0;
 }
 

@@ -18,8 +18,11 @@ enum GameObjectType
     OBJ_ENEMYSHOT,
     OBJ_FLOCK,
     OBJ_BOID,
-    OBJ_EXPLOSION,
+<<<<<<< HEAD
+    OBJ_EXPLOSION
+=======
     OBJ_TERRAIN
+>>>>>>> f44602e93aa4aa9bfe3e7699e602cb98e8f8393b
 };
 
 

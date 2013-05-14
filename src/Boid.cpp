@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Util.h"
 #include "Boid.h"
+#include "Explosion.h"
 #include "Flock.h"
 #include "Player.h"
 #include "Shot.h"
@@ -76,6 +77,8 @@ void Boid::ManageBullets(double dt) {
 
 void Boid::Destroy()
 {
+    globals.gomgr->Add(new Explosion(node->getWorldTransform()));
+
     node->Destroy();
     delete mat;
 }
