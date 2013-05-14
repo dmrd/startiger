@@ -28,6 +28,7 @@ void Shot::Create(void)
     // create material
     R3Material::Params matParams;
     matParams.kd = params.playershot ? R3Rgb(0.9, 0.8, 0.0, 1) : R3Rgb(0.8, 0.1, 0.1, 1);
+    matParams.emission = params.playershot ? R3Rgb(0.9, 0.8, 0.0, 1) : R3Rgb(0.8, 0.1, 0.1, 1);
     mat = new R3Material(matParams);
 
     // create node

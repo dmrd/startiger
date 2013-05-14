@@ -70,6 +70,13 @@ void R3Material::Load(void) const
 
 void R3Material::Initialize(void)
 {
+    // default shaders
+    if (params.defaultShaders && params.lit)
+    {
+        params.vertShaderName = "scenedepth.vert";
+        params.fragShaderName = "scenedepth.frag";
+    }
+
     // texture
     if (params.textureName == "")
         textured = false;

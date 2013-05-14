@@ -8,7 +8,7 @@ bool InitSound() {
     SDL_Init(SDL_INIT_AUDIO);
     if(Mix_OpenAudio(globals.sounds.rate, globals.sounds.format, globals.sounds.channels, globals.sounds.buffers)) {
         printf("Unable to open audio!\n");
-        exit(1);
+        //exit(1);
     }
     Mix_AllocateChannels(globals.sounds.mix_channels); 
     printf("Sound initialized\n");
