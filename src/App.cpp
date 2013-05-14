@@ -1,14 +1,14 @@
 #include "App.h"
-
+#include "glutfix.h"
 #include "Globals.h"
 #include "Util.h"
-#include "glutfix.h"
 #include "R3/R3.h"
 #include "R3Scene.h"
 #include "Player.h"
 #include "particle.h"
 #include "Flock.h"
 #include "Boid.h"
+#include "Sound.h"
 #include "BasicLevel.h"
 #include <string>
 #include <sstream>
@@ -36,7 +36,8 @@ void App::Init(int *argc, char **argv)
     if (!App::ParseArgs(*argc, argv))
         exit(1);
 
-
+    /* Sound initialization */
+    InitSound();
 
     // initialize GLUT
     glutInit(argc, argv);
@@ -49,7 +50,7 @@ void App::Init(int *argc, char **argv)
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     globals.window.glutid = glutCreateWindow("StarTiger");
 
-    // load scene
+    // load scenclass Sound
     printf("Input scene: %s\n", globals.input_scene_name.c_str());
     globals.scene = new R3Scene();
     globals.scene->Read(globals.input_scene_name);
@@ -154,6 +155,8 @@ void App::Quit(void)
     // cleanup
     delete globals.scene;
     delete globals.gomgr;
+
+    
 
     exit(0);
 }

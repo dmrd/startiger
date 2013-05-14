@@ -5,7 +5,8 @@
 
 #include "GameObject.h"
 #include "GameState.h"
-
+#include "SDL/SDL.h"
+#include "SDL/SDL_mixer.h"
 
 /*
  * forward declarations

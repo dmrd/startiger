@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "CameraHandler.h"
 #include "R3Scene.h"
+#include "Sound.h"
 
 class Player : public GameObject
 {
@@ -83,6 +84,8 @@ class Player : public GameObject
 
         float health;
         double fireTimer;
+
+        Sound fireSound;
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Shot.h"
 #include "R3Scene.h"
+#include "Sound.h"
 #include <cmath>
 
 #define ROLL_MAX 0.5
@@ -20,6 +21,7 @@
 Player::Player(const Params &params_) :
     params(params_)
 {
+    fireSound = Sound("laser.wav");
 }
 
 Player::~Player()
@@ -30,6 +32,7 @@ void Player::Create(void)
 {
     // let everyone know
     globals.player = this;
+
 
     // create material
     R3Material::Params matParams;
@@ -158,6 +161,7 @@ void Player::Update(double dt)
         fireTimer -= dt;
     else if (globals.keys['j'])
     {
+        fireSound.Play();
         Shot::Params shotparams;
         shotparams.transform = GetPosition();
         shotparams.direction = nodes.pitch->getWorldTransform() * R3negz_vector;
