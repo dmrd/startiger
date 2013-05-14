@@ -76,6 +76,8 @@ void Terrain::Create(void)
     R3Material::Params matParams;
     matParams.textureName = "mars.jpg";
     matParams.kd = R3Rgb(1, 1, 1, 1);
+    //matParams.vertShaderName = "toon.vert";
+    //matParams.fragShaderName = "toon.frag";
     R3Material *mat = new R3Material(matParams);
 
     node->AddChild(new R3Node(Patch(R3Point(0,-3, 0),

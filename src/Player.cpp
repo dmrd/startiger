@@ -39,9 +39,10 @@ void Player::Create(void)
     //matParams.fragShaderName = "toon.frag";
     mat = new R3Material(matParams);
 
-    matParams.textureName = "reticle.jpg";
-    matParams.lit = false;
-    reticleMat = new R3Material(matParams);
+    R3Material::Params reticleMatParams;
+    reticleMatParams.textureName = "reticle.jpg";
+    reticleMatParams.lit = false;
+    reticleMat = new R3Material(reticleMatParams);
 
     // create nodes
     //

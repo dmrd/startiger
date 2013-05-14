@@ -21,16 +21,16 @@ void BasicLevel::Start()
     playerparams.transform = R3identity_matrix;
     globals.gomgr->Add(new Player(playerparams));
 
+    Terrain::Params terrainparams;
+    terrainparams.heightMap = new R2Image("heightmap.jpg");
+    globals.gomgr->Add(new Terrain(terrainparams));
+
     Flock::Params flockparams;
     flockparams.spawn = R3Point(-5,0,-10);
     flockparams.swarmSize = 10;
     flockparams.radius = 1;
     flock = new Flock(flockparams);
     globals.gomgr->Add(flock);
-
-    Terrain::Params terrainparams;
-    terrainparams.heightMap = new R2Image("heightmap.jpg");
-    globals.gomgr->Add(new Terrain(terrainparams));
 }
 
 void BasicLevel::Stop()

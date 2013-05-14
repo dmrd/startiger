@@ -78,6 +78,7 @@ void R3Scene::Draw()
     {
         R3Material::Params skyboxMatParams;
         skyboxMatParams.textureName = "space3.jpg";
+        skyboxMatParams.lit = false;
         skybox.material = new R3Material(skyboxMatParams);
     }
     skybox.material->Load();
