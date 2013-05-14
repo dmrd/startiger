@@ -15,9 +15,11 @@
 #    ifndef NOMINMAX
 #        define NOMINMAX
 #    endif
+#    define __NOSOUND__
 #    include <windows.h>
 #    include <GL/glut.h>
 #elif defined(__APPLE__)
+#    define __NOSOUND__
 #    include <GL/glew.h>
 #    include <GLUT/glut.h>
 #else 

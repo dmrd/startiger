@@ -3,9 +3,10 @@
 
 #include <string>
 
+#include "glutfix.h"
 #include "GameObject.h"
 #include "GameState.h"
-#ifndef __APPLE__
+#ifndef __NOSOUND__
     #include "SDL/SDL.h"
     #include "SDL/SDL_mixer.h"
 #endif
@@ -16,7 +17,7 @@
 class R3Scene;
 class Player;
 class CameraHandler;
-#ifndef __APPLE__
+#ifndef __NOSOUND__
 class Sound;
 #endif
 
@@ -57,7 +58,7 @@ struct Globals
     Terrain* terrain;
     Rails* rails;
 
-#ifndef __APPLE__
+#ifndef __NOSOUND__
     struct Sounds
     {
         Sound *explosion;
@@ -80,7 +81,7 @@ struct Globals
         quit = false;
         input_scene_name = "";
 
-#ifndef __APPLE__
+#ifndef __NOSOUND__
         sounds.rate = 22050;
         sounds.format = MIX_DEFAULT_FORMAT; 
         sounds.channels = 2;

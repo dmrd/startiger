@@ -9,7 +9,7 @@
 #include "Flock.h"
 #include "Boid.h"
 
-#ifndef __APPLE__
+#ifndef __NOSOUND__
     #include "Sound.h"
 #endif
 
@@ -33,7 +33,7 @@ void App::Init(int *argc, char **argv)
         //exit(1);
 
     /* Sound initialization */
-#ifndef __APPLE__
+#ifndef __NOSOUND__
     InitSound();
 #endif
 
@@ -128,7 +128,7 @@ void App::Init(int *argc, char **argv)
     globals.gsmgr->Add(new BasicLevel());
 
     // Sounds
-#ifndef __APPLE__
+#ifndef __NOSOUND__
     globals.sounds.explosion = new Sound("explosion.wav");
     globals.sounds.shot[0] = new Sound("shot1.wav");
     globals.sounds.shot[1] = new Sound("shot2.wav");
@@ -269,7 +269,9 @@ void App::HUD()
     glLoadIdentity();
 
 
+#ifdef USESHADERS
     glUseProgram(0);
+#endif
     glDisable(GL_LIGHTING);
     glDisable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ZERO);

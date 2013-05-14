@@ -5,7 +5,7 @@
 #include "Rails.h"
 #include "Shot.h"
 #include "R3Scene.h"
-#ifndef __APPLE__
+#ifndef __NOSOUND__
 #include "Sound.h"
 #endif
 #include "Terrain.h"
@@ -230,7 +230,7 @@ void Player::Update(double dt)
         fireTimer -= dt;
     else if (globals.keys['j'])
     {
-#ifndef __APPLE__
+#ifndef __NOSOUND__
         globals.sounds.shot[(int) (2.9 * Util::UnitRandom())]->Play();
 #endif
         Shot::Params shotparams;
