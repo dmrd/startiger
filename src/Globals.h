@@ -3,7 +3,6 @@
 
 #include <string>
 
-#include "glutfix.h"
 #include "GameObject.h"
 #include "GameState.h"
 #ifndef __NOSOUND__
@@ -60,7 +59,6 @@ struct Globals
 
     int levelStatus;
 
-#ifndef __APPLE__
 #ifndef __NOSOUND__
     struct Sounds
     {
