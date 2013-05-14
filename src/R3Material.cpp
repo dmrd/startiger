@@ -6,15 +6,16 @@ const R3Material *R3Material::lastMaterial = NULL;
 
 void R3Material::Load(void) const
 {
+    // skip if previous
+    if (lastMaterial == this)
+        return;
+    lastMaterial = this;
+
     if (params.lit) {
         glEnable(GL_LIGHTING);
     } else {
         glDisable(GL_LIGHTING);
     }
-    // skip if previous
-    if (lastMaterial == this)
-        return;
-    lastMaterial = this;
 
     // ambient, diffuse, specular, emmision, shininess
     GLfloat c[4];
