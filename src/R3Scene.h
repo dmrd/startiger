@@ -116,6 +116,19 @@ struct R3Scene
         // Collision
         void Collide(void);
 
+        // Lights
+        void AddLight(R3Light *light) { lights.push_back(light); }
+        void RemoveLight(R3Light *light)
+        {
+            vector<R3Light *>::iterator found = find(lights.begin(), lights.end(), light);
+
+            if (found != lights.end())
+            {
+                lights.erase(found);
+                delete light;
+            }
+        }
+
     public:
         R3Node *root;
         vector<R3Particle *> particles;

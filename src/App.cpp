@@ -29,8 +29,8 @@ int changeFps = 0;
 void App::Init(int *argc, char **argv)
 {
     // read command-line arguments
-    if (!App::ParseArgs(*argc, argv))
-        exit(1);
+    //if (!App::ParseArgs(*argc, argv))
+        //exit(1);
 
     /* Sound initialization */
 #ifndef __APPLE__
@@ -51,7 +51,43 @@ void App::Init(int *argc, char **argv)
     // load scenclass Sound
     printf("Input scene: %s\n", globals.input_scene_name.c_str());
     globals.scene = new R3Scene();
-    globals.scene->Read(globals.input_scene_name);
+    globals.scene->Read("loltest");
+
+    // particles are chill
+    globals.scene->gravity = R3null_vector;
+
+    // default lights
+    R3Light *light = new R3Light();
+    R3Vector direction(-3,-4,-5);
+    direction.Normalize();
+    light->type = R3_DIRECTIONAL_LIGHT;
+    light->color = R3Rgb(0.6,0.6,0.6,1);
+    light->position = R3Point(0, 0, 0);
+    light->direction = direction;
+    light->radius = 0;
+    light->constant_attenuation = 0;
+    light->linear_attenuation = 0;
+    light->quadratic_attenuation = 0;
+    light->angle_attenuation = 0;
+    light->angle_cutoff = M_PI;
+    globals.scene->AddLight(light);
+
+    light = new R3Light();
+    direction = R3Vector(3,2,3);
+    direction.Normalize();
+    light->type = R3_DIRECTIONAL_LIGHT;
+    light->color = R3Rgb(0.3, 0.3, 0.3, 1);
+    light->position = R3Point(0, 0, 0);
+    light->direction = direction;
+    light->radius = 0;
+    light->constant_attenuation = 0;
+    light->linear_attenuation = 0;
+    light->quadratic_attenuation = 0;
+    light->angle_attenuation = 0;
+    light->angle_cutoff = M_PI;
+    globals.scene->AddLight(light);
+
+    globals.scene->ambient = R3Rgb(0.2, 0.2, 0.2, 1);
 
     // callbacks
     glutIdleFunc(App::Idle);
@@ -165,7 +201,7 @@ void App::Quit(void)
     delete globals.scene;
     delete globals.gomgr;
 
-    
+
 
     exit(0);
 }
@@ -233,6 +269,7 @@ void App::HUD()
     glLoadIdentity();
 
 
+    glUseProgram(0);
     glDisable(GL_LIGHTING);
     glDisable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ZERO);

@@ -50,15 +50,15 @@ R3Mesh* Terrain::Patch(R3Point center, R2Point size, R2Point dps) { // dps: dots
       unsigned int cols = (unsigned int)dps.X();
       unsigned int k = c + r * cols;
       vector<R3MeshVertex*> vertices;
-      vertices.push_back(patch->Vertex(k));
-      vertices.push_back(patch->Vertex(k+1));
       vertices.push_back(patch->Vertex(k+cols));
+      vertices.push_back(patch->Vertex(k+1));
+      vertices.push_back(patch->Vertex(k));
       patch->CreateFace(vertices);
 
       vector<R3MeshVertex*> vertices2;
-      vertices2.push_back(patch->Vertex(k+1));
-      vertices2.push_back(patch->Vertex(k+1+cols));
       vertices2.push_back(patch->Vertex(k+cols));
+      vertices2.push_back(patch->Vertex(k+1+cols));
+      vertices2.push_back(patch->Vertex(k+1));
       patch->CreateFace(vertices2);
     }
   }
@@ -75,13 +75,12 @@ void Terrain::Create(void)
 
     R3Material::Params matParams;
     matParams.textureName = "mars.jpg";
-    matParams.kd = R3Rgb(1, 1, 1, 1);
-    //matParams.vertShaderName = "toon.vert";
-    //matParams.fragShaderName = "toon.frag";
+    matParams.kd = R3Rgb(0.6, 0.6, 0.6, 1);
+    matParams.ks = R3Rgb(0.3, 0.3, 0.3, 1);
     R3Material *mat = new R3Material(matParams);
 
     node->AddChild(new R3Node(Patch(R3Point(0,-3, 0),
-                    R2Point(300,300), R2Point(200,200)),
+                    R2Point(TERRAIN_SIZE,TERRAIN_SIZE), R2Point(TERRAIN_DPS,TERRAIN_DPS)),
                 mat, R3identity_matrix));
     //node->AddChild(new R3Node(Patch(R3Point(10,-3, 0), R2Point(10,10), R2Point(60,60)), NULL, R3identity_matrix));
     globals.scene->root->AddChild(node);
@@ -95,4 +94,22 @@ void Terrain::Update(double dt)
 void Terrain::Destroy(void)
 {
     
+}
+
+double Terrain::Height(R3Point pos) {
+    double x = ((pos.X() + TERRAIN_SIZE / 2) / (TERRAIN_SIZE)) * params.heightMap->Width();
+    double y = ((pos.Z() + TERRAIN_SIZE / 2) / (TERRAIN_SIZE)) * params.heightMap->Height();
+
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+    if (x > params.heightMap->Width() - 1) x = params.heightMap->Width() - 1;
+    if (y > params.heightMap->Width() - 1) y = params.heightMap->Width() - 1;
+
+    double fx = x - floor(x);
+    double fy = y - floor(y);
+
+    double a = (1 - fx) * _Height(x,     y) + fx * _Height(x + 1,     y);
+    double b = (1 - fx) * _Height(x, y + 1) + fx * _Height(x + 1, y + 1);
+
+    return a + fy * (b - a);
 }

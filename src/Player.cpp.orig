@@ -2,17 +2,21 @@
 #include "R3Node.h"
 #include "GameObject.h"
 #include "Player.h"
-#include "Rails.h"
 #include "Shot.h"
 #include "R3Scene.h"
 #ifndef __APPLE__
 #include "Sound.h"
+<<<<<<< HEAD
 #endif
+=======
 #include "Terrain.h"
+>>>>>>> 7e28c9e27ed57f42ac7b5238ae5fff3c316da0ac
 #include <cmath>
 
 #define ROLL_MAX 0.5
+#define ROLL_SPEED 2.5
 
+#define MOVE_SPEED 20
 
 #define FIRE_PERIOD .05
 
@@ -101,14 +105,11 @@ void Player::Create(void)
     nodes.yawpos->AddChild(nodes.pitch);
     nodes.pitch->AddChild(nodes.roll);
 
-
-    rotation.yaw = 3.14159;
+    rotation.yaw = 0;
     rotation.pitch = 0;
     rotation.roll = 0;
 
-//    nodes.yawpos->transformation = 
-    position = R3Point(-globals.rails->currentLocation.Y()-.5, 1, -globals.rails->currentLocation.X()-.5)*TERRAIN_SIZE/TERRAIN_DPS;
-//params.transform.getOrigin();
+    position = params.transform.getOrigin();
 
     // camera targets
 
@@ -127,15 +128,6 @@ void Player::Create(void)
     health = 1;
     lives = 3;
     score = 0;
-    xVal = 0;
-    yVal = 0;
-}
-
-void Player::SetPosition(R3Point p) {
-}
-
-void Player::SetDirection(float angle) {
-    rotation.yaw = angle;
 }
 
 void Player::Update(double dt)
@@ -143,38 +135,16 @@ void Player::Update(double dt)
     //health -= dt*.01;
     // yaw/pitch/roll
 
-    //rotation.yaw += (globals.keys['z'] - globals.keys['c']) * ROLL_SPEED * dt;
-    //RotAnim(rotation.pitch, ROLL_MAX * (globals.keys['r'] - globals.keys['f']), ROLL_SPEED, dt);
+    rotation.yaw += (globals.keys['z'] - globals.keys['c']) * ROLL_SPEED * dt;
+    RotAnim(rotation.pitch, ROLL_MAX * (globals.keys['r'] - globals.keys['f']), ROLL_SPEED, dt);
     RotAnim(rotation.roll,  ROLL_MAX * (globals.keys['a'] - globals.keys['d']), ROLL_SPEED, dt);
 
     // move
 
-    int rightleft = (globals.keys['d'] - globals.keys['a']);
-    int updown = (globals.keys['w'] - globals.keys['s']);
-    double horizontalMove =  rightleft * MOVE_SPEED * dt;
-    double verticalMove = updown * MOVE_SPEED * dt;
-    if (xVal + horizontalMove > BOUNDARY) {
-        horizontalMove = 0;
-        rightleft = 0;
-    }
-    if (xVal + horizontalMove < -BOUNDARY) {
-        horizontalMove = 0;
-        rightleft = 0;
-    }
-    if (yVal + verticalMove > BOUNDARY) {
-        verticalMove = 0;
-        updown = 0;
-    }
-    if (yVal + verticalMove < -BOUNDARY) {
-        verticalMove = 0;
-        updown = 0;
-    }
-    xVal += horizontalMove;
-    yVal += verticalMove;
     R3Vector dx(
-            rightleft,
-            updown,
-            -1//globals.keys['k'] - globals.keys['i']
+            globals.keys['d'] - globals.keys['a'],
+            globals.keys['w'] - globals.keys['s'],
+            globals.keys['k'] - globals.keys['i']
             );
 
 #define JET_RATE 190
@@ -197,9 +167,7 @@ void Player::Update(double dt)
     dx.Transform(R3Matrix::YRotation(rotation.yaw));
 
     dx *= MOVE_SPEED;
-
     position += dx * dt;
-
     // Keep player above terrain
     double height = globals.terrain->Height(GetPosition()); 
     if (position.Y() < height) {

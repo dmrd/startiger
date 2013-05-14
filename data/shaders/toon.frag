@@ -24,6 +24,6 @@ void main()
         intensity2 = ceil(intensity * 5.0)/5.0;
         color = vec4(intensity2, intensity2, intensity2, 1.0);
 	
-	//gl_FragColor = gl_FrontMaterial.diffuse*color;//*texture2D(texture1, gl_TexCoord[0].st);
-	gl_FragColor = vec4(1, 0, 0, 1);
+	gl_FragColor = gl_FrontMaterial.diffuse*color;//*texture2D(texture1, gl_TexCoord[0].st);
+	//gl_FragColor = vec4(1, 0, 0, 1);
 } 

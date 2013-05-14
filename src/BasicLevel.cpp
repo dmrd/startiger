@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Flock.h"
 #include "Terrain.h"
+#include "Rails.h"
 
 Flock *flock;
 
@@ -19,7 +20,13 @@ void BasicLevel::Start()
 {
     Terrain::Params terrainparams;
     terrainparams.heightMap = new R2Image("heightmap.jpg");
-    globals.gomgr->Add(new Terrain(terrainparams));
+    globals.terrain = new Terrain(terrainparams);
+    globals.gomgr->Add(globals.terrain);
+
+    Rails::Params railsparams;
+    railsparams.railMap = new R2Image("railsmap.jpg");
+    globals.rails = new Rails(railsparams);
+    globals.gomgr->Add(globals.rails);
 
     Player::Params playerparams;
     playerparams.transform = R3identity_matrix;
@@ -27,8 +34,8 @@ void BasicLevel::Start()
 
     Flock::Params flockparams;
     flockparams.spawn = R3Point(-5,0,-10);
-    flockparams.swarmSize = 10;
-    flockparams.radius = 1;
+    flockparams.swarmSize = 20;
+    flockparams.radius = 20;
     flock = new Flock(flockparams);
     globals.gomgr->Add(flock);
 }
@@ -49,8 +56,8 @@ void BasicLevel::Update(double dt)
             printf("new flock \n");
             Flock::Params flockparams;
             flockparams.spawn = globals.player->GetPosition();
-            flockparams.swarmSize = 8;
-            flockparams.radius = 1;
+            flockparams.swarmSize = 10;
+            flockparams.radius = 20;
             flock = new Flock(flockparams);
             globals.gomgr->Add(flock);
         }

@@ -10,6 +10,8 @@
 #include "Sound.h"
 #endif
 
+#define MOVE_SPEED 25.0
+#define ROLL_SPEED 2.5
 class Player : public GameObject
 {
     public:
@@ -36,6 +38,8 @@ class Player : public GameObject
         R3Point GetPosition();
         float GetHealth();
 
+        void SetDirection(float angle);
+        void SetPosition(R3Point p);
         int lives;
         int score;
 
@@ -88,6 +92,8 @@ class Player : public GameObject
 
         float health;
         double fireTimer;
+        float xVal;
+        float yVal;
 };
 
 #endif

@@ -19,7 +19,8 @@ enum GameObjectType
     OBJ_FLOCK,
     OBJ_BOID,
     OBJ_EXPLOSION,
-    OBJ_TERRAIN
+    OBJ_TERRAIN,
+    OBJ_RAILS
 };
 
 

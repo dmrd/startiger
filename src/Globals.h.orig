@@ -21,7 +21,6 @@ class Sound;
 #endif
 
 class Terrain;
-class Rails;
 
 /*
  * data accessible from everywhere
@@ -53,11 +52,13 @@ struct Globals
     GameStateManager *gsmgr;
     Player *player;
     CameraHandler *camerahandler;
+<<<<<<< HEAD
+#ifndef __APPLE__
+=======
 
     Terrain* terrain;
-    Rails* rails;
 
-#ifndef __APPLE__
+>>>>>>> 7e28c9e27ed57f42ac7b5238ae5fff3c316da0ac
     struct Sounds
     {
         Sound *explosion;

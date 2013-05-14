@@ -5,28 +5,44 @@
 #include "R3Node.h"
 #include "GameObject.h"
 #include "CameraHandler.h"
+<<<<<<< HEAD
 #include "R3Scene.h"
+#ifndef __APPLE__
+=======
+>>>>>>> 7e28c9e27ed57f42ac7b5238ae5fff3c316da0ac
+#include "Sound.h"
+#endif
 
 class Player : public GameObject
 {
     public:
+        GameObjectType GetType(void) { return OBJ_PLAYER; }
+
         struct Params { R3Matrix transform; };
         Player(const Params &params_);
         ~Player();
 
+        // events
         void Create(void);
         void Update(double dt);
         void Destroy();
+        void Collide(GameObject *other)
+        {
+            if (other && other->GetType() == OBJ_ENEMYSHOT)
+            {
+                globals.gomgr->Destroy(other->GetID());
+                health -= 0.01;
+            }
+        }
 
+        // public API
         R3Point GetPosition();
-
-<<<<<<< HEAD
         float GetHealth();
 
+        int lives;
+        int score;
+
     protected:
-=======
-    public:
->>>>>>> 71753bf096c94e3a13bdafab6afa1804be3a8d59
         Params params;
 
         struct
@@ -37,6 +53,11 @@ class Player : public GameObject
 
             R3Node *camMove;   // camera position target
             R3Node *camLook;   // camera look target
+
+            R3Node *reticleNear;
+            R3Node *reticleFar;
+
+            R3Node *jet;
         } nodes;
 
         struct
@@ -66,10 +87,10 @@ class Player : public GameObject
         }
 
         R3Material *mat;
+        R3Material *reticleMat;
 
         float health;
         double fireTimer;
-        int lives;
 };
 
 #endif
