@@ -18,10 +18,12 @@
 #define M_PI 3.1415925
 #endif
 #ifdef __APPLE__
+# define __NOSOUND__
 # include <OpenGL/gl.h>
 # include <OpenGL/glu.h>
 #else 
 # ifdef _WIN32
+#   define __NOSOUND__
 #   include <GL/gl.h>
 #   include <GL/glu.h>
 # else

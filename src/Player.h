@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "CameraHandler.h"
 #include "R3Scene.h"
-#ifndef __APPLE__
+#ifndef __NOSOUND__
 #include "Sound.h"
 #endif
 

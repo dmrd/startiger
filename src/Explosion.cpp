@@ -5,7 +5,7 @@
 #include "Explosion.h"
 #include "R3Scene.h"
 #include <iostream>
-#ifndef __APPLE__
+#ifndef __NOSOUND__
 #include "Sound.h"
 #endif
 
@@ -70,7 +70,7 @@ void Explosion::Create(void)
 
     node->AttachSource(source);
 
-#ifndef __APPLE__
+#ifndef __NOSOUND__
     globals.sounds.explosion->Play();
 #endif
 }

@@ -13,9 +13,6 @@ language "C++"
 
 files { "./src/**.h", "./src/**.cpp" }
 
-if os.is("apple") then
-    files { "./src/*[[!Sound]].h", "./src/*[[!Sound]].cpp" }
-end
 -- Include/library directories and libraries ------------------------------------------------
 
 includedirs { 

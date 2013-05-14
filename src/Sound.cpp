@@ -1,4 +1,5 @@
-#ifndef __APPLE__
+#include "glutfix.h"
+#ifndef __NOSOUND__
 #include "Sound.h"
 #include <string>
 #include "Dirs.h"
