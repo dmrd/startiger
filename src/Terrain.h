@@ -27,6 +27,15 @@ class Terrain : public GameObject
         double Height(R3Point pos);
         
     protected:
+        double _Height(int x, int y)
+        {
+            if (x < 0) x = 0;
+            if (y < 0) y = 0;
+            if (x > params.heightMap->Width() - 1) x = params.heightMap->Width() - 1;
+            if (y > params.heightMap->Width() - 1) y = params.heightMap->Width() - 1;
+            return 25 * params.heightMap->Pixel(round(x), round(y)).Luminance();
+        }
+
         R3Mesh *Patch(R3Point center, R2Point size, R2Point dps);
 
         Params params;
