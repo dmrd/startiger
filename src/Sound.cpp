@@ -1,4 +1,4 @@
-#include "glutfix.h"
+#include "soundfix.h"
 #ifndef __NOSOUND__
 #include "Sound.h"
 #include <string>

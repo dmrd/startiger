@@ -4,6 +4,7 @@
 #include "Shot.h"
 #include "R3Scene.h"
 #include <cmath>
+#include "soundfix.h"
 #ifndef __NOSOUND__
 #include "Sound.h"
 #endif

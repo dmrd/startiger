@@ -5,6 +5,7 @@
 #include "Rails.h"
 #include "Shot.h"
 #include "R3Scene.h"
+#include "soundfix.h"
 #ifndef __NOSOUND__
 #include "Sound.h"
 #endif

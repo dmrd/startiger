@@ -5,7 +5,6 @@
  * hax to get glut to work
  */
 
-#define USE_SHADERS 1
 
 #if defined(_WIN32) || defined(__CYGWIN__)
 #    define USE_SHADERS 0
@@ -15,14 +14,14 @@
 #    ifndef NOMINMAX
 #        define NOMINMAX
 #    endif
-#    define __NOSOUND__
 #    include <windows.h>
 #    include <GL/glut.h>
 #elif defined(__APPLE__)
-#    define __NOSOUND__
+#    define USE_SHADERS 1
 #    include <GL/glew.h>
 #    include <GLUT/glut.h>
 #else 
+#    define USE_SHADERS 1
 #    include <GL/glew.h>
 #    include <GL/glut.h>
 #endif

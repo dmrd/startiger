@@ -12,18 +12,17 @@
 #include <assert.h>
 #include <vector>
 #include "R2/R2.h"
+#include "soundfix.h"
 #ifdef _WIN32
 # include <windows.h>
 #pragma warning(disable:4996)
 #define M_PI 3.1415925
 #endif
 #ifdef __APPLE__
-# define __NOSOUND__
 # include <OpenGL/gl.h>
 # include <OpenGL/glu.h>
 #else 
 # ifdef _WIN32
-#   define __NOSOUND__
 #   include <GL/gl.h>
 #   include <GL/glu.h>
 # else

@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "CameraHandler.h"
 #include "R3Scene.h"
+#include "soundfix.h"
 #ifndef __NOSOUND__
 #include "Sound.h"
 #endif

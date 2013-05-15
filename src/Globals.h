@@ -5,6 +5,7 @@
 
 #include "GameObject.h"
 #include "GameState.h"
+#include "soundfix.h"
 #ifndef __NOSOUND__
     #include "SDL/SDL.h"
     #include "SDL/SDL_mixer.h"

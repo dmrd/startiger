@@ -8,6 +8,7 @@
 #include "particle.h"
 #include "Flock.h"
 #include "Boid.h"
+#include "soundfix.h"
 
 #ifndef __NOSOUND__
     #include "Sound.h"
