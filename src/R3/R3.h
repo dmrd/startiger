@@ -12,7 +12,6 @@
 #include <assert.h>
 #include <vector>
 #include "R2/R2.h"
-#include "soundfix.h"
 #ifdef _WIN32
 # include <windows.h>
 #pragma warning(disable:4996)

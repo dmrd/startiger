@@ -23,6 +23,7 @@ class Flock : public GameObject
         void Destroy();
 
         unsigned int NBoids();
+        vector<R3Point> targets;
 
     protected:
         Params params;
@@ -30,7 +31,6 @@ class Flock : public GameObject
         double neighborhood;
         double repulsionArea;
         double vlim;
-        vector<R3Point> targets;
         void UpdateBoidVelocity(int current);
 };
 

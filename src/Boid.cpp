@@ -48,6 +48,9 @@ void Boid::Update(double dt)
     child->transformation = R3identity_matrix;
 
     R3Vector dir = globals.player->GetPosition() - GetPosition();
+    if (dir.Dot(globals.player->GetDirection()) > 0) {
+        dir = flock->targets[targetID] - GetPosition();
+    }
     dir.Normalize();
     R3Vector dirXZ = R3Vector(dir.X(), 0, dir.Z());
     dirXZ.Normalize();
@@ -59,11 +62,15 @@ void Boid::Update(double dt)
     R3Matrix pitch = R3Matrix::Rotation(R3negz_vector, dir);
     child->transformation.Transform(pitch);
 
-    child->transformation.Scale(0.5);
+    child->transformation.Scale(0.8);
 }
 
 /* Manage accumulating bullet firing probabilities and act of firing*/
 void Boid::ManageBullets(double dt) {
+    //R3Vector dir = globals.player->GetPosition() - GetPosition();
+    //if (dir.Dot(globals.player->GetDirection()) < 0) {
+        //return;
+    //}
     bullets += dt * firingRate;
     if (bullets > 1) {
         bullets = Util::UnitRandom() - firingRate;

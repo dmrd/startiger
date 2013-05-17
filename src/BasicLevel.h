@@ -3,6 +3,8 @@
 
 #include "GameState.h"
 
+class R3Node;
+
 class BasicLevel : public GameState
 {
     public:
@@ -14,6 +16,8 @@ class BasicLevel : public GameState
         void Stop(void);
 
     protected:
+        R3Node *treasure;
+        void SpawnTreasure();
 };
 
 #endif

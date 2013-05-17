@@ -9,7 +9,7 @@
 #include "Terrain.h"
 
 /* Simple test "impulse" in a certain direction */
-double targetDist = 3;
+double targetDist = 6;
 double targetIntensity = 8;
 double targetConstant = 1;
 double targetLinear = 0.5;
@@ -32,11 +32,14 @@ Flock::~Flock()
 
 void Flock::Create(void)
 {
-    relativeTargets.push_back(R3Point(0,0,-10));
-    relativeTargets.push_back(R3Point(-5,-5,-15));
-    relativeTargets.push_back(R3Point(-5,5,-15));
-    relativeTargets.push_back(R3Point(5,5,-15));
-    relativeTargets.push_back(R3Point(5,-5,-15));
+    relativeTargets.push_back(R3Point(0,0,30));
+    relativeTargets.push_back(R3Point(-7,-7,30));
+    relativeTargets.push_back(R3Point(-7,7,30));
+    relativeTargets.push_back(R3Point(7,7,30));
+    relativeTargets.push_back(R3Point(7,-7,30));
+    relativeTargets.push_back(R3Point(0,0,40));
+    relativeTargets.push_back(R3Point(35,35,-40));
+    relativeTargets.push_back(R3Point(-35,35,-40));
     targets = vector<R3Point>(relativeTargets);
     for (int boid = 0; boid < params.swarmSize; boid++)
     {
@@ -110,8 +113,17 @@ void Flock::Update(double dt)
 {
     // Update absolute targets relative to player
     R3Point playerPos = globals.player->GetPosition();
+    R3Vector playerDir = globals.player->GetDirection();
+    R3Vector playerLeft = R3Vector(R3posy_vector);
+    playerLeft.Cross(playerDir);
     for (int i = 0; i < targets.size(); i++) {
-        targets[i] = relativeTargets[i] + playerPos;
+        targets[i] = playerPos + relativeTargets[i].X() * playerLeft + 
+                     relativeTargets[i].Y() * R3posy_vector + 
+                     relativeTargets[i].Z() * playerDir;
+        double height = globals.terrain->Height(targets[i]);
+        if (targets[i].Y() < height) {
+            targets[i].SetY(height);
+        }
     }
     /* Clear dead boids */
     int oSize = params.swarmSize;
@@ -123,7 +135,6 @@ void Flock::Update(double dt)
             boids[params.swarmSize] = boids[i];
             params.swarmSize++;
         } else {
-            //boids[i]->Destroy();
             globals.gomgr->Destroy(boids[i]->GetID());
         }
     }

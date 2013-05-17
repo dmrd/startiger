@@ -8,8 +8,8 @@
 #include "particle.h"
 #include "Flock.h"
 #include "Boid.h"
-#include "soundfix.h"
 
+#include "soundfix.h"
 #ifndef __NOSOUND__
     #include "Sound.h"
 #endif
@@ -50,7 +50,9 @@ void App::Init(int *argc, char **argv)
     globals.window.glutid = glutCreateWindow("StarTiger");
 
     // load scenclass Sound
+    printf("Input scene: %s\n", globals.input_scene_name.c_str());
     globals.scene = new R3Scene();
+    globals.scene->Read("loltest");
 
     // particles are chill
     globals.scene->gravity = R3null_vector;
@@ -331,8 +333,8 @@ void App::HUD()
         glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
         glVertex2f(50.0, 30.0);
         glVertex2f(50.0, 50.0);
-        glVertex2f(250.0*globals.player->GetHealth() + 50.0, 50.0);
-        glVertex2f(250.0*globals.player->GetHealth() + 50.0, 30.0);
+        glVertex2f(250.0*globals.player->GetHealth(), 50.0);
+        glVertex2f(250.0*globals.player->GetHealth(), 30.0);
         glEnd();
 
 
@@ -384,7 +386,7 @@ void App::HUD()
     } else if (globals.levelStatus == 2) {
         stringstream ss3;
 
-        ss3 << "YOU LOOSE! PRESS Q TO QUIT";
+        ss3 << "Congratulations!" << " Your score is " << globals.player->score;
         glColor3f(0.8f, 0.8f, 0.3f);
         glRasterPos2f(globals.window.width/2-150, 200.0);
 
@@ -434,6 +436,8 @@ void App::Update()
 
     // collide
     globals.scene->Collide();
+
+    if (globals.player->GetHealth() <= 0) { globals.levelStatus = 2; }
 
     // quit?
     if (globals.quit)

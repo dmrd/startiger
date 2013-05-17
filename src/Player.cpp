@@ -108,11 +108,11 @@ void Player::Create(void)
     rotation.roll = 0;
 
 //    nodes.yawpos->transformation = 
-    R2Point size = R2Point(TERRAIN_SIZE,TERRAIN_SIZE);
-    R2Point dps = R2Point(TERRAIN_DPS,TERRAIN_DPS);
-    double dx = (double)globals.rails->currentLocation.X()/globals.rails->GetWidth() * size.X() - size.X() / 2;
-    double dz = (double)globals.rails->currentLocation.Y()/globals.rails->GetHeight() * size.Y() - size.Y() / 2;
-    position = R3Point(dx, 1, dz);
+    //R2Point size = R2Point(TERRAIN_SIZE,TERRAIN_SIZE);
+    //R2Point dps = R2Point(TERRAIN_DPS,TERRAIN_DPS);
+    //double dx = (double)globals.rails->currentLocation.X()/globals.rails->GetWidth() * size.X() - size.X() / 2;
+    //double dz = (double)globals.rails->currentLocation.Y()/globals.rails->GetHeight() * size.Y() - size.Y() / 2;
+    //position = R3Point(dx, 1, dz);
 //params.transform.getOrigin();
 
     // camera targets
@@ -140,8 +140,17 @@ void Player::SetPosition(R3Point p) {
 }
 
 void Player::SetDirection(float angle) {
-    rotation.yaw = angle;
+    //rotation.yaw = angle;
 }
+
+R3Vector Player::GetDirection() {
+    R3Vector dir = R3Vector(R3negz_vector);
+    dir.Rotate(R3posy_vector, rotation.yaw);
+    printf("%f %f %f\n", dir.X(), dir.Y(), dir.Z());
+    printf("%f %f %f\n", position.X(), position.Y(), position.Z());
+    return dir;
+}
+
 
 void Player::Update(double dt)
 {
@@ -152,8 +161,8 @@ void Player::Update(double dt)
     // yaw/pitch/roll
 
     rotation.yaw += (globals.keys['z'] - globals.keys['c']) * ROLL_SPEED * dt;
-    //RotAnim(rotation.pitch, ROLL_MAX * (globals.keys['r'] - globals.keys['f']), ROLL_SPEED, dt);
-    //RotAnim(rotation.roll,  ROLL_MAX * (globals.keys['a'] - globals.keys['d']), ROLL_SPEED, dt);
+    RotAnim(rotation.pitch, ROLL_MAX * (globals.keys['r'] - globals.keys['f']), ROLL_SPEED, dt);
+    RotAnim(rotation.roll,  ROLL_MAX * (globals.keys['a'] - globals.keys['d']), ROLL_SPEED, dt);
 
     // move
 
@@ -161,21 +170,22 @@ void Player::Update(double dt)
     int updown = (globals.keys['w'] - globals.keys['s']);
     double horizontalMove =  rightleft * MOVE_SPEED * dt;
     double verticalMove = updown * MOVE_SPEED * dt;
-    if (xVal + horizontalMove > BOUNDARY) {
-        horizontalMove = 0;
-        rightleft = 0;
-    }
-    if (xVal + horizontalMove < -BOUNDARY) {
-        horizontalMove = 0;
-        rightleft = 0;
-    }
+    //if (xVal + horizontalMove > BOUNDARY) {
+        //horizontalMove = 0;
+        //rightleft = 0;
+    //}
+    //if (xVal + horizontalMove < -BOUNDARY) {
+        //horizontalMove = 0;
+        //rightleft = 0;
+    //}
 
     xVal += horizontalMove;
     yVal += verticalMove;
     R3Vector dx(
             rightleft,
             updown,
-            -1//globals.keys['k'] - globals.keys['i']
+            //-1
+            globals.keys['k'] - globals.keys['i']
             );
 
 #define JET_RATE 190
@@ -206,9 +216,9 @@ void Player::Update(double dt)
     if (position.Y() < height) {
         position.SetY(height);
     }
-    if (position.Y() > height+10) {
-        position.SetY(height+10);
-    }
+    //if (position.Y() > height+10) {
+        //position.SetY(height+10);
+    //}
 
     // actually set the transform
 
@@ -216,8 +226,8 @@ void Player::Update(double dt)
         //position.SetX(-BOUNDARY);
     //if (position.X() > BOUNDARY)
         //position.SetX(BOUNDARY);
-    if (position.Y() < -2)
-        position.SetY(-2);
+    //if (position.Y() < -2)
+        //position.SetY(-2);
     //if (position.Y() > BOUNDARY)
         //position.SetY(BOUNDARY);
 
@@ -260,5 +270,6 @@ R3Point Player::GetPosition()
 
 float Player::GetHealth()
 {
+    if (health < 0) { return 0; }
     return health;
 }

@@ -7,6 +7,7 @@
 #include "CameraHandler.h"
 #include "R3Scene.h"
 #include "soundfix.h"
+
 #ifndef __NOSOUND__
 #include "Sound.h"
 #endif
@@ -37,6 +38,7 @@ class Player : public GameObject
 
         // public API
         R3Point GetPosition();
+        R3Vector GetDirection();
         float GetHealth();
 
         void SetDirection(float angle);

@@ -15,6 +15,7 @@
  * forward declarations
  */
 class R3Scene;
+class R3Point;
 class Player;
 class CameraHandler;
 #ifndef __NOSOUND__
