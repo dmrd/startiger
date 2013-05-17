@@ -44,11 +44,6 @@ void BasicLevel::Start()
     globals.terrain = new Terrain(terrainparams);
     globals.gomgr->Add(globals.terrain);
 
-    //Rails::Params railsparams;
-    //railsparams.railMap = new R2Image("railsmap.jpg");
-    //globals.rails = new Rails(railsparams);
-    //globals.gomgr->Add(globals.rails);
-
     Player::Params playerparams;
     playerparams.transform = R3identity_matrix;
     globals.gomgr->Add(new Player(playerparams));
@@ -107,7 +102,7 @@ void BasicLevel::Update(double dt)
     static double timeSinceClear = 0;
     //if (flock->NBoids() == 0) {
     spawnFlockTime -= dt;
-    printf("%f\n", spawnFlockTime);
+
     if (spawnFlockTime < 0) {
         spawnFlockTime = FLOCK_TIME;
         //timeSinceClear += dt;
@@ -115,7 +110,6 @@ void BasicLevel::Update(double dt)
         //if (timeSinceClear > 5) {
             //timeSinceClear = 0;
 
-            printf("new flock \n");
             Flock::Params flockparams;
             flockparams.spawn = SpawnLocation();
             flockparams.swarmSize = 10;

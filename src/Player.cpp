@@ -146,8 +146,6 @@ void Player::SetDirection(float angle) {
 R3Vector Player::GetDirection() {
     R3Vector dir = R3Vector(R3negz_vector);
     dir.Rotate(R3posy_vector, rotation.yaw);
-    printf("%f %f %f\n", dir.X(), dir.Y(), dir.Z());
-    printf("%f %f %f\n", position.X(), position.Y(), position.Z());
     return dir;
 }
 

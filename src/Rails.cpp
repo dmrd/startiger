@@ -16,7 +16,6 @@ Rails::Rails()
 Rails::Rails(const Params &params_) :
     params(params_)
 {
-  printf("rails\n");
 }
 
 

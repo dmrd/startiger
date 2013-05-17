@@ -13,7 +13,6 @@ Terrain::Terrain()
 Terrain::Terrain(const Params &params_) :
     params(params_)
 {
-  printf("terrain\n");
 }
 
 R3Mesh* Terrain::Patch(R3Point center, R2Point size, R2Point dps) { // dps: dots per side
