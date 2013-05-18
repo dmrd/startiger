@@ -50,7 +50,6 @@ void App::Init(int *argc, char **argv)
     globals.window.glutid = glutCreateWindow("StarTiger");
 
     // load scenclass Sound
-    printf("Input scene: %s\n", globals.input_scene_name.c_str());
     globals.scene = new R3Scene();
     globals.scene->Read("loltest");
 
